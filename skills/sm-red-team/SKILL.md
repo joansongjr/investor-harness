@@ -14,9 +14,18 @@ markets: [CN-A, HK, US]
 
 这个 skill 专门负责"唱反调"，目的是降低确认偏误。
 
-## 开始前先取数
+## 强制流程（v0.3 硬约束）
 
-按 [../../core/adapters.md](../../core/adapters.md) 的数据获取协议取数。Red Team 需要用户先给出多头逻辑，然后主动去找反方证据——重点查：历史类似案例（WebSearch）、行业周期拐点信号 (iFind `get_edb_data`)、空头观点（研报、论坛）。
+> ⛔ **任何分析输出之前**，必须严格执行 [`../../core/preamble.md`](../../core/preamble.md) 的 5 步开始前流程
+>
+> ⛔ **任何输出完成之前**，必须严格执行 [`../../core/postamble.md`](../../core/postamble.md) 的 6 步结束后流程
+>
+> 输出归档按 [`../../core/output-archive.md`](../../core/output-archive.md) 命名规范
+> 输出验收按 [`../../core/acceptance.md`](../../core/acceptance.md) 清单逐条自检
+>
+> **跳过任何一环视为未完成任务。**
+
+Red Team 特别注意：preamble Step 4 的取数必须包含历史类似案例 + 行业周期拐点信号 + 空头观点 3 类。**强制读取用户的 `biases.md` 文件**并在结论中显式报告命中情况——这是 Red Team 区别于其他工具的核心。
 
 适用场景：
 

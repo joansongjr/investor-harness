@@ -1,23 +1,27 @@
 # Investor Harness
 
-> 二级市场投研的开放提示词栈
-> *An open prompt stack for public-market research*
+> 投研人的 AI 任务执行规范
+> *An execution discipline harness for AI-assisted investment research*
 
-**v0.2.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.3.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
 
 ---
 
 ## 为什么做这个
 
-二级市场投研有三个核心动作，是分析师和基金经理**每周都在干**，也是**LLM 最容易做得敷衍**的：
+投研人现在都在用 AI 辅助工作——搜集数据、起 coverage、写前瞻、维护覆盖库。但 AI 在严肃投研场景下有三个**老大难问题**：
 
-1. **公司深度**——起 coverage 或重大更新时的 9 段式拆解
-2. **财报前瞻**——财报季前识别市场关注点、敏感变量、beat/miss 路径
-3. **反方审视**——在多头逻辑太顺时强制挑战自己的命题
+| 问题 | 你已经遇到过 |
+|---|---|
+| **❶ 幻觉** | AI 编数据，把市场猜测当成财报披露写出来 |
+| **❷ 健忘** | AI 不记得你的覆盖池、不记得上次研究到哪、每次都从零开始 |
+| **❸ 不成体系** | AI 输出格式每次都不一样，没法归档、对比、迭代 |
 
-裸 LLM 给这三件事的输出，90% 是百度百科式段落 + 套话风险 + 无证据链的猜测。拿这种东西给 PM 看，等同于把自己置于不专业的位置。
+**Investor Harness 是一套强制 AI 按投研工作纪律执行任务的开源规范**。
 
-**Investor Harness 不是另一个"AI 投资助手"，是一组强制 LLM 按卖方 / 买方分析师工作纪律输出的提示词栈**。它不替你判断，只让 AI 的输出**可交付到研究底稿里**。
+它不让 AI 变聪明，让 AI **可靠**——每次取数必须先列计划、每条事实必须标证据等级、每次输出必须承认"还有什么不知道"、所有输出归档到固定路径、跨会话能从断点接续。
+
+跨平台开源（Claude Code / Codex / OpenCode / OpenClaw 全部支持），MIT 协议。
 
 下面用真实任务做三组**深度对比**，让你自己判断值不值得装。
 
@@ -593,9 +597,11 @@ Q4 是"指引 > 业绩"的财报：市场已经 price in 收入同比高增，
 
 ---
 
-## 三个能力之外：另外 10 个 skill
+## 三个能力之外：另外 13 个 skill
 
-上面三个是**你最值得体验的**。Investor Harness 一共 13 个 skill，另外 10 个按同样纪律设计：
+上面三个是**你最值得体验的**。Investor Harness v0.3.0 一共 16 个 skill，另外 13 个按同样纪律设计：
+
+### 单点研究 skills（10 个）
 
 | Skill | 适用场景 |
 |---|---|
@@ -610,11 +616,19 @@ Q4 是"指引 > 业绩"的财报：市场已经 price in 收入同比高增，
 | `sm-pm-brief` | 给基金经理 / IC 会议的一页纸摘要 |
 | `sm-briefing` | 晨会 / 晚报 / 纪要整理 |
 
+### 批量任务 skills（v0.3 新增）
+
+| Skill | 适用场景 |
+|---|---|
+| `sm-batch-refresh` | 覆盖池批量刷新（行情/财务/股东/催化）— 每周/每月跑 |
+| `sm-batch-earnings` | 财报季批量前瞻 / 复盘 — 财报季密集时跑 |
+| `sm-catalyst-sweep` | 覆盖池每日 / 每周催化剂扫描 — 晨会前 30 分钟跑 |
+
 每个 skill 都强制：
-- 取数协议（`core/adapters.md`）
-- 证据分级（`core/evidence.md`）
-- 合规边界（`core/compliance.md`）
-- 结构化输出
+- **开始前**：执行 [`core/preamble.md`](core/preamble.md) 的 5 步流程（识别市场 → 检查历史 → 检查任务 → Preflight → 实际取数）
+- **结束后**：执行 [`core/postamble.md`](core/postamble.md) 的 6 步流程（证据自检 → 仍需补 → 合规声明 → 归档 → 更新任务 → 验收）
+- **归档**：按 [`core/output-archive.md`](core/output-archive.md) 命名规范写入固定路径
+- **验收**：跑 [`core/acceptance.md`](core/acceptance.md) 清单（通用 + skill 专属）
 
 ---
 
@@ -656,7 +670,7 @@ bash install/claude-code.sh    # 或 codex.sh / opencode.sh / generic.sh
 bash setup/bootstrap.sh ~/my-investor-workspace
 ```
 
-会生成一套分析师工作区模板：CLAUDE.md / memory.md / coverage.md / decision-log.md / biases.md / research-queue.md，填几个空就能开始用。
+会生成一套分析师工作区模板：CLAUDE.md / memory.md / coverage.md / decision-log.md / biases.md / research-queue.md / **active-tasks.md** (v0.3 新增)，填几个空就能开始用。
 
 详见 [setup/README.md](setup/README.md)。
 
@@ -679,6 +693,39 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 
 ✅ 持牌卖方分析师 / 买方研究员 / 基金经理 / IC 成员 / 商学院金融方向学生
 ❌ 数字货币 / 一级市场 / 期权期货 / 散户量化 / 期望 AI 替你决策的人
+
+---
+
+## Changelog
+
+### v0.3.0 — 兑现"治幻觉、健忘、杂乱"三大承诺
+- **新增 `core/preamble.md`** — 强制开始前 5 步流程（治幻觉 + 治健忘）
+- **新增 `core/postamble.md`** — 强制结束后 6 步流程（治幻觉 + 治不成体系）
+- **新增 `core/output-archive.md`** — 输出归档命名规范，让所有 skill 输出可 diff、可 review、可引用
+- **新增 `core/acceptance.md`** — 输出验收清单（通用 + 各 skill 专属），最后一道质量关卡
+- **新增 `setup/workspace/active-tasks.md.template`** — 任务进度持久化机制，治"AI 忘记任务到哪了"
+- **新增 3 个批量任务 skill**：
+  - `sm-batch-refresh` — 覆盖池批量刷新
+  - `sm-batch-earnings` — 财报季批量前瞻 / 复盘
+  - `sm-catalyst-sweep` — 每日催化剂扫描
+- **重写所有 13 个旧 skill 的"开始前先取数"段** — 改为强制引用 preamble.md / postamble.md / output-archive.md / acceptance.md，每个 skill 加上独有的注意事项
+- **更新 CLAUDE.md.template** — 加入强制流程引用 + 主动报告进行中任务的规则
+- **品牌定位升级** — 从"开放提示词栈" → "投研人的 AI 任务执行规范"，三大痛点（幻觉/健忘/杂乱）显式列出
+- **manifest.yaml 新增 `solves` 字段** — 机器可读的痛点声明
+
+### v0.2.0
+- 品牌正式命名为 **Investor Harness**
+- 新建 `core/adapters.md` — 数据源优先级决策树
+- 新建 `core/markets.md` — 市场识别与分市场差异
+- 新增 `sm-master` skill — 7 模式长形态总控
+- 新增 `setup/` — 投研工作区脚手架（CLAUDE.md / memory / 覆盖池 / 决策日志 / 偏差清单等模板）
+- 新增 `setup/agents/` — 5 个多 agent 团队角色定义
+- 所有 skill 的 frontmatter 补齐 `inputs / outputs / data_sources / markets`
+- 增加顶层 `manifest.yaml`、`install/` 多 harness 安装脚本
+
+### v0.1.0
+- 12 个专业子 skill + autopilot
+- Codex 安装脚本
 
 ---
 

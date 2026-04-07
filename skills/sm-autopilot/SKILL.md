@@ -13,9 +13,18 @@ markets: [CN-A, CN-FUND, HK, US, GLOBAL]
 
 这是整套投研 skill 组的"默认入口"。
 
-## 开始前先取数
+## 强制流程（v0.3 硬约束）
 
-按 [../../core/adapters.md](../../core/adapters.md) 的数据获取协议取数，按 [../../core/markets.md](../../core/markets.md) 确认标的市场。这一步对 Autopilot 尤为关键——用户通常只给极少信息，需要先补齐数据再进入路由。
+> ⛔ **任何分析输出之前**，必须严格执行 [`../../core/preamble.md`](../../core/preamble.md) 的 5 步开始前流程
+>
+> ⛔ **任何输出完成之前**，必须严格执行 [`../../core/postamble.md`](../../core/postamble.md) 的 6 步结束后流程
+>
+> 输出归档按 [`../../core/output-archive.md`](../../core/output-archive.md) 命名规范
+> 输出验收按 [`../../core/acceptance.md`](../../core/acceptance.md) 清单逐条自检
+>
+> **跳过任何一环视为未完成任务。**
+
+Autopilot 特别注意：用户通常只给极少信息，preamble Step 4 的 [Preflight] 必须明确声明本次自动路由到了哪个 / 哪几个 sm-* 子 skill。
 
 目标不是让使用者自己判断该用哪个 skill，而是让使用者只要给出最少的信息，比如：
 

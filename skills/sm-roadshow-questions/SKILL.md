@@ -14,9 +14,18 @@ markets: [CN-A, HK, US]
 
 这个 skill 用于生成真正有投研价值的调研问题，而不是一套公司很容易"标准回答"的泛问题。
 
-## 开始前先取数
+## 强制流程（v0.3 硬约束）
 
-按 [../../core/adapters.md](../../core/adapters.md) 的数据获取协议取数。路演问题设计需要先了解公司当前的市场争议点（近期研报、新闻 `search_news`）和历史沟通记录，才能避免"纸面问题"。
+> ⛔ **任何分析输出之前**，必须严格执行 [`../../core/preamble.md`](../../core/preamble.md) 的 5 步开始前流程
+>
+> ⛔ **任何输出完成之前**，必须严格执行 [`../../core/postamble.md`](../../core/postamble.md) 的 6 步结束后流程
+>
+> 输出归档按 [`../../core/output-archive.md`](../../core/output-archive.md) 命名规范
+> 输出验收按 [`../../core/acceptance.md`](../../core/acceptance.md) 清单逐条自检
+>
+> **跳过任何一环视为未完成任务。**
+
+Roadshow Questions 特别注意：preamble Step 4 必须包含市场争议点（近期研报、新闻）+ 历史沟通记录，否则会出"纸面问题"。preamble Step 2 必须读最近一份 deepdive 和 thesis。
 
 适用场景：
 

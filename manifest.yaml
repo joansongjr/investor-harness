@@ -3,8 +3,8 @@
 
 name: investor-harness
 display_name: Investor Harness
-version: 0.2.0
-description: 开放、跨 harness 的二级市场投研 skill 套件。覆盖 A 股 / 港股 / 美股 / 公募 / 跨市场主题，提供 Thesis / Coverage / Consensus / Catalyst / Red Team / Briefing / PM Prep 七种工作模式。包含 13 个 skill、数据源 adapter 决策树和投研工作区脚手架。
+version: 0.3.0
+description: 投研人的 AI 任务执行规范。强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。包含 16 个 skill、强制开始/结束流程、归档协议、验收清单、任务持久化机制和投研工作区脚手架。
 license: MIT
 author: Joan Song
 homepage: https://github.com/joansongjr/investor-harness
@@ -16,11 +16,17 @@ compatible_harnesses:
   - openclaw
   - generic  # 任何支持"读取相对路径 markdown"的 harness
 
+# 三大痛点定位
+solves:
+  - hallucination: 强制取数协议 + 证据分级 + 仍需补的资料段
+  - task_forgetting: 持久化记忆系统 + active-tasks.md + 跨会话任务接续
+  - lack_of_structure: 16 个标准化 skill + 输出归档协议 + 验收清单
+
 # 数据源：全部可选。skill 会按 adapters.md 的优先级逐级降级
 data_sources:
   optional:
     - name: ifind-mcp
-      description: 同花顺 iFind MCP，覆盖 A 股、公募、宏观、资讯
+      description: 同花顺 iFind MCP，覆盖 A 股、公募、宏观、资讯（用户需自备账号）
       servers:
         - hexin-ifind-ds-stock-mcp
         - hexin-ifind-ds-fund-mcp
@@ -88,6 +94,19 @@ skills:
   - id: sm-briefing
     path: skills/sm-briefing
     tier: output
+  # v0.3 新增 batch skills
+  - id: sm-batch-refresh
+    path: skills/sm-batch-refresh
+    tier: batch
+    description: 覆盖池批量刷新（行情/财务/股东/催化）— v0.3 新增
+  - id: sm-batch-earnings
+    path: skills/sm-batch-earnings
+    tier: batch
+    description: 财报季批量前瞻 / 复盘 — v0.3 新增
+  - id: sm-catalyst-sweep
+    path: skills/sm-catalyst-sweep
+    tier: batch
+    description: 覆盖池每日 / 每周催化剂扫描 — v0.3 新增
 
 core:
   - path: core/evidence.md
@@ -99,9 +118,36 @@ core:
   - path: core/workflows.md
     purpose: skill 协作顺序与团队映射
   - path: core/adapters.md
-    purpose: 数据源优先级决策树（本版本新增）
+    purpose: 数据源优先级决策树
   - path: core/markets.md
-    purpose: 市场识别与分市场差异（本版本新增）
+    purpose: 市场识别与分市场差异
+  # v0.3 新增 core
+  - path: core/preamble.md
+    purpose: 强制开始前流程（识别市场→检查历史→检查任务→Preflight→实际取数）— v0.3 新增
+  - path: core/postamble.md
+    purpose: 强制结束后流程（证据自检→仍需补→合规声明→归档→更新任务→验收）— v0.3 新增
+  - path: core/output-archive.md
+    purpose: 输出归档命名规范 — v0.3 新增
+  - path: core/acceptance.md
+    purpose: 输出验收清单（通用 + 各 skill 专属）— v0.3 新增
+
+workspace_templates:
+  - path: setup/workspace/CLAUDE.md.template
+    purpose: 分析师 persona + 默认行为
+  - path: setup/workspace/memory.md.template
+    purpose: 记忆索引
+  - path: setup/workspace/coverage.md.template
+    purpose: 覆盖池清单
+  - path: setup/workspace/watchlist.md.template
+    purpose: 观察池
+  - path: setup/workspace/decision-log.md.template
+    purpose: 投资决策日志
+  - path: setup/workspace/biases.md.template
+    purpose: 已知偏差清单
+  - path: setup/workspace/research-queue.md.template
+    purpose: 待研究队列
+  - path: setup/workspace/active-tasks.md.template
+    purpose: 任务进度持久化 — v0.3 新增
 
 recommended_workflows:
   company_research:
@@ -123,4 +169,16 @@ recommended_workflows:
     - sm-consensus-watch
     - sm-pm-brief
   daily_briefing:
+    - sm-briefing
+  # v0.3 新增批量工作流
+  weekly_coverage_refresh:
+    - sm-batch-refresh
+    - sm-catalyst-sweep
+    - sm-briefing
+  earnings_season_full:
+    - sm-batch-earnings
+    - sm-consensus-watch
+    - sm-pm-brief
+  daily_morning_routine:
+    - sm-catalyst-sweep
     - sm-briefing

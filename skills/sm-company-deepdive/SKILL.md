@@ -14,9 +14,18 @@ markets: [CN-A, HK, US]
 
 这个 skill 用于公司层面的深度研究，不写空泛概述，要尽量回答"为什么是这家公司，而不是别人"。
 
-## 开始前先取数
+## 强制流程（v0.3 硬约束）
 
-按 [../../core/adapters.md](../../core/adapters.md) 的数据获取协议取数，并按 [../../core/markets.md](../../core/markets.md) 确认标的市场。本 skill 是最吃数据的 skill，缺数据时严禁开始输出结论。
+> ⛔ **任何分析输出之前**，必须严格执行 [`../../core/preamble.md`](../../core/preamble.md) 的 5 步开始前流程
+>
+> ⛔ **任何输出完成之前**，必须严格执行 [`../../core/postamble.md`](../../core/postamble.md) 的 6 步结束后流程
+>
+> 输出归档按 [`../../core/output-archive.md`](../../core/output-archive.md) 命名规范
+> 输出验收按 [`../../core/acceptance.md`](../../core/acceptance.md) 清单逐条自检
+>
+> **跳过任何一环视为未完成任务。**
+
+Company Deepdive 是最吃数据的 skill，缺数据时**严禁**开始输出结论。如果 preamble 拿不到关键数据（最近一期财报、股东、可比公司），必须走兜底协议让用户贴材料。
 
 适用场景：
 

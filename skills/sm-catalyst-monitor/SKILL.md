@@ -14,9 +14,18 @@ markets: [CN-A, HK, US, GLOBAL]
 
 这个 skill 用于事件驱动研究和财报前瞻，不是简单新闻摘要。
 
-## 开始前先取数
+## 强制流程（v0.3 硬约束）
 
-按 [../../core/adapters.md](../../core/adapters.md) 的数据获取协议取数，按 [../../core/markets.md](../../core/markets.md) 确认标的市场。事件跟踪需要交叉多源——政策 (政府网站) + 公司公告 (iFind `search_notice`) + 行业媒体 (cn-web-search)。
+> ⛔ **任何分析输出之前**，必须严格执行 [`../../core/preamble.md`](../../core/preamble.md) 的 5 步开始前流程
+>
+> ⛔ **任何输出完成之前**，必须严格执行 [`../../core/postamble.md`](../../core/postamble.md) 的 6 步结束后流程
+>
+> 输出归档按 [`../../core/output-archive.md`](../../core/output-archive.md) 命名规范
+> 输出验收按 [`../../core/acceptance.md`](../../core/acceptance.md) 清单逐条自检
+>
+> **跳过任何一环视为未完成任务。**
+
+Catalyst Monitor 特别注意：事件跟踪需要交叉多源（政策 + 公告 + 行业媒体），preamble Step 4 的 [Preflight] 必须列出至少 2 个独立信源。
 
 ## 核心任务
 

@@ -33,9 +33,18 @@ license: MIT
 - 绕过研究合规、信息隔离墙或保密要求
 - 将未经核验的传闻直接写成投资结论
 
-## 开始前先取数
+## 强制流程（v0.3 硬约束）
 
-开始任何模式之前，先按 [../../core/adapters.md](../../core/adapters.md) 的数据获取协议取数，并按 [../../core/markets.md](../../core/markets.md) 确认标的市场。
+> ⛔ **任何分析输出之前**，必须严格执行 [`../../core/preamble.md`](../../core/preamble.md) 的 5 步开始前流程
+>
+> ⛔ **任何输出完成之前**，必须严格执行 [`../../core/postamble.md`](../../core/postamble.md) 的 6 步结束后流程
+>
+> 输出归档按 [`../../core/output-archive.md`](../../core/output-archive.md) 命名规范
+> 输出验收按 [`../../core/acceptance.md`](../../core/acceptance.md) 清单逐条自检
+>
+> **跳过任何一环视为未完成任务。**
+
+SM Master 特别注意：作为长形态总控，必须在 [Preflight] 中**显式声明本次走的是 7 种模式中的哪一种**，并按对应模式的结构输出。
 
 ## 启动原则
 

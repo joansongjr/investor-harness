@@ -14,9 +14,18 @@ markets: [CN-A, HK, US]
 
 这个 skill 用于研究"市场在想什么"以及"市场可能错在哪"。
 
-## 开始前先取数
+## 强制流程（v0.3 硬约束）
 
-按 [../../core/adapters.md](../../core/adapters.md) 的数据获取协议取数，按 [../../core/markets.md](../../core/markets.md) 确认标的市场。一致预期类任务需要重点获取卖方一致预期（iFind `get_stock_performance` 或卖方研报摘要），缺这层数据时请明确告知用户"无法判断预期差"并走兜底。
+> ⛔ **任何分析输出之前**，必须严格执行 [`../../core/preamble.md`](../../core/preamble.md) 的 5 步开始前流程
+>
+> ⛔ **任何输出完成之前**，必须严格执行 [`../../core/postamble.md`](../../core/postamble.md) 的 6 步结束后流程
+>
+> 输出归档按 [`../../core/output-archive.md`](../../core/output-archive.md) 命名规范
+> 输出验收按 [`../../core/acceptance.md`](../../core/acceptance.md) 清单逐条自检
+>
+> **跳过任何一环视为未完成任务。**
+
+Consensus Watch 特别注意：必须重点获取卖方一致预期（iFind `get_stock_performance` 或卖方研报摘要），缺这层数据时**禁止**输出预期差判断，必须明确告知用户"无法判断预期差"并走兜底。
 
 ## 核心任务
 

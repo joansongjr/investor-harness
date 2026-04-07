@@ -24,6 +24,7 @@ This will create a new analyst workspace at <target-dir> with:
   - decision-log.md    (investment decision journal)
   - research-queue.md  (research backlog)
   - biases.md          (your known biases)
+  - active-tasks.md    (in-progress task state, v0.3+)
 
 Example:
   bash setup/bootstrap.sh ~/my-research
@@ -47,6 +48,7 @@ FILES=(
   "decision-log.md"
   "research-queue.md"
   "biases.md"
+  "active-tasks.md"
 )
 
 echo "Bootstrapping Investor Harness workspace at: $TARGET_DIR"

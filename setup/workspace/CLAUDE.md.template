@@ -25,10 +25,34 @@
 
 1. 本文件 `CLAUDE.md`
 2. `memory.md` — 我的记忆索引
-3. `coverage.md` — 我的覆盖池
-4. `biases.md` — 我的已知偏差
+3. `active-tasks.md` — 进行中的任务（v0.3 新增）
+4. `coverage.md` — 我的覆盖池
+5. `biases.md` — 我的已知偏差
 
 不读不开始工作。
+
+**主动报告进行中的任务**：每次新会话开始时，从 `active-tasks.md` 列出所有 `in_progress` 任务，主动告知我："你有 N 个进行中的任务：…要继续哪一个？" 不要等我自己问。
+
+### 1.5 强制流程（v0.3 硬约束）
+
+任何 sm-* skill 调用都必须按以下两个文件严格执行：
+
+- 开始前 → `~/.claude/skills/investor-harness/core/preamble.md` 的 5 步流程
+  - Step 1 识别市场
+  - Step 2 检查历史输出（治健忘）
+  - Step 3 检查 active-tasks.md（治健忘）
+  - Step 4 输出 [Preflight] 取数计划（治幻觉）
+  - Step 5 实际取数
+
+- 结束后 → `~/.claude/skills/investor-harness/core/postamble.md` 的 6 步流程
+  - Step 1 证据等级自检
+  - Step 2 "仍需补的资料"段
+  - Step 3 合规声明
+  - Step 4 归档输出（按 output-archive.md）
+  - Step 5 更新 active-tasks.md
+  - Step 6 跑 acceptance.md 验收清单
+
+**跳过任何一步视为未完成任务**。
 
 ### 2. 默认调用 Investor Harness skills
 
