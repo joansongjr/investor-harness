@@ -86,6 +86,23 @@ for f in "${FILES[@]}"; do
 done
 
 echo
+
+# v0.4: create .task-pulse and .checkpoint/ for task persistence
+PULSE_FILE="$TARGET_DIR/.task-pulse"
+if [[ ! -f "$PULSE_FILE" ]]; then
+  cat > "$PULSE_FILE" <<'PULSE_EOF'
+{"v":"0.4","ts":null,"tasks":[],"compacted":false,"warn":null}
+PULSE_EOF
+  echo "  ✓ created:  .task-pulse (task heartbeat, < 100 tokens)"
+fi
+
+CKPT_DIR="$TARGET_DIR/.checkpoint"
+if [[ ! -d "$CKPT_DIR" ]]; then
+  mkdir -p "$CKPT_DIR"
+  echo "  ✓ created:  .checkpoint/ (resume directory)"
+fi
+
+echo
 echo "Summary: created=$CREATED, overwritten=$OVERWRITTEN, skipped=$SKIPPED"
 echo
 echo "Next steps:"

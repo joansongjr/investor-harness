@@ -19,19 +19,36 @@
 
 你（LLM）在本工作区工作时，必须遵守以下行为规范：
 
-### 1. 启动时先读记忆
+### 1. 启动时先读记忆（v0.4 三层加载优化）
 
-每次新会话开始时，按顺序读取：
+**Tier 0 — 强制读取（每次新会话，< 2k tokens 合计）**
 
-1. 本文件 `CLAUDE.md`
-2. `memory.md` — 我的记忆索引
-3. `active-tasks.md` — 进行中的任务（v0.3 新增）
-4. `coverage.md` — 我的覆盖池
-5. `biases.md` — 我的已知偏差
+1. `~/.claude/skills/investor-harness/core/_boot.md` — harness 启动文件（v0.4 新增）
+2. `.task-pulse` — 任务心跳信号，< 100 tokens（v0.4 新增）
+3. 本文件 `CLAUDE.md` — 我的身份和规则
 
-不读不开始工作。
+**Tier 1 — 按需读取**
+4. `memory.md` — 我的记忆索引（只在需要研究身份信息时读）
+5. `active-tasks.md` — 进行中任务的完整历史（只在用户问任务详情时读；平时用 .task-pulse 就够）
+6. `coverage.md` — 我的覆盖池（只在研究覆盖标的时读）
+7. `biases.md` — 我的已知偏差（只在 sm-red-team 或决策类任务时读）
 
-**主动报告进行中的任务**：每次新会话开始时，从 `active-tasks.md` 列出所有 `in_progress` 任务，主动告知我："你有 N 个进行中的任务：…要继续哪一个？" 不要等我自己问。
+**⛔ 严禁**在不需要时读 Tier 1 文件——浪费 token。
+
+---
+
+**主动报告进行中的任务**：
+
+每次新会话开始时读 `.task-pulse`（v0.4 新增，< 100 tokens）。如果其中有 `in_progress` 任务：
+
+主动告知："你有 N 个进行中的任务：
+- t-001 · sm-company-deepdive · 寒武纪 · 6/9 段
+- t-002 · sm-earnings-preview · 中芯国际 · 3/7 段
+要继续哪一个？"
+
+等用户选择。**不要**默认从头开始新任务。
+
+**续跑指令**：用户说 "继续 t-001" / "接着上次的" → 按 `core/checkpoint.md` 流程恢复。
 
 ### 1.4 零配置入口菜单（v0.3 新增）
 
@@ -39,26 +56,42 @@
 
 不要在用户没指定 skill 时硬猜——优先显示菜单。
 
-### 1.5 强制流程（v0.3 硬约束）
+### 1.5 强制流程（v0.4 硬约束）
 
 任何 sm-* skill 调用都必须按以下两个文件严格执行：
 
-- 开始前 → `~/.claude/skills/investor-harness/core/preamble.md` 的 5 步流程
+- 开始前 → `~/.claude/skills/investor-harness/core/preamble.md` 的 6 步流程
+  - Step 0 任务断点检查（v0.4 新增）
   - Step 1 识别市场
-  - Step 2 检查历史输出（治健忘）
-  - Step 3 检查 active-tasks.md（治健忘）
-  - Step 4 输出 [Preflight] 取数计划（治幻觉）
+  - Step 2 检查历史输出
+  - Step 3 检查 active-tasks
+  - Step 4 输出 [Preflight] 取数计划
   - Step 5 实际取数
 
-- 结束后 → `~/.claude/skills/investor-harness/core/postamble.md` 的 6 步流程
+- 结束后 → `~/.claude/skills/investor-harness/core/postamble.md` 的 8 步流程
+  - Step 0 增量 checkpoint 写入（v0.4 新增，每完成一段就写）
   - Step 1 证据等级自检
   - Step 2 "仍需补的资料"段
   - Step 3 合规声明
   - Step 4 归档输出（按 output-archive.md）
-  - Step 5 更新 active-tasks.md
+  - Step 5 更新 .task-pulse + active-tasks.md
   - Step 6 跑 acceptance.md 验收清单
+  - Step 7 Context Echo Discipline（v0.4 新增，对话只回摘要，不贴完整输出）
 
 **跳过任何一步视为未完成任务**。
+
+### 1.6 Context Overflow 保护（v0.4 新增）
+
+LLM 在每次输出前估算剩余 context budget：
+
+- **剩余 > 30k tokens** → 正常继续
+- **剩余 < 30k tokens** → 在输出末尾提醒"context 紧张，建议本任务完后开新会话"
+- **剩余 < 10k tokens** → 立即停止当前任务
+  - 强制写 `.checkpoint/{task-id}.md`
+  - 更新 `.task-pulse`
+  - 告知用户："已保存到 checkpoint，请新开会话用'继续 {task-id}'续跑"
+
+详见 `~/.claude/skills/investor-harness/core/checkpoint.md`。
 
 ### 2. 默认调用 Investor Harness skills
 

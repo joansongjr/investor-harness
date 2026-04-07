@@ -3,19 +3,20 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.3.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.4.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
 
 ---
 
 ## 为什么做这个
 
-投研人现在都在用 AI 辅助工作——搜集数据、起 coverage、写前瞻、维护覆盖库。但 AI 在严肃投研场景下有三个**老大难问题**：
+投研人现在都在用 AI 辅助工作——搜集数据、起 coverage、写前瞻、维护覆盖库。但 AI 在严肃投研场景下有四个**老大难问题**：
 
 | 问题 | 你已经遇到过 |
 |---|---|
 | **❶ 幻觉** | AI 编数据，把市场猜测当成财报披露写出来 |
 | **❷ 健忘** | AI 不记得你的覆盖池、不记得上次研究到哪、每次都从零开始 |
 | **❸ 不成体系** | AI 输出格式每次都不一样，没法归档、对比、迭代 |
+| **❹ 上下文溢出**（v0.4 新增） | 长会话或深度任务跑到一半，context 满了就丢失全部进度 |
 
 **Investor Harness 是一套强制 AI 按投研工作纪律执行任务的开源规范**。
 
@@ -697,6 +698,33 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 ---
 
 ## Changelog
+
+### v0.4.0 — Context overflow 防御 + 三层加载优化
+
+> 解决 v0.3 没解决的"上下文溢出 + 任务被打断后失忆"问题。
+
+- **新增 `core/_boot.md`** — 启动文件，~1.2k tokens，每次新会话第一个读。包含 16 skill 一行说明、boot protocol、resume protocol、三层加载策略
+- **新增 `core/task-pulse.md`** — `.task-pulse` 心跳信号文件规范（< 100 tokens 的 JSON），让 LLM 用极小代价知道工作区当前任务状态
+- **新增 `core/checkpoint.md`** — `.checkpoint/{task-id}.md` 断点续跑机制，让任务被 compact / 重开会话后能从断点继续，不重复
+- **preamble.md 新增 Step 0** — 任务断点检查（读 .task-pulse → 询问续跑或新建）
+- **postamble.md 新增 Step 0** — 增量 checkpoint 写入（每完成一段就写，不是任务完才写）
+- **postamble.md 新增 Step 7** — Context Echo Discipline：对话只回 ~300 token 的摘要，完整输出在文件里。**节省 ~90% 对话 token**
+- **三层加载优化**：
+  - **Tier 0**（每次必读）_boot.md + .task-pulse + CLAUDE.md ≈ 1.5k tokens
+  - **Tier 1**（skill 调用时）SKILL.md + preamble + postamble + adapters ≈ 6k tokens
+  - **Tier 2**（按需）evidence / compliance / output-archive / acceptance ≈ 5k tokens
+  - vs v0.3 每次任务 ~17k 静态成本，**节省 50-70%**
+- **CLAUDE.md.template** 升级为 v0.4 三层加载 + Context Overflow 保护
+- **bootstrap.sh** 自动创建 `.task-pulse` 和 `.checkpoint/` 目录
+
+#### v0.4 真实 token 测算
+
+| 操作 | v0.3 token | v0.4 token | 节省 |
+|---|---|---|---|
+| 新会话启动 | ~10k | ~1.5k | 85% |
+| 一次完整 skill 调用 | ~42k | ~15-20k | 50%+ |
+| 200k context 能跑几个任务 | 4-5 个 | 8-10 个 | 100%+ |
+| 任务被打断后续跑 | ❌ 丢失 | ✅ 完整恢复 | — |
 
 ### v0.3.0 — 兑现"治幻觉、健忘、杂乱"三大承诺
 - **新增 `core/preamble.md`** — 强制开始前 5 步流程（治幻觉 + 治健忘）

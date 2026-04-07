@@ -3,8 +3,8 @@
 
 name: investor-harness
 display_name: Investor Harness
-version: 0.3.0
-description: 投研人的 AI 任务执行规范。强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。包含 16 个 skill、强制开始/结束流程、归档协议、验收清单、任务持久化机制和投研工作区脚手架。
+version: 0.4.0
+description: 投研人的 AI 任务执行规范。强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.4 新增三层 token 加载优化 + 任务断点续跑机制，支持长会话不失忆和 context overflow 恢复。
 license: MIT
 author: Joan Song
 homepage: https://github.com/joansongjr/investor-harness
@@ -16,11 +16,12 @@ compatible_harnesses:
   - openclaw
   - generic  # 任何支持"读取相对路径 markdown"的 harness
 
-# 三大痛点定位
+# 三大痛点定位 + v0.4 新增：上下文溢出保护
 solves:
   - hallucination: 强制取数协议 + 证据分级 + 仍需补的资料段
-  - task_forgetting: 持久化记忆系统 + active-tasks.md + 跨会话任务接续
+  - task_forgetting: 持久化记忆系统 + .task-pulse + .checkpoint 断点续跑
   - lack_of_structure: 16 个标准化 skill + 输出归档协议 + 验收清单
+  - context_overflow: 三层加载（Tier 0/1/2）+ 输出文件化 + Echo 简化 + 断点续跑
 
 # 数据源：全部可选。skill 会按 adapters.md 的优先级逐级降级
 data_sources:
@@ -132,6 +133,12 @@ core:
     purpose: 输出验收清单（通用 + 各 skill 专属）— v0.3 新增
   - path: core/menu.md
     purpose: 零配置入口菜单（首次使用 / 模糊输入时显示）— v0.3 新增
+  - path: core/_boot.md
+    purpose: 启动文件（每次新会话第一个读，~1.2k tokens）— v0.4 新增
+  - path: core/task-pulse.md
+    purpose: .task-pulse 心跳信号文件格式规范 — v0.4 新增
+  - path: core/checkpoint.md
+    purpose: .checkpoint/ 断点续跑机制规范 — v0.4 新增
 
 workspace_templates:
   - path: setup/workspace/CLAUDE.md.template

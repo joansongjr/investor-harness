@@ -1,7 +1,32 @@
 # Preamble · 强制开始前流程
 
-> 所有 sm-* skill 在产生任何分析输出**之前**，必须按本文件依序完成 5 个步骤。
+> 所有 sm-* skill 在产生任何分析输出**之前**，必须按本文件依序完成 6 个步骤。
 > 这是治"幻觉"和"健忘"的核心机制——跳过任何一步视为未完成任务。
+>
+> v0.4 改动：新增 Step 0（任务断点检查），Steps 1-5 保留。
+
+---
+
+## Step 0 · 任务断点检查（v0.4 新增 · 治健忘）
+
+在做任何其他事情之前：
+
+1. **读 `.task-pulse`**（如果存在）
+   - 不存在 → 视为新工作区，跳过本 step
+   - 存在 → 解析 JSON，检查是否有进行中任务
+
+2. **匹配本次请求**
+   - 如果用户输入是"继续 t-XXX"或类似 → 直接进入 [checkpoint.md](checkpoint.md) 的恢复流程
+   - 如果用户输入与 .task-pulse 中某个 in_progress 任务的 target 匹配 → 主动询问"你之前在做这个标的的 X 任务，要继续吗？"
+   - 如果不匹配 → 创建新 task 条目，分配 task-id
+
+3. **创建 task 条目**
+   - 在 `.task-pulse` 添加新条目：`{id, skill, target, step:"0/N", ckpt:".checkpoint/{id}.md"}`
+   - 创建空的 `.checkpoint/{id}.md` 文件
+
+4. **Context budget 估算**
+   - 如果当前会话已使用 > 150k tokens → 警告用户"建议本任务跑完后开新会话"
+   - 如果 > 180k → 强制只完成当前段，写 checkpoint，停止
 
 ---
 
