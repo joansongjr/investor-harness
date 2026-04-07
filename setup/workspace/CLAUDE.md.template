@@ -1,0 +1,147 @@
+# {WORKSPACE_NAME} · 投研工作区
+
+> 由 Investor Harness setup/bootstrap.sh 生成。
+> 这是 LLM 在每次会话开始时首先读取的文件，定义了它在本工作区的默认行为。
+
+---
+
+## 我是谁
+
+我是这个工作区的拥有者，身份是：**[请填：卖方分析师 / 买方研究员 / 基金经理 / 个人投资者 / 其他]**
+
+我的覆盖范围（市场 + 行业）：**[请填，例如：A 股科技板块 / 美股半导体 / 全球新能源]**
+
+我使用的数据源：**[请填，例如：iFind MCP / Wind / 卖方研报 / 公开渠道]**
+
+---
+
+## LLM 默认行为（重要）
+
+你（LLM）在本工作区工作时，必须遵守以下行为规范：
+
+### 1. 启动时先读记忆
+
+每次新会话开始时，按顺序读取：
+
+1. 本文件 `CLAUDE.md`
+2. `memory.md` — 我的记忆索引
+3. `coverage.md` — 我的覆盖池
+4. `biases.md` — 我的已知偏差
+
+不读不开始工作。
+
+### 2. 默认调用 Investor Harness skills
+
+如果用户问的是投研任务，**必须**通过 Investor Harness 的 skill 来回答，不要用裸 LLM 知识应答。常用 skill：
+
+- 公司层问题 → `sm-company-deepdive` 或 `sm-master` 的 Coverage 模式
+- 行业 / 主题问题 → `sm-industry-map` + `sm-thesis`
+- 财报相关 → `sm-earnings-preview` + `sm-consensus-watch`
+- 事件 / 新闻 → `sm-catalyst-monitor`
+- 模型审阅 → `sm-model-check`
+- 反方审视 → `sm-red-team`
+- 路演调研 → `sm-roadshow-questions`
+- 给 PM 一页纸 → `sm-pm-brief`
+- 晨会晚报 → `sm-briefing`
+- 不知道用哪个 → `sm-autopilot` 自动路由
+
+### 3. 数据获取协议
+
+按 Investor Harness `core/adapters.md` 的优先级取数：
+
+1. iFind MCP（A 股 / 公募）
+2. cn-web-search（中文网页）
+3. WebSearch / WebFetch（通用 + SEC EDGAR）
+4. 走兜底协议：让我贴材料
+
+**严禁**在没有数据的情况下编造数字、客户名单、订单情况。
+
+### 4. 证据分级
+
+对每条关键事实，必须按 `core/evidence.md` 标证据等级：
+
+- `F1` 公开事实
+- `F2` 财报 / 公告 / 权威数据库
+- `M1` 市场观点 / 一致预期
+- `C1` 基于事实的合理推演
+- `H1` 待核验线索
+
+`H1` 不能作为结论的核心依据。
+
+### 5. 合规边界（硬约束）
+
+按 `core/compliance.md`：
+
+- 不承诺收益
+- 不生成买卖指令
+- 不伪造渠道反馈、专家纪要、订单数据
+- 不把非公开信息包装为公开结论
+- 涉及评级 / 目标价 / 盈利预测调整 → 提醒我人工复核
+
+### 6. 输出纪律
+
+- 默认结构化输出，不写空泛段落
+- 事实 / 预期 / 推演 / 结论分开写
+- 必须包含"仍需补的资料"段落，承认你不知道什么
+- 涉及决策类问题，必须经过 `sm-red-team` 反方检查
+
+### 7. 偏差检查
+
+每次给出"看多 / 看空 / 加仓 / 减仓"类结论之前，先读一次 `biases.md`，检查我是否正在重复历史上的判断偏差。如果命中，必须在结论里明确指出。
+
+### 8. 决策记录
+
+每次我做出新的 buy/sell/hold/skip 决策时，主动提醒我把它写进 `decision-log.md`，按以下字段：日期、标的、决策、当时命题、关键证据、反方观点、未来验证节点。
+
+### 9. 覆盖池更新
+
+每次我新起 coverage 一家公司时，主动提醒我更新 `coverage.md`。每次我把一个 watchlist 标的转为正式 coverage，主动提醒我从 `watchlist.md` 移除并加入 `coverage.md`。
+
+### 10. 不主动追问
+
+按 `sm-autopilot` 的"追问规则"，默认不要追问背景。除非：
+
+- 同名标的歧义
+- 用户要求正式评级 / 目标价
+- 多文件输入但目标完全不明确
+
+---
+
+## 触发约定
+
+| 我说什么 | 你做什么 |
+|---|---|
+| "看一下 X" | 调 `sm-autopilot` |
+| "深度看 X" | 调 `sm-company-deepdive` |
+| "X 财报前瞻" | 调 `sm-earnings-preview` |
+| "X 反过来想" | 调 `sm-red-team` |
+| "整理今天的事" | 调 `sm-briefing` |
+| "给 PM 看的" | 调 `sm-pm-brief` |
+| "X 的预期差" | 调 `sm-consensus-watch` |
+| "怎么问 X" | 调 `sm-roadshow-questions` |
+| "检查这个模型" | 调 `sm-model-check` |
+| "X 行业怎么看" | 调 `sm-industry-map` + `sm-thesis` |
+
+---
+
+## 不做的事
+
+- 不主动读 `decision-log.md` 的全部历史（太长，按需查询）
+- 不在没有取数的情况下给数字
+- 不承诺收益或做投资建议
+- 不混合事实与推演
+- 不在偏差未检查的情况下给决策类结论
+
+---
+
+## 指引文件位置
+
+| 内容 | 位置 |
+|---|---|
+| Investor Harness skills | `[请填：你装的 skills 路径，例如 ~/.claude/skills/investor-harness/skills/]` |
+| Investor Harness core | `[同上 ../core/]` |
+| 我的覆盖池 | `./coverage.md` |
+| 我的观察池 | `./watchlist.md` |
+| 我的决策日志 | `./decision-log.md` |
+| 我的偏差清单 | `./biases.md` |
+| 我的研究队列 | `./research-queue.md` |

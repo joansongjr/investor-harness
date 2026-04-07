@@ -1,0 +1,126 @@
+# Investor Harness 套件清单
+# harness 开发者和 LLM 可读，用于发现、路由、依赖校验
+
+name: investor-harness
+display_name: Investor Harness
+version: 0.2.0
+description: 开放、跨 harness 的二级市场投研 skill 套件。覆盖 A 股 / 港股 / 美股 / 公募 / 跨市场主题，提供 Thesis / Coverage / Consensus / Catalyst / Red Team / Briefing / PM Prep 七种工作模式。包含 13 个 skill、数据源 adapter 决策树和投研工作区脚手架。
+license: MIT
+author: Joan Song
+homepage: https://github.com/joansongjr/investor-harness
+
+compatible_harnesses:
+  - claude-code
+  - codex
+  - opencode
+  - openclaw
+  - generic  # 任何支持"读取相对路径 markdown"的 harness
+
+# 数据源：全部可选。skill 会按 adapters.md 的优先级逐级降级
+data_sources:
+  optional:
+    - name: ifind-mcp
+      description: 同花顺 iFind MCP，覆盖 A 股、公募、宏观、资讯
+      servers:
+        - hexin-ifind-ds-stock-mcp
+        - hexin-ifind-ds-fund-mcp
+        - hexin-ifind-ds-edb-mcp
+        - hexin-ifind-ds-news-mcp
+    - name: cn-web-search
+      description: 中文网页搜索 skill，聚合 17 个免费搜索引擎
+    - name: websearch
+      description: harness 内置的通用英文搜索（所有主流 harness 默认可用）
+    - name: webfetch
+      description: harness 内置的网页抓取（所有主流 harness 默认可用）
+  fallback: 用户手动贴材料（所有 skill 必须支持此模式）
+
+markets:
+  - code: CN-A
+    name: A股（沪深）
+  - code: CN-FUND
+    name: 公募基金
+  - code: HK
+    name: 港股
+  - code: US
+    name: 美股
+  - code: GLOBAL
+    name: 跨市场主题
+
+skills:
+  - id: sm-master
+    path: skills/sm-master
+    tier: entry
+    description: 单 skill 长形态总控，7 模式全量，适合"只装一个 skill"
+  - id: sm-autopilot
+    path: skills/sm-autopilot
+    tier: entry
+    description: 轻量路由入口，自动串联下游 skill
+  - id: sm-thesis
+    path: skills/sm-thesis
+    tier: framing
+  - id: sm-industry-map
+    path: skills/sm-industry-map
+    tier: framing
+  - id: sm-company-deepdive
+    path: skills/sm-company-deepdive
+    tier: research
+  - id: sm-earnings-preview
+    path: skills/sm-earnings-preview
+    tier: research
+  - id: sm-model-check
+    path: skills/sm-model-check
+    tier: research
+  - id: sm-consensus-watch
+    path: skills/sm-consensus-watch
+    tier: research
+  - id: sm-catalyst-monitor
+    path: skills/sm-catalyst-monitor
+    tier: monitoring
+  - id: sm-roadshow-questions
+    path: skills/sm-roadshow-questions
+    tier: monitoring
+  - id: sm-red-team
+    path: skills/sm-red-team
+    tier: challenge
+  - id: sm-pm-brief
+    path: skills/sm-pm-brief
+    tier: output
+  - id: sm-briefing
+    path: skills/sm-briefing
+    tier: output
+
+core:
+  - path: core/evidence.md
+    purpose: 证据分级 F1/F2/M1/C1/H1
+  - path: core/compliance.md
+    purpose: 合规边界与表达规范
+  - path: core/templates.md
+    purpose: 输出模板
+  - path: core/workflows.md
+    purpose: skill 协作顺序与团队映射
+  - path: core/adapters.md
+    purpose: 数据源优先级决策树（本版本新增）
+  - path: core/markets.md
+    purpose: 市场识别与分市场差异（本版本新增）
+
+recommended_workflows:
+  company_research:
+    - sm-company-deepdive
+    - sm-consensus-watch
+    - sm-red-team
+    - sm-pm-brief
+  industry_research:
+    - sm-thesis
+    - sm-industry-map
+    - sm-pm-brief
+  earnings_season:
+    - sm-earnings-preview
+    - sm-consensus-watch
+    - sm-model-check
+    - sm-pm-brief
+  event_driven:
+    - sm-catalyst-monitor
+    - sm-consensus-watch
+    - sm-pm-brief
+  daily_briefing:
+    - sm-briefing
