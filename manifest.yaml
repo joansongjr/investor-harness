@@ -130,6 +130,8 @@ core:
     purpose: 输出归档命名规范 — v0.3 新增
   - path: core/acceptance.md
     purpose: 输出验收清单（通用 + 各 skill 专属）— v0.3 新增
+  - path: core/menu.md
+    purpose: 零配置入口菜单（首次使用 / 模糊输入时显示）— v0.3 新增
 
 workspace_templates:
   - path: setup/workspace/CLAUDE.md.template

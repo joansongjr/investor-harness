@@ -703,6 +703,7 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 - **新增 `core/postamble.md`** — 强制结束后 6 步流程（治幻觉 + 治不成体系）
 - **新增 `core/output-archive.md`** — 输出归档命名规范，让所有 skill 输出可 diff、可 review、可引用
 - **新增 `core/acceptance.md`** — 输出验收清单（通用 + 各 skill 专属），最后一道质量关卡
+- **新增 `core/menu.md`** — 零配置入口菜单。用户首次使用 / 输入模糊时自动显示 16 个 skill 的编号菜单，直接按数字或描述选择任务。配套零配置工作区初始化（3 个问题搞定）
 - **新增 `setup/workspace/active-tasks.md.template`** — 任务进度持久化机制，治"AI 忘记任务到哪了"
 - **新增 3 个批量任务 skill**：
   - `sm-batch-refresh` — 覆盖池批量刷新
