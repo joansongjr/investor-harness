@@ -3,7 +3,7 @@
 
 name: investor-harness
 display_name: Investor Harness
-version: 0.5.0
+version: 0.5.1
 description: 投研人的 AI 任务执行规范。17 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.5 新增技术面复盘 skill (sm-tape-review) + INSTALL-PROMPT.md 用户级强制提示词，让小白用户的 LLM 也能自动遵守规则。
 license: MIT
 author: Joan Song

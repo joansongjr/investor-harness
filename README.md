@@ -3,7 +3,7 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.5.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.5.1** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
 
 ---
 
@@ -706,6 +706,26 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 ---
 
 ## Changelog
+
+### v0.5.1 — Dual Output Discipline 修正（云端用户友好）
+
+> 修复 v0.4 over-optimization：原 Step 7 "对话只回 ~300 token 摘要"忽视了云端用户根本打不开本地文件。
+
+**改动**：
+- `core/postamble.md` Step 7 重写：从"Echo Discipline 只回摘要"改为"**Dual Output Discipline 双输出**"——对话里贴完整内容（云端用户能直接读）+ 同时写文件（归档 + 跨 skill 引用 + 长期 diff）
+- 结尾追加 `📁 已归档：{path}` + 关键统计 + 下一步建议
+- 例外：用户主动说"省 token 模式"才退回到 v0.4 纯摘要
+- `_boot.md` Output discipline 段同步更新
+- `setup/workspace/CLAUDE.md.template` 同步更新
+- `INSTALL-PROMPT.md` Step 7 描述同步更新
+
+**Token 影响**：每任务对话成本 ~300 → ~5500 tokens。200k context 能跑的任务数从 ~50（理论但不可用）变为 ~25（真实可用）。
+
+**为什么这个修正很重要**：
+- 投研人很多在 Claude.ai web / Codex web / 远程 SSH 跑 Claude Code → 没有本地文件系统
+- 即使是本地用户，"打开文件"也比"对话直读"麻烦
+- 文件存档的核心价值是**跨 skill 引用 + 长期归档**，不是"对话不贴"
+- 对话是 control plane + data plane 双重身份，文件是补充
 
 ### v0.5.0 — 技术面复盘 skill + 强制启用提示词
 

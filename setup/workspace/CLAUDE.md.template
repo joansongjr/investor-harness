@@ -76,7 +76,7 @@
   - Step 4 归档输出（按 output-archive.md）
   - Step 5 更新 .task-pulse + active-tasks.md
   - Step 6 跑 acceptance.md 验收清单
-  - Step 7 Context Echo Discipline（v0.4 新增，对话只回摘要，不贴完整输出）
+  - Step 7 Dual Output Discipline（v0.5.1 修正，对话贴完整输出 + 同时写文件备份）
 
 **跳过任何一步视为未完成任务**。
 

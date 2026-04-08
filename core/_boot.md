@@ -37,11 +37,13 @@ Investor Harness v0.4 — 投研人的 AI 任务执行规范。
 5. 完成后写最终输出到归档路径，更新 .task-pulse 标 done
 ```
 
-## Output discipline
+## Output discipline (v0.5.1 双输出)
 
-- 输出**必须**写入文件（按 output-archive.md），不要只放对话里
-- 对话只回**摘要**：1 句话 + 文件路径 + 段落数 + 证据数
-- 文件是 source of truth
+- 输出**必须**同时**贴到对话**和**写入文件**（按 output-archive.md）
+- 对话里贴完整内容（人类读），文件里存完整内容（归档 + 跨 skill 引用）
+- 结尾追加 `📁 已归档：{path}` 提示 + 关键统计 + 下一步建议
+- **不要**只回摘要——很多人在云端跑，打不开本地文件
+- 例外：用户明确说"省 token 模式"才退回到摘要
 
 ## Where to find more
 
