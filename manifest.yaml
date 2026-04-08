@@ -3,8 +3,8 @@
 
 name: investor-harness
 display_name: Investor Harness
-version: 0.4.0
-description: 投研人的 AI 任务执行规范。强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.4 新增三层 token 加载优化 + 任务断点续跑机制，支持长会话不失忆和 context overflow 恢复。
+version: 0.5.0
+description: 投研人的 AI 任务执行规范。17 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.5 新增技术面复盘 skill (sm-tape-review) + INSTALL-PROMPT.md 用户级强制提示词，让小白用户的 LLM 也能自动遵守规则。
 license: MIT
 author: Joan Song
 homepage: https://github.com/joansongjr/investor-harness
@@ -95,6 +95,11 @@ skills:
   - id: sm-briefing
     path: skills/sm-briefing
     tier: output
+  # v0.5 新增技术面 skill
+  - id: sm-tape-review
+    path: skills/sm-tape-review
+    tier: technical
+    description: 盘面 + 技术面复盘（K 线 / 量价 / 指标 / 关键位 / 一致性检验）— v0.5 新增
   # v0.3 新增 batch skills
   - id: sm-batch-refresh
     path: skills/sm-batch-refresh
@@ -139,6 +144,11 @@ core:
     purpose: .task-pulse 心跳信号文件格式规范 — v0.4 新增
   - path: core/checkpoint.md
     purpose: .checkpoint/ 断点续跑机制规范 — v0.4 新增
+
+user_install_prompt:
+  path: INSTALL-PROMPT.md
+  purpose: 用户复制粘贴到 ~/.claude/CLAUDE.md 的强制启用提示词，让 LLM 自动遵守 harness 规则 — v0.5 新增
+  critical: true
 
 workspace_templates:
   - path: setup/workspace/CLAUDE.md.template
@@ -191,3 +201,11 @@ recommended_workflows:
   daily_morning_routine:
     - sm-catalyst-sweep
     - sm-briefing
+  # v0.5 新增技术面工作流
+  daily_tape_review:
+    - sm-tape-review
+  add_position_decision:
+    - sm-thesis
+    - sm-red-team
+    - sm-tape-review
+    - sm-pm-brief

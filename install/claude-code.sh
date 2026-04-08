@@ -25,6 +25,10 @@ SKILLS=(
   sm-red-team
   sm-pm-brief
   sm-briefing
+  sm-tape-review
+  sm-batch-refresh
+  sm-batch-earnings
+  sm-catalyst-sweep
 )
 
 mkdir -p "$CLAUDE_SKILLS_DIR"
@@ -55,10 +59,37 @@ else
 fi
 
 echo
-echo "Install complete."
-echo "Skills available as:"
+echo "═══════════════════════════════════════════════════════════════"
+echo "  ✅ Skills installed (17 total)"
+echo "═══════════════════════════════════════════════════════════════"
 for s in "${SKILLS[@]}"; do
-  echo "  - $s"
+  echo "  • $s"
 done
 echo
-echo "Restart Claude Code to pick up the new skills."
+echo "═══════════════════════════════════════════════════════════════"
+echo "  ⚠️  IMPORTANT · 关键最后一步"
+echo "═══════════════════════════════════════════════════════════════"
+echo
+echo "  装好 skills **不等于** LLM 会自动遵守规则。"
+echo "  你必须把 INSTALL-PROMPT.md 里的提示词复制到："
+echo
+echo "    📋 ~/.claude/CLAUDE.md  (推荐 — 全局生效)"
+echo
+echo "  否则 LLM 不会自动按 Investor Harness 流程工作。"
+echo
+echo "  完整说明 + 复制粘贴的提示词正文："
+echo "    📖 $HARNESS_DIR/INSTALL-PROMPT.md"
+echo
+echo "  Quick start：先 cat 一下："
+echo "    cat $HARNESS_DIR/INSTALL-PROMPT.md"
+echo
+echo "═══════════════════════════════════════════════════════════════"
+echo "  下一步建议"
+echo "═══════════════════════════════════════════════════════════════"
+echo
+echo "  1. 阅读 INSTALL-PROMPT.md 并把'启用提示词'贴到 ~/.claude/CLAUDE.md"
+echo "  2. (可选) 跑 bash setup/bootstrap.sh ~/my-investor-workspace 创建工作区"
+echo "  3. 重启 Claude Code"
+echo "  4. 测试：'看一下宁德时代'，应该看到 [Preflight] 段而不是百度百科"
+echo
+echo "═══════════════════════════════════════════════════════════════"

@@ -3,7 +3,7 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.4.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.5.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
 
 ---
 
@@ -617,6 +617,12 @@ Q4 是"指引 > 业绩"的财报：市场已经 price in 收入同比高增，
 | `sm-pm-brief` | 给基金经理 / IC 会议的一页纸摘要 |
 | `sm-briefing` | 晨会 / 晚报 / 纪要整理 |
 
+### 技术面 skill（v0.5 新增）
+
+| Skill | 适用场景 |
+|---|---|
+| `sm-tape-review` | **盘面 + 技术面复盘** — 日内行情、收盘技术分析、K 线 / 量价 / MACD/KDJ/RSI/BOLL 指标解读、关键支撑压力位、与基本面命题的一致性检验 |
+
 ### 批量任务 skills（v0.3 新增）
 
 | Skill | 适用场景 |
@@ -626,10 +632,12 @@ Q4 是"指引 > 业绩"的财报：市场已经 price in 收入同比高增，
 | `sm-catalyst-sweep` | 覆盖池每日 / 每周催化剂扫描 — 晨会前 30 分钟跑 |
 
 每个 skill 都强制：
-- **开始前**：执行 [`core/preamble.md`](core/preamble.md) 的 5 步流程（识别市场 → 检查历史 → 检查任务 → Preflight → 实际取数）
-- **结束后**：执行 [`core/postamble.md`](core/postamble.md) 的 6 步流程（证据自检 → 仍需补 → 合规声明 → 归档 → 更新任务 → 验收）
+- **开始前**：执行 [`core/preamble.md`](core/preamble.md) 的 6 步流程（任务断点 → 识别市场 → 检查历史 → 检查任务 → Preflight → 实际取数）
+- **结束后**：执行 [`core/postamble.md`](core/postamble.md) 的 8 步流程（增量 checkpoint → 证据自检 → 仍需补 → 合规 → 归档 → 更新任务 → 验收 → echo 简化）
 - **归档**：按 [`core/output-archive.md`](core/output-archive.md) 命名规范写入固定路径
 - **验收**：跑 [`core/acceptance.md`](core/acceptance.md) 清单（通用 + skill 专属）
+
+> ⚠️ **关键最后一步**：装好 skills 之后**必须**把 [`INSTALL-PROMPT.md`](INSTALL-PROMPT.md) 里的"启用提示词"复制到 `~/.claude/CLAUDE.md`，否则 LLM 不会自动按规则工作。详见 INSTALL-PROMPT.md。
 
 ---
 
@@ -698,6 +706,43 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 ---
 
 ## Changelog
+
+### v0.5.0 — 技术面复盘 skill + 强制启用提示词
+
+> 解决两个新发现的痛点：
+> 1. 缺技术面 skill（基本面 13 个 skill 都覆盖了，技术面是空白）
+> 2. markdown 规范没有强制力——非技术用户的 LLM 不会自动遵守
+
+**新增**：
+
+- **`sm-tape-review`** — 盘面 + 技术面复盘 skill（第 17 个）
+  - 7 段输出：行情摘要 / 资金面 / K 线形态 / 技术指标 / 关键位 / 一致性检验 / 明日观察
+  - 强制使用 iFind get_stock_performance 拉真实指标，禁止凭印象编造
+  - §6 必须引用同标的最新 sm-thesis / sm-company-deepdive 输出做基本面一致性检验
+  - 适用场景：日内复盘、收盘技术面、加减仓技术确认、stop loss 设定
+
+- **`INSTALL-PROMPT.md`** — 启用提示词模板（关键文件）
+  - 解决"装好但 LLM 不遵守"的问题
+  - 用户复制粘贴到 `~/.claude/CLAUDE.md` 之后，LLM 自动按 Investor Harness 流程工作
+  - 包含完整的 boot protocol / preamble / postamble / 自动路由规则
+  - 三种粘贴方式：全局 CLAUDE.md / 工作区 / 单次对话
+
+- **`acceptance.md`** 新增 sm-tape-review 专属验收清单（10 条）
+
+**更新**：
+
+- 4 个 install 脚本（claude-code / codex / opencode / generic）安装完后**主动打印**INSTALL-PROMPT.md 路径和复制粘贴说明
+- `core/_boot.md` 16 → 17 skills 速查
+- README 添加技术面 skill 段落 + INSTALL-PROMPT.md 强调
+
+#### 为什么要有 INSTALL-PROMPT.md
+
+v0.4 之前的设计假设 LLM 会"看到 SKILL.md 就遵守"，但现实是：
+- 小白用户不知道说"用 sm-X"，他们说"看一下 X"
+- LLM 看到模糊请求会直接给百度百科段落，不会主动 invoke skill
+- markdown 规则没有 hook 强制执行
+
+INSTALL-PROMPT.md 是用户主动**给 LLM 灌输**"以后所有投研任务都按这套规则做"的指令。一次粘贴，永久生效。
 
 ### v0.4.0 — Context overflow 防御 + 三层加载优化
 

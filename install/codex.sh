@@ -27,5 +27,17 @@ else
 fi
 
 echo
-echo "Install complete."
-echo "Restart Codex to pick up the new skills."
+echo "═══════════════════════════════════════════════════════════════"
+echo "  ✅ Investor Harness installed (17 skills)"
+echo "═══════════════════════════════════════════════════════════════"
+echo
+echo "  ⚠️  关键最后一步："
+echo "  把 INSTALL-PROMPT.md 里的'启用提示词'复制到："
+echo "    📋 ~/.codex/CLAUDE.md (或你 Codex 用的 system prompt 配置)"
+echo
+echo "  完整说明：cat $HARNESS_DIR/INSTALL-PROMPT.md"
+echo
+echo "  否则 LLM 不会自动按 Investor Harness 流程工作。"
+echo
+echo "  Restart Codex to pick up the new skills."
+echo "═══════════════════════════════════════════════════════════════"
