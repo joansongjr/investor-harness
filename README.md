@@ -3,7 +3,7 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.5.1** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.6.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
 
 ---
 
@@ -706,6 +706,73 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 ---
 
 ## Changelog
+
+### v0.6.0 — 交互式安装 + 更新向导
+
+> 解决 v0.5 的最后一个门槛：**非技术用户装不了**。
+> 手动跑 `git clone + bash install/claude-code.sh + 复制粘贴 INSTALL-PROMPT` 步骤太多，容易卡。
+> v0.6 提供**交互式向导**：一个命令全搞定。
+
+**新增**：
+
+- **`setup.sh`** — 交互式安装向导（~600 行 bash）
+  - 检测操作系统 / Shell / Git / 现有 harness
+  - 选择目标 harness（Claude Code / Codex / OpenClaw，可多选）
+  - 选择数据源（iFind / Alpha派 / 进门财经 / Wind / cn-web-search / WebSearch）
+  - 检测现有 .mcp.json 配置
+  - 安装 skills（默认 symlink 模式）
+  - 可选创建投研工作区（跑 bootstrap.sh）
+  - **自动注入启用提示词到 ~/.claude/CLAUDE.md**（带 marker + 备份）
+  - 验证安装
+
+- **`update.sh`** — 交互式更新向导
+  - 检测本地 vs 远程版本
+  - 显示新 commit 列表
+  - 检测破坏性变更（major bump / skill 重命名 / core 文件变更）
+  - git pull（含 stash 保护）
+  - 检测 CLAUDE.md 里启用提示词的版本，不一致时提示更新
+  - 备份机制完善
+
+- **`install.sh`** — curl 一键入口
+  - `curl -fsSL https://.../install.sh | bash`
+  - 自动 git clone + 调用 setup.sh
+  - 适合首次安装场景
+
+- **`core/claude-md-section.md`** — 标准化的 CLAUDE.md 注入模板
+  - 带 `<!-- INVESTOR_HARNESS:BEGIN v0.6.0 -->` / `END` marker
+  - 支持幂等更新（update.sh 只替换 marker 之间的内容）
+  - 包含占位符（DATE / HARNESS_PATH / WORKSPACE_ROOT / DATA_SOURCES 等）
+
+**四个数据源全部是 MCP**：
+
+| 数据源 | 类型 | 默认优先级 |
+|---|---|---|
+| iFind MCP | MCP server | 1（A 股 / 公募最优）|
+| Alpha派 MCP | MCP server | 2 |
+| Wind MCP | MCP server | 3（全球覆盖）|
+| 进门财经 MCP | MCP server | 4（路演/专家/研报）|
+| cn-web-search | Skill | 5 |
+| WebSearch | harness 内置 | 6（兜底）|
+| 用户贴材料 | 手动 | 7（最后兜底）|
+
+向导会根据用户选择**动态生成**个性化的数据源优先级链，写进 CLAUDE.md 注入段。
+
+**安装路径对比**：
+
+| 方式 | 命令 | 适合谁 |
+|---|---|---|
+| 🟢 **一键 curl** | `curl -fsSL .../install.sh \| bash` | 首次用户 |
+| 🟡 **git clone + wizard** | `git clone ... && cd ... && bash setup.sh` | 想看清楚每一步的人 |
+| 🔴 **低级命令** | `bash install/claude-code.sh`（原 v0.5）| 自动化脚本 |
+
+**更新路径**：
+
+```bash
+cd ~/investor-harness
+bash update.sh
+```
+
+自动处理：版本检查、破坏性变更警告、git pull、CLAUDE.md 迁移。
 
 ### v0.5.1 — Dual Output Discipline 修正（云端用户友好）
 
