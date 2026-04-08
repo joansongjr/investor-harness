@@ -3,7 +3,7 @@
 
 name: investor-harness
 display_name: Investor Harness
-version: 0.7.0
+version: 0.8.0
 description: 投研人的 AI 任务执行规范。17 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.5 新增技术面复盘 skill (sm-tape-review) + INSTALL-PROMPT.md 用户级强制提示词，让小白用户的 LLM 也能自动遵守规则。
 license: MIT
 author: Joan Song
@@ -100,6 +100,16 @@ skills:
     path: skills/sm-tape-review
     tier: technical
     description: 盘面 + 技术面复盘（K 线 / 量价 / 指标 / 关键位 / 一致性检验）— v0.5 新增
+  # v0.8 新增演示/汇报 skill
+  - id: sm-deck-builder
+    path: skills/sm-deck-builder
+    tier: presentation
+    description: 投研 PPT 生成 · UI 设计 + 研报包装（10 段 IC pitch / 6 段 roadshow / 8 段 earnings review / 5 段 monthly / 15 段 client pitch）— v0.8 新增
+    depends_on:
+      - sm-thesis            # 命题来源
+      - sm-company-deepdive  # 公司内容
+      - sm-red-team          # Risk 页
+      - anthropic-skills:pptx  # 底层 PPT 生成引擎
   # v0.3 新增 batch skills
   - id: sm-batch-refresh
     path: skills/sm-batch-refresh
@@ -213,3 +223,18 @@ recommended_workflows:
     - sm-red-team
     - sm-tape-review
     - sm-pm-brief
+  # v0.8 新增 deck 生成工作流
+  ic_pitch_full:
+    - sm-thesis
+    - sm-company-deepdive
+    - sm-consensus-watch
+    - sm-red-team
+    - sm-deck-builder         # 最后一步：转成 PPT
+  roadshow_prep:
+    - sm-company-deepdive
+    - sm-roadshow-questions
+    - sm-deck-builder
+  earnings_review_deck:
+    - sm-earnings-preview
+    - sm-consensus-watch
+    - sm-deck-builder

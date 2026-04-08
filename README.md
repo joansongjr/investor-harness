@@ -3,7 +3,7 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.7.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.8.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
 
 ---
 
@@ -623,6 +623,12 @@ Q4 是"指引 > 业绩"的财报：市场已经 price in 收入同比高增，
 |---|---|
 | `sm-tape-review` | **盘面 + 技术面复盘** — 日内行情、收盘技术分析、K 线 / 量价 / MACD/KDJ/RSI/BOLL 指标解读、关键支撑压力位、与基本面命题的一致性检验 |
 
+### 演示 / 汇报 skill（v0.8 新增）
+
+| Skill | 适用场景 |
+|---|---|
+| `sm-deck-builder` | **PPT 生成 · UI 设计 + 研报包装** — 把 sm-thesis / sm-company-deepdive / sm-red-team 等研究底稿转成机构级投研 PPT；10 页标准结构、完整 UI 设计系统（色板/字体/布局）、证据可追溯。支持 IC pitch / roadshow / earnings review / monthly update / client pitch 5 种类型。依赖 anthropic-skills:pptx 做实际文件生成 |
+
 ### 批量任务 skills（v0.3 新增）
 
 | Skill | 适用场景 |
@@ -706,6 +712,56 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 ---
 
 ## Changelog
+
+### v0.8.0 — PPT 生成 skill · sm-deck-builder
+
+> 把散落的研究 markdown 转成机构级投研 PPT。填补"研究做完了，但没法给 PM / IC / 客户看"的空白。
+
+**新增 `sm-deck-builder` skill（第 18 个）**
+
+**10 段标准结构（IC pitch deck 默认）**：
+
+1. 封面（标的 / 分析师 / 日期 / conviction）
+2. 执行摘要（命题一句话 + 3 支撑柱 + 推荐 action）
+3. 公司概览（商业模式 + 关键指标）
+4. 核心逻辑（Why now + variant view）
+5. 支撑证据（3-5 个硬数据点 + 证据等级）
+6. 市场预期差（已 price in vs 未 price in）
+7. 催化剂时间线（未来 3-12 个月）
+8. **反方审视**（Top 3 risks + Kill switch）— 不能省略
+9. 跟踪指标（3 个月内 What to watch）
+10. 附录 + 合规声明 + 证据统计
+
+**UI 设计系统**：
+
+- 色板：深海军蓝主色 + 金色强调色 + 绿/红 semantic（机构研报风格）
+- 字体：PingFang SC / Helvetica Neue / Arial，3 级层次
+- 布局：header + title + body + footer 严格 1920×1080，留白 ≥ 30%
+- 图表：无 3D / 无彩虹色 / 无 clipart
+- 硬约束：< 3 种字体 / < 3 种颜色 / 每页 ≤ 5 bullets
+
+**支持的 deck 类型**：
+
+| 类型 | 默认长度 | 场景 |
+|---|---|---|
+| `ic-pitch` | 10 页 | 投委会汇报 |
+| `roadshow` | 6 页 | 管理层路演 |
+| `earnings-review` | 8 页 | 财报季复盘 |
+| `monthly-update` | 5 页 | 月度 PM 汇报 |
+| `client-pitch` | 15 页 | 客户展示 |
+
+**强依赖**：必须先跑 `sm-thesis` / `sm-company-deepdive` / `sm-red-team` 等研究 skill，deck-builder 从归档里读内容。**没有研究底稿的情况下禁止直接生成 deck**——deck 是研究的包装，不是替代。
+
+**技术实现**：依赖 `anthropic-skills:pptx` skill 做底层 .pptx 文件生成，sm-deck-builder 负责：
+- 决定结构（10 段 IC pitch / 6 段 roadshow / ...）
+- 从研究归档提炼内容
+- 应用 UI 设计系统（色板 / 字体 / 布局）
+- 强制证据等级标注
+- 归档到 `{coverage}/{ticker}/decks/` 同时保存 .pptx + .md 两份
+
+**双输出**：对话里贴 markdown 大纲（云端用户直接读），文件写 .pptx（打印 / 演示用）。
+
+**验收清单**：`acceptance.md` 新增 sm-deck-builder 专属 14 项检查，包括"不能省 Risk 页"、"不能省 Gaps 页"、"每个数字必须带证据等级"等硬约束。
 
 ### v0.7.0 — 任务永久化：用户模板 + 自定义 skill 三层机制
 

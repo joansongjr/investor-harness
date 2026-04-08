@@ -42,6 +42,7 @@
 | "X 行业框架" / "X 产业链" | 走 `sm-industry-map` |
 | "怎么问 X 管理层" | 走 `sm-roadshow-questions` |
 | "看 X 的 K 线" / "复盘 X" | 走 `sm-tape-review` |
+| "做 X 的 PPT" / "生成 deck" / "IC pitch" / "路演材料" | 走 `sm-deck-builder` |
 | "刷新覆盖池" | 走 `sm-batch-refresh` |
 | "扫事件" | 走 `sm-catalyst-sweep` |
 
@@ -84,7 +85,7 @@
 
 ## 17 个 skill
 
-`sm-master` · `sm-autopilot` · `sm-thesis` · `sm-industry-map` · `sm-company-deepdive` · `sm-earnings-preview` · `sm-model-check` · `sm-consensus-watch` · `sm-catalyst-monitor` · `sm-roadshow-questions` · `sm-red-team` · `sm-pm-brief` · `sm-briefing` · `sm-tape-review` · `sm-batch-refresh` · `sm-batch-earnings` · `sm-catalyst-sweep`
+`sm-master` · `sm-autopilot` · `sm-thesis` · `sm-industry-map` · `sm-company-deepdive` · `sm-earnings-preview` · `sm-model-check` · `sm-consensus-watch` · `sm-catalyst-monitor` · `sm-roadshow-questions` · `sm-red-team` · `sm-pm-brief` · `sm-briefing` · `sm-tape-review` · `sm-deck-builder` · `sm-batch-refresh` · `sm-batch-earnings` · `sm-catalyst-sweep`
 
 ## 硬约束（违反等于未完成任务）
 

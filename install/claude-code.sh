@@ -26,6 +26,7 @@ SKILLS=(
   sm-pm-brief
   sm-briefing
   sm-tape-review
+  sm-deck-builder
   sm-batch-refresh
   sm-batch-earnings
   sm-catalyst-sweep
@@ -60,7 +61,7 @@ fi
 
 echo
 echo "═══════════════════════════════════════════════════════════════"
-echo "  ✅ Skills installed (17 total)"
+echo "  ✅ Skills installed (18 total)"
 echo "═══════════════════════════════════════════════════════════════"
 for s in "${SKILLS[@]}"; do
   echo "  • $s"

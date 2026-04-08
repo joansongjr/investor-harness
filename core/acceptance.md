@@ -170,6 +170,23 @@
 - [ ] 有完整的 `## 强制流程` 段引用 core/
 - [ ] 输出仍然走通用验收清单 A/B/C/D/E
 
+### sm-deck-builder 专属
+
+- [ ] preamble Step 2 已读取同标的最新的 sm-thesis / sm-company-deepdive 等研究底稿
+- [ ] 至少有一份 deepdive 或 thesis 作为内容来源（不能凭空生成 deck）
+- [ ] Slide 结构符合所选 deck_type 的标准（ic-pitch 10 页 / roadshow 6 页 等）
+- [ ] Slide 1（封面）包含：标的名、ticker、分析师、日期、conviction、免责声明
+- [ ] Slide 2（执行摘要）包含：一句话命题 + 3 个支撑柱 + 推荐 action
+- [ ] **每个具体数字带 F1/F2/M1/C1/H1 证据标注**（脚注或角标形式）
+- [ ] **有独立的 Risk / Red Team 页**（不能省略）
+- [ ] **有独立的仍需补的资料 / Gaps 页**（不能省略）
+- [ ] **有合规免责页**（或每页 footer 带免责）
+- [ ] 任何"建议加减仓"明确标注"需人工复核"
+- [ ] UI 遵守硬约束：< 3 种字体 / < 3 种颜色 / 无 3D 图表 / 无 clipart
+- [ ] 归档到 `{coverage}/{ticker}/decks/{YYYY-MM-DD}-{deck-type}.pptx`
+- [ ] 同时保存 markdown 版本 `.md`（用于对话预览和 diff）
+- [ ] Dual Output：对话贴 markdown 大纲 + 文件写 .pptx
+
 ### sm-tape-review 专属
 
 - [ ] 7 段结构齐全：行情摘要 / 资金 / K 线形态 / 技术指标 / 关键位 / 一致性检验 / 明日观察
