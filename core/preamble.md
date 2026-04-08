@@ -30,6 +30,68 @@
 
 ---
 
+## Step 0.5 · 检查用户自定义模板和 skill（v0.7 新增 · 任务永久化）
+
+在走标准路由之前，**必须**检查用户的 workspace 是否有自定义：
+
+### 读取 user-templates/
+
+```
+检查 {workspace_root}/user-templates/*.md
+读取每个文件的 frontmatter（name / trigger / based_on_skill）
+把所有 trigger 收集成一个关键词表
+```
+
+### 读取 user-skills/
+
+```
+检查 {workspace_root}/user-skills/*/SKILL.md
+读取每个 skill 的 frontmatter（name / extends / description / trigger）
+```
+
+### 匹配用户输入
+
+按以下优先级：
+
+1. **显式调用**：用户说"用 xxx 模板"或"用 my-xxx skill" → 精确匹配，直接加载
+2. **自动路由**：用户输入包含某个 user-template 或 user-skill 的 `trigger:` 关键词 → 使用该定制
+3. **命中多个**：列出候选让用户选
+4. **零命中**：走默认 sm-* skill 路由
+
+### 加载策略
+
+**用户模板 (user-templates)**：
+- 加载模板文件
+- 加载 `based_on_skill` 指定的父 skill（作为执行框架）
+- 输出时按模板的 `## 输出结构`，不用父 skill 默认结构
+- 归档到模板的 `output_to:` 路径（覆盖 output-archive.md 的默认）
+
+**L2 继承 skill (user-skills/ 带 extends:)**：
+- 加载子 skill
+- 加载 `extends:` 指定的父 skill
+- 合并规则：子 skill 的新增段插入 / 追加到父 skill 的结构中
+- 不能删除父 skill 的必需段
+
+**L3 自创 skill (user-skills/ 不带 extends:)**：
+- 直接加载该 SKILL.md
+- 按它自己的结构和约束执行
+- 仍然**强制**走 core/ 的 preamble / postamble / 证据分级 / 合规
+
+### 不能被覆盖的规则
+
+无论用户模板 / L2 / L3 怎么定制，以下规则**永远不能绕过**：
+
+- ❌ `core/preamble.md` 6 步
+- ❌ `core/postamble.md` 8 步
+- ❌ 证据分级（F1/F2/M1/C1/H1）
+- ❌ "仍需补的资料"段
+- ❌ 合规声明
+- ❌ Dual Output Discipline
+
+详见 [`user-templates.md`](user-templates.md) 和 [`user-skills.md`](user-skills.md)。
+
+---
+
 ## Step 1 · 识别市场
 
 按 [markets.md](markets.md) 确定标的的市场归属：

@@ -45,12 +45,21 @@ Investor Harness v0.4 — 投研人的 AI 任务执行规范。
 - **不要**只回摘要——很多人在云端跑，打不开本地文件
 - 例外：用户明确说"省 token 模式"才退回到摘要
 
+## User customization (v0.7 新增)
+
+**开始常规路由前**必须检查用户工作区是否有自定义：
+- `{workspace}/user-templates/*.md` — 用户任务模板（日报 / 周报 / 月报等）
+- `{workspace}/user-skills/*/SKILL.md` — 用户自定义 skill（L2 继承 / L3 自创）
+
+命中 → 用用户定制，不用默认 sm-* 路由。
+详见 core/user-templates.md + core/user-skills.md。
+
 ## Where to find more
 
 | 需要时读 | 文件 |
 |---|---|
-| 完整 5 步开始前 | core/preamble.md |
-| 完整 6 步结束后 | core/postamble.md |
+| 完整 6 步开始前 | core/preamble.md |
+| 完整 8 步结束后 | core/postamble.md |
 | 数据源决策树 | core/adapters.md |
 | 证据分级 F1-H1 | core/evidence.md |
 | 合规边界 | core/compliance.md |
@@ -60,3 +69,5 @@ Investor Harness v0.4 — 投研人的 AI 任务执行规范。
 | 市场识别 | core/markets.md |
 | 任务持久化格式 | core/task-pulse.md |
 | 断点续跑细节 | core/checkpoint.md |
+| 用户任务模板 (L1) | core/user-templates.md |
+| 用户自定义 skill (L2+L3) | core/user-skills.md |

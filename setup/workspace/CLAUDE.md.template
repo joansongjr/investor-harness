@@ -32,8 +32,31 @@
 5. `active-tasks.md` — 进行中任务的完整历史（只在用户问任务详情时读；平时用 .task-pulse 就够）
 6. `coverage.md` — 我的覆盖池（只在研究覆盖标的时读）
 7. `biases.md` — 我的已知偏差（只在 sm-red-team 或决策类任务时读）
+8. `user-templates/*.md` — 我的自定义任务模板（v0.7 新增，识别触发词时扫描）
+9. `user-skills/*/SKILL.md` — 我的自定义 skill（v0.7 新增，识别触发词时扫描）
 
 **⛔ 严禁**在不需要时读 Tier 1 文件——浪费 token。
+
+### 1.3 任务永久化（v0.7 新增 · 我的自定义）
+
+当收到任何投研任务请求，**在走默认 sm-* 路由之前**，必须按以下顺序检查：
+
+1. **读 `user-templates/` 下每个 .md 文件的 frontmatter**
+   - 提取 `trigger:` 关键词列表
+   - 和用户输入做模糊匹配
+   - 命中 → 加载该模板 + 对应的 `based_on_skill` 作为执行框架
+   - 按模板的 `## 输出结构` 输出，按 `output_to:` 归档
+
+2. **读 `user-skills/*/SKILL.md`**
+   - L2 (extends:) → 加载父 skill，应用本 skill 的新增/覆盖
+   - L3 (无 extends) → 直接用本 skill 的结构
+   - 都继承 core/ 的强制流程，不能绕过
+
+3. **零命中 → 走 sm-* 默认路由**
+
+详细规范见：
+- `~/.claude/skills/investor-harness/core/user-templates.md`
+- `~/.claude/skills/investor-harness/core/user-skills.md`
 
 ---
 

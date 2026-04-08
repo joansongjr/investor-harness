@@ -159,7 +159,7 @@ Autopilot 特别注意：用户通常只给极少信息，preamble Step 4 的 [P
 
 以下输入都应能直接产出高质量结果：
 
-- `请用 sm-autopilot 看一下宁德时代`
+- `请用 sm-autopilot 看一下 LITE`
 - `请用 sm-autopilot 看一下AI眼镜`
 - `请用 sm-autopilot 做中芯国际财报前瞻`
 - `请用 sm-autopilot 检查我上传的模型`

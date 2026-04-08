@@ -146,6 +146,30 @@
 - [ ] 命中事件按重要性分级
 - [ ] 每条命中关联到具体的 ticker
 
+### 用户模板 / 用户 skill 专属（v0.7 新增）
+
+当执行的是 user-templates/*.md 或 user-skills/*/SKILL.md：
+
+**通用验收**（以上所有 A/B/C/D/E 通用清单**全部适用**，不能因为是用户定制而跳过）
+
+**用户模板专属**：
+- [ ] 已按模板的 `## 输出结构` 输出，不是父 skill 的默认结构
+- [ ] 已归档到模板的 `output_to:` 路径（不是父 skill 的默认路径）
+- [ ] 已加载模板 `based_on_skill:` 指定的父 skill 作为执行框架
+- [ ] 模板特有的约束已生效（字数限制 / 禁用词等）
+
+**L2 extends skill 专属**：
+- [ ] 已识别 `extends:` 并加载父 skill
+- [ ] 父 skill 的必需段**没有被删除**
+- [ ] 子 skill 的新增段**已插入到正确位置**
+- [ ] 合规边界 = 父 + 子的叠加，不是只看子的
+
+**L3 自创 skill 专属**：
+- [ ] SKILL.md 明确引用了 core/preamble.md 和 core/postamble.md
+- [ ] frontmatter 有 data_sources / markets / inputs / outputs 字段
+- [ ] 有完整的 `## 强制流程` 段引用 core/
+- [ ] 输出仍然走通用验收清单 A/B/C/D/E
+
 ### sm-tape-review 专属
 
 - [ ] 7 段结构齐全：行情摘要 / 资金 / K 线形态 / 技术指标 / 关键位 / 一致性检验 / 明日观察

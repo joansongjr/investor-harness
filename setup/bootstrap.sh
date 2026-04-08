@@ -102,6 +102,40 @@ if [[ ! -d "$CKPT_DIR" ]]; then
   echo "  ✓ created:  .checkpoint/ (resume directory)"
 fi
 
+# v0.7: create user-templates/ and user-skills/ for task permanence
+USER_TEMPLATES_DIR="$TARGET_DIR/user-templates"
+USER_SKILLS_DIR="$TARGET_DIR/user-skills"
+
+if [[ ! -d "$USER_TEMPLATES_DIR" ]]; then
+  mkdir -p "$USER_TEMPLATES_DIR"
+  echo "  ✓ created:  user-templates/ (L1 任务模板目录)"
+  # Copy 3 example templates
+  for t in daily-briefing weekly-coverage-review monthly-pm-report; do
+    src="$TEMPLATE_DIR/user-templates/${t}.md.template"
+    dest="$USER_TEMPLATES_DIR/${t}.md"
+    if [[ -f "$src" && ! -f "$dest" ]]; then
+      cp "$src" "$dest"
+      echo "    ✓ example:  user-templates/${t}.md"
+    fi
+  done
+fi
+
+if [[ ! -d "$USER_SKILLS_DIR" ]]; then
+  mkdir -p "$USER_SKILLS_DIR"
+  echo "  ✓ created:  user-skills/ (L2 继承 + L3 自创 skill 目录)"
+  # Copy 2 example skills
+  for s in my-deepdive-esg my-hk-ipo-analysis; do
+    src="$TEMPLATE_DIR/user-skills/${s}/SKILL.md.template"
+    dest_dir="$USER_SKILLS_DIR/${s}"
+    dest="$dest_dir/SKILL.md"
+    if [[ -f "$src" && ! -f "$dest" ]]; then
+      mkdir -p "$dest_dir"
+      cp "$src" "$dest"
+      echo "    ✓ example:  user-skills/${s}/SKILL.md"
+    fi
+  done
+fi
+
 echo
 echo "Summary: created=$CREATED, overwritten=$OVERWRITTEN, skipped=$SKIPPED"
 echo
@@ -110,7 +144,10 @@ echo "  1. cd $TARGET_DIR"
 echo "  2. Edit CLAUDE.md and fill in your role + coverage scope"
 echo "  3. Edit memory.md and fill in your research identity"
 echo "  4. Add your initial covered companies to coverage.md"
-echo "  5. Open this folder in Claude Code / Codex / OpenCode and start asking:"
-echo "       请用 sm-autopilot 看一下 [your-first-stock]"
+echo "  5. (可选) 改 user-templates/daily-briefing.md 为你自己的日报模板"
+echo "  6. (可选) 把 user-skills/my-hk-ipo-analysis 改成你自己的定制 skill"
+echo "  7. 打开此目录，在 Claude Code / Codex / OpenCode 里开始提问："
+echo "       看一下 LITE"
+echo "       跑一下日报"
 echo
 echo "Done."

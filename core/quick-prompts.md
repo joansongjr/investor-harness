@@ -4,7 +4,7 @@
 
 ## 最常用一句话
 
-- `请用 sm-autopilot 看一下宁德时代`
+- `请用 sm-autopilot 看一下 LITE`
 - `请用 sm-autopilot 看一下中际旭创，重点判断未来3个月预期差`
 - `请用 sm-autopilot 看一下AI眼镜产业链`
 - `请用 sm-autopilot 看一下英伟达发布会对A股算力链影响`
@@ -22,7 +22,7 @@
 
 示例：
 
-- `请用 sm-autopilot 看一下宁德时代，重点看储能和毛利率，时间窗未来3个月`
+- `请用 sm-autopilot 看一下 LITE，重点看储能和毛利率，时间窗未来3个月`
 - `请用 sm-autopilot 做中芯国际财报前瞻，重点看成熟制程价格和下季指引`
 - `请用 sm-autopilot 检查我上传的模型，重点看收入拆分、毛利率和capex`
 

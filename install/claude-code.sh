@@ -90,6 +90,6 @@ echo
 echo "  1. 阅读 INSTALL-PROMPT.md 并把'启用提示词'贴到 ~/.claude/CLAUDE.md"
 echo "  2. (可选) 跑 bash setup/bootstrap.sh ~/my-investor-workspace 创建工作区"
 echo "  3. 重启 Claude Code"
-echo "  4. 测试：'看一下宁德时代'，应该看到 [Preflight] 段而不是百度百科"
+echo "  4. 测试：'看一下 LITE'，应该看到 [Preflight] 段而不是百度百科"
 echo
 echo "═══════════════════════════════════════════════════════════════"

@@ -3,7 +3,7 @@
 
 name: investor-harness
 display_name: Investor Harness
-version: 0.6.0
+version: 0.7.0
 description: 投研人的 AI 任务执行规范。17 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.5 新增技术面复盘 skill (sm-tape-review) + INSTALL-PROMPT.md 用户级强制提示词，让小白用户的 LLM 也能自动遵守规则。
 license: MIT
 author: Joan Song
@@ -144,6 +144,10 @@ core:
     purpose: .task-pulse 心跳信号文件格式规范 — v0.4 新增
   - path: core/checkpoint.md
     purpose: .checkpoint/ 断点续跑机制规范 — v0.4 新增
+  - path: core/user-templates.md
+    purpose: L1 用户任务模板规范（日报/周报/月报等）— v0.7 新增
+  - path: core/user-skills.md
+    purpose: L2 继承 + L3 自创 skill 规范 — v0.7 新增
 
 user_install_prompt:
   path: INSTALL-PROMPT.md

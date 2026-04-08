@@ -492,7 +492,7 @@ inject_claude_md() {
   echo
 
   info "启用提示词是让 LLM 自动按 Investor Harness 规则工作的关键一步。"
-  info "（如果不做这一步，LLM 看到'看一下宁德时代'还会给你百度百科段落）"
+  info "（如果不做这一步，LLM 看到'看一下 LITE'还会给你百度百科段落）"
   echo
 
   # 目标文件
@@ -602,7 +602,7 @@ show_completion() {
   info "下一步："
   info "  1. ${BOLD}重启你的 AI 工具${NC}（Claude Code / Codex / OpenClaw）"
   [ -n "$WORKSPACE_ROOT" ] && info "  2. cd ${WORKSPACE_ROOT}"
-  info "  3. 随便问一家公司，比如：'看一下宁德时代'"
+  info "  3. 随便问一家公司，比如：'看一下 LITE'"
   info "  4. 验证：LLM 应该先输出 [Preflight] 取数计划，而不是直接给百度百科段落"
   echo
   info "有问题？"

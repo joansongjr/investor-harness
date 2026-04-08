@@ -3,7 +3,7 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.6.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.7.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
 
 ---
 
@@ -706,6 +706,59 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 ---
 
 ## Changelog
+
+### v0.7.0 — 任务永久化：用户模板 + 自定义 skill 三层机制
+
+> 用户可以把**重复的投研任务固化成文件**，而不是每次在对话里重新解释。
+> 从"一次性用完就忘"升级为"长期复用的工作流"。
+
+**新增三层机制**：
+
+| 层 | 内容 | 文件位置 | 适合场景 |
+|---|---|---|---|
+| **L1 · 用户模板** | 复用 sm-* skill，自定义输出结构 + 归档路径 | `{workspace}/user-templates/*.md` | 日报 / 周报 / 月报 / 财报季流程 |
+| **L2 · 继承扩展** | 在现有 sm-* 基础上新增段（不改原 skill）| `{workspace}/user-skills/my-xxx/SKILL.md` 带 `extends:` | sm-company-deepdive + ESG 专项 |
+| **L3 · 自创 skill** | 完全新场景，17 个 sm-* 都没有 | `{workspace}/user-skills/my-xxx/SKILL.md` | 港股打新 / 可转债 / ETF 对比 |
+
+**新增文件**：
+
+- `core/user-templates.md` — L1 模板格式规范 + 触发机制 + 硬约束
+- `core/user-skills.md` — L2 继承 + L3 自创规范 + 贡献回流指南
+- `setup/workspace/user-templates/*.md.template` — 3 个示例模板：
+  - `daily-briefing.md.template` — 每日晨会日报（5 段）
+  - `weekly-coverage-review.md.template` — 每周覆盖池复盘（6 段）
+  - `monthly-pm-report.md.template` — 月度 PM 汇报（一页纸）
+- `setup/workspace/user-skills/my-deepdive-esg/SKILL.md.template` — L2 示例（ESG 扩展）
+- `setup/workspace/user-skills/my-hk-ipo-analysis/SKILL.md.template` — L3 示例（港股打新）
+
+**更新**：
+
+- `setup/bootstrap.sh` 创建 `user-templates/` 和 `user-skills/` 目录，自动复制 3+2 个示例
+- `core/preamble.md` 新增 Step 0.5（检查 user-templates / user-skills 匹配）
+- `core/_boot.md` 新增 User customization 段
+- `core/acceptance.md` 新增 L1/L2/L3 专属验收清单
+- `setup/workspace/CLAUDE.md.template` 新增 1.3 任务永久化段
+
+**双触发机制**：
+
+1. **自动路由**：用户说"跑一下日报"，LLM 扫描 user-templates/ 的 `trigger:` 关键词匹配
+2. **显式调用**：用户说"用 my-deepdive-esg 看 X"，精确按名匹配
+
+**硬约束（不可绕过）**：
+
+用户的任何定制**都不能**绕过以下规则：
+- `core/preamble.md` 6 步
+- `core/postamble.md` 8 步
+- 证据分级
+- "仍需补的资料"段
+- 合规声明
+- Dual Output Discipline
+
+用户可以自定义的只是：输出段的结构、归档路径、触发词、额外约束。
+
+**Bug 修复**：
+
+- 全部示例从"看一下宁德时代"改为"看一下 LITE"（Lumentum NASDAQ:LITE，光模块美股龙头，验证时顺带测试美股降级路径）
 
 ### v0.6.0 — 交互式安装 + 更新向导
 
