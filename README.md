@@ -3,7 +3,11 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.8.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.9.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+
+> 🆕 **v0.9.0 — Librarian 升级：从记忆系统到主动投研助手**
+> 23 个 skill（新增 5 个 Librarian skill）+ 6 份新核心文档。重点：让 AI 不只是帮你**记住**了什么，而是**在你需要之前**就把跨源综合做完、矛盾标红、判断点摆好——你做 PM 的判断，机器干苦活。
+> 完整设计参见 [`core/librarian.md`](core/librarian.md) · HTML 介绍 deck：[`docs/v0.9-librarian-deck.html`](docs/v0.9-librarian-deck.html)
 
 ---
 
@@ -598,9 +602,23 @@ Q4 是"指引 > 业绩"的财报：市场已经 price in 收入同比高增，
 
 ---
 
-## 三个能力之外：另外 13 个 skill
+## 三个能力之外：另外 20 个 skill
 
-上面三个是**你最值得体验的**。Investor Harness v0.3.0 一共 16 个 skill，另外 13 个按同样纪律设计：
+上面三个是**你最值得体验的**。Investor Harness v0.9.0 一共 23 个 skill，另外 20 个按同样纪律设计：
+
+### 🆕 Librarian 模式 skills（v0.9 新增，opt-in）
+
+让 AI 从"被动记忆系统"升级成"主动投研助手"。需要用户明示触发（"建 coverage / 起 wiki page / 刷 daily feed / 跑健康检查 / 会后归档"），不在 sm-autopilot 默认路由。
+
+| Skill | 适用场景 |
+|---|---|
+| `sm-wiki-build` | 新建 coverage：扫 vault → 14 段 wiki page 自动构建（每个数字带 wikilink + 证据等级）|
+| `sm-daily-feed` | 每天扫 vault 生成 7 桶 daily feed，刷新 wiki §4——让 wiki 从静态笔记变活的信息流 |
+| `sm-question-list` | 见分析师 / 管理层之前：question list 自动附"vault 扫描初步结论"，会前自动纠偏 |
+| `sm-health-check` | 双层健康检查 + 跨源仲裁（A 级 vs B 级 + 差异超 5% 标红）——让 wiki 自己维护自己 |
+| `sm-qa-archive` | 会后 Q&A 归档：双链复利执行端，触发 wiki 级联更新（§4/§5/§9/§10/§14） |
+
+完整设计参见 [`core/librarian.md`](core/librarian.md)。
 
 ### 单点研究 skills（10 个）
 
@@ -712,6 +730,46 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 ---
 
 ## Changelog
+
+### v0.9.0 — Librarian 升级：从记忆系统到主动投研助手
+
+> 解决 v0.6 的下一阶段问题：**AI 还是被动的——你不问它它不动**。
+> v0.9 把 AI 从"被动记忆系统"升级成"主动投研助手"：在你打开 wiki page 之前，跨源综合已经做完、矛盾已经标红、判断点已经摆在你面前。**你做 PM 的判断，机器干 RA 的苦活。**
+
+**核心叙事**：
+
+> 好的投研系统不只是帮你记住了什么，而是**在你需要之前**就把信息拼好了、验证好了、分类好了。**你要做的只是判断**。
+
+**新增 6 份 core 文档**：
+
+- `core/librarian.md` — 升级总览（架构基础 + 五大能力 + 何时介入）
+- `core/wiki-architecture.md` — 14 段 wiki page 标准结构（每家 focus list 公司一份）
+- `core/daily-feed.md` — 7 桶 daily feed 聚合规则（每天扫 90 天窗口）
+- `core/qa-double-link.md` — Question List + Q&A 双链复利公式（wiki v1→v2→v3）
+- `core/health-check.md` — 双层健康检查（状态巡查六项 + 跨源矛盾扫描）+ 跨源仲裁规则
+- `core/full-qc.md` — 全链路 QC 五层（入口/注册表/格式/时效/交叉）——一致性是过程的产物，不是事后修补
+
+**新增 5 个 sm-* skill（opt-in，需用户明示）**：
+
+- `sm-wiki-build` — 新建 coverage 时构建 14 段 wiki page
+- `sm-daily-feed` — 每天 7 桶聚合刷新 wiki §4
+- `sm-question-list` — 见分析师前生成会前 briefing（含 vault 扫描结论）
+- `sm-health-check` — 每天跑两层健康检查 + 跨源仲裁
+- `sm-qa-archive` — 会后归档触发 wiki 级联更新
+
+**HTML 介绍 deck**：`docs/v0.9-librarian-deck.html`（双击在浏览器打开，分享会用）
+
+**为什么 v0.9 是质变**：
+
+| 维度 | v0.8 及之前 | v0.9 Librarian |
+|---|---|---|
+| 知识沉淀 | session-by-session，靠 active-tasks 续跑 | wiki page 持续更新，每家公司一份 14 段标准结构 |
+| 信息流 | 被动等用户问 | 每天 7 桶 daily feed 主动聚合 |
+| 会前准备 | 翻 session log | question list 下面自动附 vault 扫描结论 |
+| 矛盾处理 | 出报告时回头检查 | 健康检查每天自动跑，差异超 5% 标红 |
+| QC | 事后做（acceptance.md） | 嵌在过程里（full-qc.md 五层） |
+
+---
 
 ### v0.8.0 — PPT 生成 skill · sm-deck-builder
 

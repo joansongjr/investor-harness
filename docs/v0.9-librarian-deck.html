@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Investor Harness v0.9 · Librarian 升级</title>
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #161a22;
+    --ink: #e6edf3;
+    --muted: #8b949e;
+    --line: #30363d;
+    --accent: #f0a500;
+    --accent-soft: rgba(240,165,0,.15);
+    --green: #3fb950;
+    --red: #f85149;
+    --blue: #58a6ff;
+    --serif: 'Source Han Serif SC','Noto Serif CJK SC','Songti SC','Times New Roman',serif;
+    --sans: -apple-system,BlinkMacSystemFont,'PingFang SC','Helvetica Neue','Microsoft Yahei',Arial,sans-serif;
+    --mono: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  .deck { width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+  .slide { position: absolute; inset: 0; padding: 4.5vh 6vw; display: none; flex-direction: column; justify-content: center; overflow: auto; }
+  .slide.active { display: flex; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* nav */
+  .nav { position: fixed; bottom: 18px; left: 0; right: 0; display: flex; justify-content: center; gap: 14px; z-index: 50; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .nav button { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-family: inherit; }
+  .nav button:hover { border-color: var(--accent); }
+  .progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); z-index: 50; transition: width .35s ease; }
+  .counter { position: fixed; top: 16px; right: 22px; font-family: var(--mono); font-size: 12px; color: var(--muted); z-index: 50; }
+
+  /* typography */
+  h1 { font-family: var(--serif); font-weight: 600; font-size: 76px; line-height: 1.15; margin: 0 0 24px 0; letter-spacing: -.5px; }
+  h2 { font-family: var(--serif); font-weight: 600; font-size: 50px; line-height: 1.2; margin: 0 0 18px 0; letter-spacing: -.3px; }
+  h3 { font-size: 22px; font-weight: 600; margin: 0 0 14px 0; color: var(--accent); letter-spacing: .3px; }
+  p { font-size: 20px; line-height: 1.65; color: var(--ink); margin: 0 0 12px 0; max-width: 1200px; }
+  p.small { font-size: 17px; color: var(--muted); }
+  .kicker { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+  .pull { font-family: var(--serif); font-size: 34px; line-height: 1.4; color: var(--ink); border-left: 4px solid var(--accent); padding: 8px 24px; margin: 24px 0; max-width: 1100px; }
+
+  /* layouts */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px; }
+  .card h4 { margin: 0 0 10px 0; font-size: 19px; color: var(--accent); }
+  .card p { font-size: 16px; line-height: 1.6; color: var(--ink); margin: 0; }
+  .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 3px 12px; font-size: 12px; font-family: var(--mono); margin-right: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 17px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--accent); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+  td.muted { color: var(--muted); }
+  code, pre { font-family: var(--mono); }
+  pre { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; font-size: 14px; line-height: 1.7; color: var(--ink); overflow: auto; }
+  .ascii { font-family: var(--mono); white-space: pre; font-size: 14px; line-height: 1.55; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px 24px; overflow: auto; }
+  .red { color: var(--red); }
+  .green { color: var(--green); }
+  .blue { color: var(--blue); }
+  .accent { color: var(--accent); }
+  .strike { text-decoration: line-through; color: var(--muted); }
+  ul { padding-left: 22px; margin: 6px 0; }
+  ul li { font-size: 18px; line-height: 1.7; margin-bottom: 4px; }
+  .seven { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+  .seven .bucket { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 10px; text-align: center; font-size: 13px; }
+  .seven .bucket.priority { border-color: var(--accent); background: var(--accent-soft); }
+  .seven .bucket .icon { font-size: 22px; display: block; margin-bottom: 6px; }
+  .seven .bucket .name { font-weight: 600; }
+  .seven .bucket .source { color: var(--muted); font-size: 11px; margin-top: 4px; font-family: var(--mono); }
+
+  /* cover */
+  .cover { background: radial-gradient(ellipse at 30% 30%, rgba(240,165,0,.10), transparent 60%), var(--bg); }
+  .cover h1 { font-size: 92px; }
+  .cover .sub { font-family: var(--serif); font-size: 30px; color: var(--muted); margin-top: 6px; font-style: italic; }
+  .cover .meta { position: absolute; bottom: 60px; left: 6vw; display: flex; gap: 36px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .cover .meta .label { color: var(--accent); display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 2px; }
+
+  .end h1 { font-size: 88px; }
+  .end .url { font-family: var(--mono); font-size: 22px; color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 10px; padding: 14px 22px; display: inline-block; margin-top: 16px; }
+
+  @media (max-width: 1100px) {
+    h1 { font-size: 50px; } h2 { font-size: 34px; }
+    .cover h1 { font-size: 58px; } .end h1 { font-size: 58px; }
+    p { font-size: 17px; } .pull { font-size: 22px; }
+    .two { grid-template-columns: 1fr; gap: 24px; }
+    .three { grid-template-columns: 1fr; }
+    .seven { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="counter" id="counter"></div>
+<div class="deck">
+
+  <!-- 1. Cover -->
+  <section class="slide cover active">
+    <div class="kicker">Investor Harness · v0.9.0</div>
+    <h1>从记忆到判断</h1>
+    <div class="sub">一套替你跑 RA 的 AI 投研助手</div>
+    <p style="margin-top:32px; max-width:900px; font-size:22px; color:var(--muted);">Librarian 升级 — 在你打开 wiki 之前，跨源综合已经做完、矛盾已经标红、判断点已经摆好。</p>
+    <div class="meta">
+      <div><span class="label">分享人</span>宋婧茹 · 兴业证券海外研究</div>
+      <div><span class="label">版本</span>v0.9.0 · MIT 开源</div>
+      <div><span class="label">GitHub</span>github.com/joansongjr/investor-harness</div>
+    </div>
+  </section>
+
+  <!-- 2. PM 的真问题 -->
+  <section class="slide">
+    <div class="kicker">PM 的真问题</div>
+    <h2>不是信息不够，是判断时间不够</h2>
+    <div class="two" style="margin-top:24px;">
+      <div>
+        <p>一家公司的信息散布在十几种来源里——</p>
+        <ul>
+          <li>管理层纪要披露海外单车净利</li>
+          <li>几个月前的电话会讲出口节奏</li>
+          <li>行业深度稿分析商业飞轮</li>
+          <li>券商研报给 TP 和 forecast</li>
+          <li>模型里有季度拆分</li>
+          <li>公众号追踪订单数据</li>
+        </ul>
+      </div>
+      <div>
+        <p>传统做法：在需要的时候靠记忆或临时搜索把它们拼起来。</p>
+        <p style="color:var(--red); font-weight:600; margin-top:14px;">拼不完整是常态。拼错是风险。</p>
+        <p style="color:var(--muted); margin-top:20px;">PM 最稀缺的从来不是信息时间，是判断时间——但传统工作流让你把判断时间花在了拼信息上。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 传统 AI 投研工具 vs 这套 -->
+  <section class="slide">
+    <div class="kicker">两种 AI 投研形态</div>
+    <h2>被动记忆系统 → 主动投研助手</h2>
+    <table style="margin-top:18px;">
+      <thead><tr><th style="width:24%">维度</th><th style="width:38%">传统 AI 投研工具<span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;display:block;font-size:12px;">被动记忆系统</span></th><th style="width:38%">Investor Harness v0.9<span style="color:var(--accent);font-weight:400;text-transform:none;letter-spacing:0;display:block;font-size:12px;">主动投研助手</span></th></tr></thead>
+      <tbody>
+        <tr><td>触发方式</td><td class="muted">你问什么它答什么</td><td>每天主动扫 vault、刷新 wiki、跑健康检查</td></tr>
+        <tr><td>信息状态</td><td class="muted">静态笔记，停在上次 session</td><td>活的信息流，7 桶 daily feed</td></tr>
+        <tr><td>会前准备</td><td class="muted">翻 session log，靠记忆</td><td>question list 自动附 vault 扫描结论</td></tr>
+        <tr><td>矛盾处理</td><td class="muted">出报告时回头检查</td><td>每天扫，差异 &gt;5% 标红</td></tr>
+        <tr><td>认知偏差</td><td class="muted">见完客户才发现自己记错</td><td>会前 vault 摆数字，矛盾立刻暴露</td></tr>
+        <tr><td>研究复利</td><td class="muted">每次从零开始</td><td>wiki v1 → v2 → v3，三个季度后认知厚度</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 4. The thesis -->
+  <section class="slide">
+    <div class="kicker">这套系统的核心理念</div>
+    <div class="pull" style="margin-top: 40px; font-size: 40px;">
+      "好的投研系统不只是帮你<span class="strike">记住</span>了什么，<br/>
+      而是<span class="accent">在你需要之前</span>就把信息拼好了、验证好了、分类好了。<br/>
+      <span class="accent">你要做的只是判断。</span>"
+    </div>
+    <p style="margin-top: 32px; color: var(--muted);">机器擅长的活——穷举扫描、规则仲裁、写 diff 日志。<br/>人留人擅长的活——判断哪个来源在当前 context 下更可信、哪个 gap 背后藏着 alpha。</p>
+  </section>
+
+  <!-- 5. 架构图 -->
+  <section class="slide">
+    <div class="kicker">整体形态</div>
+    <h2>一张图看懂</h2>
+    <div class="ascii" style="margin-top: 16px; font-size: 13px;">
+原始材料（纪要 / 研报 / 公告 / 公众号 / 模型 / 新闻）
+            │
+            ▼
+       <span class="accent">vault（Obsidian）</span>
+            │  librarian 扫描 + 分类 + 时序聚合
+            ▼
+       <span class="accent">wiki page（14 段标准结构）</span>  ←──┐
+            │                                  │ wiki 级联更新
+            ▼                                  │
+       <span class="accent">daily feed（7 桶活页）</span>          │
+            │                                  │
+        分析师 / 管理层会议                      │
+            │                                  │
+       <span class="accent">question list + vault 扫描</span>       │
+            │                                  │
+         <span class="accent">Q&amp;A 双链</span> ─────────────────────┘
+
+           ↑↓ 每天自动跑
+       <span class="green">跨源仲裁 · 健康检查 · 全链路 QC</span>
+    </div>
+    <p class="small" style="margin-top: 18px;">这不是单点工具，是一整套<strong>自我维护的研究工作流</strong>——每次研究活动都在强化下一次的起点。</p>
+  </section>
+
+  <!-- 6. 能力 1: 14 段 wiki -->
+  <section class="slide">
+    <div class="kicker">能力 1 · 活的公司主页</div>
+    <h2>14 段标准 wiki，每天活的</h2>
+    <div class="two" style="margin-top: 20px;">
+      <div>
+        <p>focus list 上每家公司一份 wiki page，14 段结构固定——任何一家公司打开就能直接读，结构记忆零成本。</p>
+        <p><strong class="accent">§3 Valuations 每天活的：</strong>librarian 每天拉股价，按 当天股价 / 模型基准股价 整体缩放 EV/PE/EV-EBITDA——"今天股价多少、对应估值多少"自动化。</p>
+        <p><strong class="accent">§2 Model Snapshot 走 registry：</strong>30+ 数据点注册在 Excel 模型 tab/row，模型更新自动 diff——wiki 不会悄悄过期。</p>
+      </div>
+      <div>
+        <table style="font-size: 14px;">
+          <tr><td>§1</td><td>Snapshot</td><td class="muted">季度</td></tr>
+          <tr><td>§2</td><td>Model Snapshot</td><td class="muted">registry 触发</td></tr>
+          <tr><td>§3</td><td class="accent">Valuations 实时</td><td class="muted">每天</td></tr>
+          <tr><td>§4</td><td class="accent">Key Take-Away 7 桶</td><td class="muted">每天</td></tr>
+          <tr><td>§5</td><td>关键指引 Key Guidance</td><td class="muted">业绩会触发</td></tr>
+          <tr><td>§6</td><td>Known Truth</td><td class="muted">低频</td></tr>
+          <tr><td>§7</td><td>Analyst Ratings</td><td class="muted">每周</td></tr>
+          <tr><td>§8</td><td class="accent">近期 Thesis</td><td class="muted">月度</td></tr>
+          <tr><td>§9</td><td>催化剂日历</td><td class="muted">滚动</td></tr>
+          <tr><td>§10</td><td>Q&amp;A 存档</td><td class="muted">每次会议</td></tr>
+          <tr><td>§11</td><td>调研纪要索引</td><td class="muted">visiting</td></tr>
+          <tr><td>§12</td><td>关键风险与退出条件</td><td class="muted">月度</td></tr>
+          <tr><td>§13</td><td>Diff Log</td><td class="muted">自动</td></tr>
+          <tr><td>§14</td><td>仍需补的资料</td><td class="muted">滚动</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. 能力 2: Daily Feed 7桶 -->
+  <section class="slide">
+    <div class="kicker">能力 2 · 主动信息流</div>
+    <h2>Daily Feed 7 桶 — 把 librarian 当 RA</h2>
+    <p>每天扫 vault 近 90 天窗口，按文件名 token + frontmatter 分类，塞进 7 个桶。<strong class="accent">研究活动桶置顶</strong>——打开 wiki 第一眼看到的不是过去新闻，而是"我们最近在做什么"。</p>
+    <div class="seven" style="margin-top: 22px;">
+      <div class="bucket priority"><span class="icon">🔬</span><div class="name">近期研究</div><div class="source">Activity &amp; Task</div></div>
+      <div class="bucket"><span class="icon">📋</span><div class="name">公告</div><div class="source">公告/ 目录</div></div>
+      <div class="bucket"><span class="icon">📊</span><div class="name">研报</div><div class="source">研报/ 目录</div></div>
+      <div class="bucket"><span class="icon">🎙</span><div class="name">纪要</div><div class="source">visiting record</div></div>
+      <div class="bucket"><span class="icon">📰</span><div class="name">新闻 / 媒体</div><div class="source">news/</div></div>
+      <div class="bucket"><span class="icon">📱</span><div class="name">公众号</div><div class="source">wechat-articles</div></div>
+      <div class="bucket"><span class="icon">📈</span><div class="name">模型 diff</div><div class="source">registry 触发</div></div>
+    </div>
+    <p class="small" style="margin-top: 22px;">本质上是把 librarian 当成每天替你跑搜索引擎的 RA——同样一组 query，一年 365 天稳定跑，覆盖率远高于"今天该去 google 一下"。<br/>做 IC Memo 时回答了关键问题：<span class="accent">"过去一个季度我们在这家公司上做了什么工作"，不用翻 session log。</span></p>
+  </section>
+
+  <!-- 8. 能力 3: question list + vault 扫描 -->
+  <section class="slide">
+    <div class="kicker">能力 3 · 会前自动纠偏</div>
+    <h2>Question List + vault 扫描</h2>
+    <div class="two" style="margin-top: 16px;">
+      <div>
+        <p>见分析师 / 管理层之前：建 question list 文件，列出问题。<br/>librarian 对 vault 做全量扫描，每个问题下面<strong>自动附"vault 扫描初步结论"</strong>。</p>
+        <p style="color:var(--accent); margin-top:18px;">打印出来就是一份完整的会前 briefing。</p>
+        <p style="margin-top: 20px; font-size: 18px; line-height: 1.7;"><strong style="color:var(--red);">最大副作用 = 最大价值：</strong>vault 扫描经常<strong>主动纠正你的认知偏差</strong>——你以为的数字和 vault 里实际能找到的数字经常有出入。系统把两个数字摆在一起，矛盾立刻暴露。</p>
+        <p style="color:var(--muted); margin-top:8px;">这种纠正如果在会上才发生，代价就大了。</p>
+      </div>
+      <div>
+        <pre style="font-size:12px;">Q1: FY26 出海销量目标？
+
+  vault 已知：
+  - 20260315 FY25 全年电话会
+    → 30k 单位 <span class="accent">(B 级 / 管理层口径)</span>
+  - 20260410 GS 研报
+    → 推算 28k 单位 <span class="accent">(B 级 / 卖方推算)</span>
+  - model FY26
+    → 当前假设 32k 单位 <span class="green">(A 级)</span>
+
+  矛盾点：管理层 30k vs 模型 32k
+  <span class="red">差 6.7%</span>
+
+  建议追问：32k 的差额是否来自
+  下半年新客户？哪些已签 LOI？</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. 能力 4: Q&A 双链 -->
+  <section class="slide">
+    <div class="kicker">能力 4 · 知识复利</div>
+    <h2>Q&amp;A 双链 — 每次研究强化下次起点</h2>
+    <div class="three" style="margin-top: 12px;">
+      <div class="card">
+        <h4>链 1</h4>
+        <p><strong>问题 → 答案 → 存档</strong></p>
+        <p style="color:var(--muted); margin-top:10px;">带路由方式、来源 wikilink、置信度评分。高置信度答案下次直接复用，低置信度等更好来源覆盖。</p>
+      </div>
+      <div class="card">
+        <h4>链 2</h4>
+        <p><strong>答案 → wiki → 下次提问上下文</strong></p>
+        <p style="color:var(--muted); margin-top:10px;">答案更新 wiki 对应段落。下次 vault 扫描时，新内容自动成为下个 question list 的背景知识。</p>
+      </div>
+      <div class="card">
+        <h4>合在一起</h4>
+        <p style="color:var(--accent);"><strong>复利</strong></p>
+        <p style="color:var(--muted); margin-top:10px;">每一轮：wiki 厚一层，question list 起点高一层，问题更精准，答案更有价值。</p>
+      </div>
+    </div>
+    <div class="ascii" style="margin-top:20px; font-size: 12px;">
+新建 coverage → 原始材料入库 → <span class="accent">wiki v1</span> → 分析师会议 → question list 引用 v1 → 获得新信息 → Q&amp;A 归档
+→ <span class="accent">wiki v2</span>（吸收了分析师信息） → 下次季报 → question list 引用 v2 → 更精准问题 → 新 Q&amp;A → <span class="accent">wiki v3</span> ...
+    </div>
+    <p class="small" style="margin-top:14px;">三个季度下来，一家公司的 wiki page 不再是"材料汇总"，而是一份<strong>经过反复交叉验证、带完整研究脉络的知识资产</strong>。</p>
+  </section>
+
+  <!-- 10. 能力 5: 跨源仲裁 -->
+  <section class="slide">
+    <div class="kicker">能力 5 · alpha 在 gap 里</div>
+    <h2>跨源仲裁 — 让 wiki 自己维护自己</h2>
+    <p>每天两层健康检查 + 跨源矛盾扫描。</p>
+    <div class="two" style="margin-top: 14px;">
+      <div>
+        <h3 style="font-size:17px;">第一层 · 状态巡查（6 项）</h3>
+        <ul>
+          <li>TP &gt; 60 天没更新？</li>
+          <li>距财报 &lt; 21 天？</li>
+          <li>股价偏离 TP &gt; 30%？</li>
+          <li>新研报没反映到页面？</li>
+          <li>催化剂到期未验证？</li>
+          <li>wiki 段落 &gt; 90 天没更新？</li>
+        </ul>
+        <p class="small" style="margin-top:8px;">触发 WARNING 后系统写 flag，下次上线 LLM 把整页过一遍。</p>
+      </div>
+      <div>
+        <h3 style="font-size:17px;">第二层 · 跨源矛盾扫描</h3>
+        <p style="font-size:17px;">每天对比同一家公司多个来源：</p>
+        <ul>
+          <li>管理层指引 vs 卖方 forecast</li>
+          <li>新研报 TP vs 旧研报 TP</li>
+          <li>模型数字 vs 公众号披露</li>
+        </ul>
+        <p style="color:var(--red); font-weight:600; margin-top:8px;">差异 &gt; 5% 自动标记</p>
+      </div>
+    </div>
+    <div class="pull" style="margin-top:18px; font-size:22px;">
+      B 级信源的存在意义不是和 A 级<span class="strike">竞争权威性</span>，<br/>
+      而是和 A 级<span class="accent">形成对照</span>——它们的"软"反而是价值所在，因为只有软信息才能携带 A 级硬数据还没沉淀进去的 <span class="accent">forward-looking 信号</span>。
+    </div>
+  </section>
+
+  <!-- 11. 能力 6: Full QC -->
+  <section class="slide">
+    <div class="kicker">能力 6 · 一致性是过程的产物</div>
+    <h2>全链路 QC 五层 — 不是事后修补</h2>
+    <table style="margin-top:14px;">
+      <thead><tr><th>层</th><th>QC 名</th><th>做什么</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="accent">数据入口 QC</td><td>每个数据点入库时就标 A/B 级 + 来源 wikilink。不是用的时候才想起来标。</td></tr>
+        <tr><td>2</td><td class="accent">注册表 QC</td><td>模型数字通过 registry 追踪，模型更新自动 diff。wiki 不会出现"模型更新了但页面还是旧数字"。</td></tr>
+        <tr><td>3</td><td class="accent">格式 QC</td><td>12 条硬规则。表格不能空、来源必须 wikilink、年度季度不混表... 每次更新自动 lint，不通过不算完成。</td></tr>
+        <tr><td>4</td><td class="accent">时效 QC</td><td>健康检查每天巡查六项，TP / 研报 / 催化剂 / 财报日期全覆盖。</td></tr>
+        <tr><td>5</td><td class="accent">交叉 QC</td><td>vault 扫描生成 question list 时主动对比来源，差异 &gt;5% 标记。</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:18px; color:var(--accent); font-family:var(--serif); font-size:21px;">到出 IC Memo 或做 PPT 的时候——数据已经验证过，来源已经标注过，前后一致性已经保证过。</p>
+    <p class="small" style="margin-top:6px;">最终输出物的质量和一致性，是过程的自然结果，不是事后修补的产物。</p>
+  </section>
+
+  <!-- 12. 案例 onboarding -->
+  <section class="slide">
+    <div class="kicker">真实案例</div>
+    <h2>某 OEM 临时 onboarding — 全生命周期</h2>
+    <p>被老板催着看 AUTO 出海，临时 onboard 某 OEM，从零到持续跟踪。</p>
+    <div class="ascii" style="margin-top:16px; font-size:13px;">
+<span class="accent">丢材料</span>      ─→ 一家头部中资投行首次覆盖研报 + 两家中小券商跟踪 + 第三方两篇行业深度
+              + 三份管理层调研纪要 + CapIQ 模型底稿 + 公众号半年追踪文章
+              全部一股脑丢进 vault（格式五花八门，来源参差不齐）
+
+<span class="accent">标准归档</span>    ─→ wiki page 触发 14 段构建；§2 Model Snapshot 从 Excel 自动拉取
+              §4 Key Take-Away 7 桶聚合；§7 Analyst Ratings 自动汇总
+              <span class="green">每个数字都知道自己从哪来——这不是排版，是数据血缘</span>
+
+<span class="accent">跨源自检</span>    ─→ librarian 跑跨源仲裁；matrix 标出
+              · 首批研报 FY25 销量预测 vs 管理层指引差多少
+              · 两家中小券商对欧洲占比判断是否一致
+              · 模型 ASP 假设 vs 调研纪要中实际成交价格
+
+<span class="accent">会前 briefing</span> ─→ 见卖方分析师前 1 小时，question list（23 问 / 6 模块）
+              + vault 扫描自动加上"已知 + 矛盾 + 建议追问"
+
+<span class="accent">会后归档</span>    ─→ 录音 → ASR → 纪要 → visiting record → Q&amp;A → wiki 级联（§4/§5/§9/§10/§14）
+
+<span class="accent">交付</span>        ─→ 打开 wiki 即出报告 / 做 deck（从已验证数据抽取）
+    </div>
+  </section>
+
+  <!-- 13. 22 skill 地图 -->
+  <section class="slide">
+    <div class="kicker">22 个 skill 一张地图</div>
+    <h2>17 个原有 + 5 个 Librarian 新增</h2>
+    <div class="two" style="margin-top:16px;">
+      <div>
+        <h3>原有 17（默认路由）</h3>
+        <p class="small"><span class="pill">framing</span> sm-thesis · sm-industry-map</p>
+        <p class="small"><span class="pill">research</span> sm-company-deepdive · sm-earnings-preview · sm-model-check · sm-consensus-watch</p>
+        <p class="small"><span class="pill">monitoring</span> sm-catalyst-monitor · sm-roadshow-questions</p>
+        <p class="small"><span class="pill">challenge</span> sm-red-team</p>
+        <p class="small"><span class="pill">output</span> sm-pm-brief · sm-briefing</p>
+        <p class="small"><span class="pill">technical</span> sm-tape-review</p>
+        <p class="small"><span class="pill">batch</span> sm-batch-refresh · sm-batch-earnings · sm-catalyst-sweep</p>
+        <p class="small"><span class="pill">entry</span> sm-master · sm-autopilot</p>
+      </div>
+      <div>
+        <h3 style="color:var(--accent);">🆕 v0.9 Librarian 5 个（opt-in）</h3>
+        <table style="font-size:14px;">
+          <tr><td><code>sm-wiki-build</code></td><td class="muted">新建 coverage → 14 段 wiki</td></tr>
+          <tr><td><code>sm-daily-feed</code></td><td class="muted">7 桶日刷</td></tr>
+          <tr><td><code>sm-question-list</code></td><td class="muted">会前 vault 扫描</td></tr>
+          <tr><td><code>sm-health-check</code></td><td class="muted">双层健康 + 跨源仲裁</td></tr>
+          <tr><td><code>sm-qa-archive</code></td><td class="muted">会后归档 + 级联</td></tr>
+        </table>
+        <p class="small" style="margin-top:16px; color:var(--muted);">需要用户明示触发<br/>（"建 coverage / 起 wiki / 刷 daily / 跑健康检查 / 会后归档"），<br/>不在 sm-autopilot 默认路由内。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. 怎么用 -->
+  <section class="slide">
+    <div class="kicker">你怎么用上这套</div>
+    <h2>开源 · 三分钟装完 · 数据不出本地</h2>
+    <div class="two" style="margin-top:20px;">
+      <div>
+        <h3>三步</h3>
+        <ol style="padding-left:20px;">
+          <li style="font-size:18px; margin-bottom:10px;">装 Claude Code（命令行 AI 工具，<code>claude.ai/code</code>）</li>
+          <li style="font-size:18px; margin-bottom:10px;">复制粘贴一行命令</li>
+          <li style="font-size:18px; margin-bottom:10px;">下次打开 Claude，规则自动生效</li>
+        </ol>
+        <pre style="margin-top:14px; font-size:12px;">curl -sSL https://raw.githubusercontent.com/\
+joansongjr/investor-harness/main/install.sh \
+| bash</pre>
+        <p class="small" style="margin-top:12px;">不会装 Claude Code？现场我演示。</p>
+      </div>
+      <div>
+        <h3>为什么开源</h3>
+        <ul style="font-size:17px;">
+          <li><span class="accent">免费</span> — MIT 协议，私人 / 机构 / 商用都行</li>
+          <li><span class="accent">数据不出本地</span> — 整套 prompt + skill 在你机器上，不上传任何服务器</li>
+          <li><span class="accent">能审计</span> — 全部 markdown，能看能改能审计（合规友好）</li>
+          <li><span class="accent">能 fork</span> — 你可以按自己 focus list 改一份</li>
+          <li><span class="accent">跨工具</span> — Claude Code / Codex / OpenCode 全部支持</li>
+        </ul>
+        <p style="margin-top:14px; font-family:var(--mono); font-size:14px;">github.com/joansongjr/investor-harness</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15. Why this matters to PM -->
+  <section class="slide">
+    <div class="kicker">对 PM 意味着什么</div>
+    <h2>三件事，从此你不用再做</h2>
+    <div class="three" style="margin-top:24px;">
+      <div class="card">
+        <h4>1 · 拼信息</h4>
+        <p>跨源综合自动做完。打开 wiki page 看到的是已经验证过、标注好来源的事实集合，不是一堆原始材料。</p>
+      </div>
+      <div class="card">
+        <h4>2 · 会前补课</h4>
+        <p>见客户前 question list 自动附 vault 扫描结论。<strong>你以为你知道的</strong>和<strong>库里实际有的</strong>摆在一起——会上不会被打脸。</p>
+      </div>
+      <div class="card">
+        <h4>3 · 翻 session log</h4>
+        <p>"过去一个季度我们在这家公司做了什么"——§4 🔬 桶清楚列着每一次研究活动。IC Memo 不用回忆。</p>
+      </div>
+    </div>
+    <div class="pull" style="margin-top:30px;">
+      <span class="accent">你做 PM 的判断。机器干 RA 的苦活。</span><br/>
+      这是 v0.9 想达到的状态。
+    </div>
+  </section>
+
+  <!-- 16. End -->
+  <section class="slide end">
+    <div class="kicker">下载 / 使用 / 反馈</div>
+    <h1>开源 · 任你 fork</h1>
+    <div class="url">github.com/joansongjr/investor-harness</div>
+    <p style="margin-top:28px; max-width:1100px; color:var(--muted); font-size:19px;">v0.9.0 · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场<br/>
+      支持 Claude Code · Codex · OpenCode · OpenClaw · Generic markdown harness</p>
+    <p style="margin-top: 34px; color: var(--ink); font-size: 21px;">问题、issue、PR 都欢迎。<br/><span class="muted" style="font-size:17px;">分享人：宋婧茹 · 兴业证券海外研究 · 2026 / 05</span></p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button onclick="go(-1)">← Prev</button>
+  <button onclick="go(1)">Next →</button>
+  <span style="align-self:center;">← / → 翻页 · F 全屏 · ESC 退出</span>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let idx = 0;
+function render() {
+  slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+  document.getElementById('counter').textContent = (idx+1) + ' / ' + slides.length;
+  document.getElementById('progress').style.width = ((idx+1)/slides.length*100) + '%';
+}
+function go(delta) {
+  idx = Math.max(0, Math.min(slides.length-1, idx+delta));
+  render();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { go(1); e.preventDefault(); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(-1); e.preventDefault(); }
+  if (e.key === 'Home') { idx=0; render(); }
+  if (e.key === 'End') { idx=slides.length-1; render(); }
+  if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+render();
+</script>
+</body>
+</html>

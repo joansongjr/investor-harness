@@ -3,8 +3,8 @@
 
 name: investor-harness
 display_name: Investor Harness
-version: 0.8.0
-description: 投研人的 AI 任务执行规范。17 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.5 新增技术面复盘 skill (sm-tape-review) + INSTALL-PROMPT.md 用户级强制提示词，让小白用户的 LLM 也能自动遵守规则。
+version: 0.9.0
+description: 投研人的 AI 任务执行规范。23 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.7 新增 L1/L2/L3 用户自定义 (任务模板 + skill 继承/自创)。v0.8 新增 sm-deck-builder (PPT 生成 + UI 设计 + 研报包装)。v0.9 新增 Librarian 升级——从记忆系统到主动投研助手：14 段 wiki 架构 / 7 桶 daily feed / Question List + Q&A 双链复利 / 双层健康检查 + 跨源仲裁 / 全链路 QC。5 个 Librarian skill：sm-wiki-build / sm-daily-feed / sm-question-list / sm-health-check / sm-qa-archive。
 license: MIT
 author: Joan Song
 homepage: https://github.com/joansongjr/investor-harness
@@ -123,6 +123,27 @@ skills:
     path: skills/sm-catalyst-sweep
     tier: batch
     description: 覆盖池每日 / 每周催化剂扫描 — v0.3 新增
+  # v0.9 Librarian 升级 skill
+  - id: sm-wiki-build
+    path: skills/sm-wiki-build
+    tier: librarian
+    description: 新建 coverage 时构建 14 段 wiki page — v0.9 新增
+  - id: sm-daily-feed
+    path: skills/sm-daily-feed
+    tier: librarian
+    description: 每天扫 vault 生成 7 桶 daily feed，刷新 wiki §4 — v0.9 新增
+  - id: sm-question-list
+    path: skills/sm-question-list
+    tier: librarian
+    description: 见分析师 / 管理层前生成 question list + vault 扫描 — v0.9 新增
+  - id: sm-health-check
+    path: skills/sm-health-check
+    tier: librarian
+    description: 双层健康检查 + 跨源仲裁，让 wiki 自己维护自己 — v0.9 新增
+  - id: sm-qa-archive
+    path: skills/sm-qa-archive
+    tier: librarian
+    description: 会后 Q&A 归档 + wiki 级联更新（双链复利执行端）— v0.9 新增
 
 core:
   - path: core/evidence.md
@@ -158,6 +179,19 @@ core:
     purpose: L1 用户任务模板规范（日报/周报/月报等）— v0.7 新增
   - path: core/user-skills.md
     purpose: L2 继承 + L3 自创 skill 规范 — v0.7 新增
+  # v0.9 Librarian 升级 core
+  - path: core/librarian.md
+    purpose: Librarian 升级总览（从记忆系统到主动投研助手）— v0.9 新增
+  - path: core/wiki-architecture.md
+    purpose: 14 段 wiki page 标准结构 — v0.9 新增
+  - path: core/daily-feed.md
+    purpose: 7 桶 daily feed 聚合规则 — v0.9 新增
+  - path: core/qa-double-link.md
+    purpose: Question List + Q&A 双链复利机制 — v0.9 新增
+  - path: core/health-check.md
+    purpose: 双层健康检查 + 跨源仲裁 — v0.9 新增
+  - path: core/full-qc.md
+    purpose: 全链路 QC 五层（一致性是过程的产物）— v0.9 新增
 
 user_install_prompt:
   path: INSTALL-PROMPT.md
@@ -238,3 +272,16 @@ recommended_workflows:
     - sm-earnings-preview
     - sm-consensus-watch
     - sm-deck-builder
+  # v0.9 Librarian 工作流
+  onboarding_new_coverage:
+    - sm-wiki-build
+    - sm-health-check
+    - sm-thesis
+  daily_librarian_loop:
+    - sm-daily-feed
+    - sm-health-check
+  pre_meeting_briefing:
+    - sm-question-list
+  post_meeting_archive:
+    - sm-qa-archive
+    - sm-health-check
