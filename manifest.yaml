@@ -3,8 +3,8 @@
 
 name: investor-harness
 display_name: Investor Harness
-version: 0.9.0
-description: 投研人的 AI 任务执行规范。23 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.7 新增 L1/L2/L3 用户自定义 (任务模板 + skill 继承/自创)。v0.8 新增 sm-deck-builder (PPT 生成 + UI 设计 + 研报包装)。v0.9 新增 Librarian 升级——从记忆系统到主动投研助手：14 段 wiki 架构 / 7 桶 daily feed / Question List + Q&A 双链复利 / 双层健康检查 + 跨源仲裁 / 全链路 QC。5 个 Librarian skill：sm-wiki-build / sm-daily-feed / sm-question-list / sm-health-check / sm-qa-archive。
+version: 0.9.1
+description: 投研人的 AI 任务执行规范。23 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.9.1 新增 ONBOARDING 流程——首次启动 agent 时自动展示功能 + 关键词路由表，用户输入"同意"后 agent 自动检测 harness 类型（Claude Code / Codex / OpenCode / OpenClaw）+ 在对应入口 MD（CLAUDE.md / AGENTS.md）追加带 BEGIN/END marker 的路由块。v0.9 Librarian 升级（5 个 opt-in skill）。v0.8 sm-deck-builder。v0.7 L1/L2/L3 用户自定义。
 license: MIT
 author: Joan Song
 homepage: https://github.com/joansongjr/investor-harness
@@ -197,6 +197,14 @@ user_install_prompt:
   path: INSTALL-PROMPT.md
   purpose: 用户复制粘贴到 ~/.claude/CLAUDE.md 的强制启用提示词，让 LLM 自动遵守 harness 规则 — v0.5 新增
   critical: true
+
+onboarding:
+  path: ONBOARDING.md
+  purpose: 首次启动 agent 时由 agent 读取的引导流程——列出 23 个 skill + 关键词路由表，等用户明确"同意"后自动写入 harness 入口 MD — v0.9.1 新增
+  critical: true
+  related:
+    - setup/keyword-routes.md       # 23 个 skill 关键词路由表（single source of truth）
+    - setup/routes-block.template.md # 要插入用户入口 MD 的标准块（带 BEGIN/END marker）
 
 workspace_templates:
   - path: setup/workspace/CLAUDE.md.template

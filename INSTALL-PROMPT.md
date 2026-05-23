@@ -5,6 +5,38 @@
 
 ---
 
+## 🚀 v0.9.1 推荐做法：让 agent 自动跑 onboarding
+
+如果你用 **Claude Code / Codex / OpenCode / OpenClaw** 之类支持读取本地 markdown 的 agent，**不用**手动复制粘贴下面的内容。
+
+只要装好 investor-harness（`git clone` 或 `bash setup.sh`），在你的 agent 里说：
+
+> **"跑一下 investor-harness onboarding"**
+
+或
+
+> **"读 ~/investor-harness/ONBOARDING.md 然后引导我激活"**
+
+agent 会：
+
+1. 列出 23 个 skill 功能 + 关键词触发表给你看
+2. 解释"自动写入 / 手动复制 / 每次显式调用" 三种激活方式
+3. **等你输入"同意"**（明确字面表达）
+4. 自动检测 agent 类型（Claude Code → `~/.claude/CLAUDE.md` / Codex → `~/.codex/AGENTS.md` / OpenCode → `~/.config/opencode/AGENTS.md`）
+5. 在对应入口 MD 末尾追加路由块（用 `<!-- investor-harness:keyword-routes:start -->` 包住，将来升级可整块替换、可整块移除）
+
+⛔ 硬约束：**未读到用户明确"同意" / "agree" / "yes write"** → agent 绝对不动你的文件。
+
+详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)（完整 23 个 skill 关键词表）。
+
+**这是 v0.9.1 之后的首选方式**。下面的手动复制方法仍然保留——适合不希望 agent 自动改文件的用户。
+
+---
+
+## 老的手动方式（仍然支持）
+
+---
+
 ## 为什么要做这一步
 
 Investor Harness 是一套 markdown 规范，但 markdown 本身没有强制力。LLM 看到规则不一定会执行。所以你需要在**会话开始前明确告诉 LLM**："以后所有投研任务都按这套规则做"。

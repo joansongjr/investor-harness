@@ -3,7 +3,11 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.9.0** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.9.1** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+
+> 🆕 **v0.9.1 — Onboarding 流程：让 agent 自动激活路由**
+> 装完 investor-harness 后跟你的 agent 说 **"跑一下 investor-harness onboarding"**——agent 列出全部 23 个 skill + 关键词路由表，等你输入"**同意**"后自动检测 harness 类型（Claude Code / Codex / OpenCode / OpenClaw）+ 在对应入口 MD（CLAUDE.md / AGENTS.md）追加带 BEGIN/END marker 的路由块。**未明确同意前绝对不写文件**。
+> 详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)
 
 > 🆕 **v0.9.0 — Librarian 升级：从记忆系统到主动投研助手**
 > 23 个 skill（新增 5 个 Librarian skill）+ 6 份新核心文档。重点：让 AI 不只是帮你**记住**了什么，而是**在你需要之前**就把跨源综合做完、矛盾标红、判断点摆好——你做 PM 的判断，机器干苦活。
@@ -730,6 +734,30 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 ---
 
 ## Changelog
+
+### v0.9.1 — Onboarding 流程：让 agent 自动激活路由
+
+> 解决"装完之后还要手动复制 INSTALL-PROMPT 到 CLAUDE.md"的最后一道门槛。
+> v0.9.1 让 agent 自己引导你完成激活——你只需要输入"同意"。
+
+**新增文件**：
+
+- `ONBOARDING.md` — 主流程文件。给 agent 看的执行指令 + 给用户看的功能清单。包含 6 步：① 检测是否已 onboard → ② 展示 23 个 skill + 关键词表 → ③ 解释三种激活方式 → ④ 请求精确"同意" → ⑤ 检测 harness + 入口 MD 路径 → ⑥ 写入 + 验证。
+- `setup/keyword-routes.md` — 23 个 skill 关键词路由表 single source of truth。
+- `setup/routes-block.template.md` — 要写入用户入口 MD 的标准块，带 `<!-- investor-harness:keyword-routes:start v0.9.1 -->` 到 `:end` marker，未来升级整块替换、用户想退出可整块移除。
+
+**Harness 兼容**：自动检测 6 个常见入口 MD 路径（项目级 + 用户级 × Claude Code / Codex / OpenCode / OpenClaw），优先项目级。
+
+**安全硬约束（⛔）**：
+
+1. 未明确读到用户"同意" / "agree" / "yes write" → agent **绝对不**写文件
+2. 用户说"先看看" / "再想想" → **不写**
+3. 写入前再次 dry-run 显示要写的内容 + 目标路径 + marker → 用户**再次确认**"确认"才写
+4. 已存在 marker → 整块替换（保留 marker 外的所有现有内容）
+
+**未来兼容**：路由表升级时只需改 `setup/keyword-routes.md` + `setup/routes-block.template.md` 两个文件，所有已 onboard 用户说"重新跑 onboarding"即可整块刷新。
+
+---
 
 ### v0.9.0 — Librarian 升级：从记忆系统到主动投研助手
 
