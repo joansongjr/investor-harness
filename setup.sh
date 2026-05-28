@@ -11,7 +11,7 @@
 #   2. Detect existing MCP configs
 #   3. Install skills via symlink
 #   4. Create workspace (optional)
-#   5. Inject CLAUDE.md section with markers (backup original)
+#   5. Inject entrypoint MD section with markers (backup original)
 #   6. Verify install
 
 set -euo pipefail
@@ -37,8 +37,7 @@ NC=$'\033[0m'
 TARGET_HARNESSES=""       # "claude-code codex openclaw"
 DATA_SOURCES=""           # "ifind alphapie jinmen wind websearch"
 WORKSPACE_ROOT=""         # "~/investor-research"
-WRITE_CLAUDE_MD="yes"     # "yes" or "no"
-CLAUDE_MD_TARGET=""       # "~/.claude/CLAUDE.md"
+ENTRY_MD_TARGET=""        # "~/.claude/CLAUDE.md" / "~/.codex/AGENTS.md"
 
 # ═══════════════════════════════════════════════════
 # 工具函数
@@ -79,6 +78,46 @@ prompt_yn() {
   esac
 }
 
+entry_md_target_for_harness() {
+  case "$1" in
+    claude-code) printf '%s\n' "$HOME/.claude/CLAUDE.md" ;;
+    codex)       printf '%s\n' "$HOME/.codex/AGENTS.md" ;;
+    openclaw)    printf '%s\n' "$HOME/.openclaw/CLAUDE.md" ;;
+    opencode)    printf '%s\n' "$HOME/.config/opencode/AGENTS.md" ;;
+    *)           return 1 ;;
+  esac
+}
+
+default_entry_md_target() {
+  local harness
+  for harness in $TARGET_HARNESSES; do
+    entry_md_target_for_harness "$harness"
+    return 0
+  done
+  printf '%s\n' "$HOME/.claude/CLAUDE.md"
+}
+
+replace_managed_block() {
+  local target="$1"
+  local start_regex="$2"
+  local end_regex="$3"
+  local replacement_file="$4"
+  local tmp="${target}.tmp.${TS}"
+
+  awk -v start_regex="$start_regex" -v end_regex="$end_regex" -v replacement_file="$replacement_file" '
+    $0 ~ start_regex {
+      in_block=1
+      while ((getline line < replacement_file) > 0) print line
+      close(replacement_file)
+      next
+    }
+    in_block && $0 ~ end_regex { in_block=0; next }
+    !in_block { print }
+  ' "$target" > "$tmp"
+
+  mv "$tmp" "$target"
+}
+
 # ═══════════════════════════════════════════════════
 # Banner
 # ═══════════════════════════════════════════════════
@@ -93,9 +132,9 @@ show_banner() {
   info "本向导会帮你："
   info "  1. 检测你的 AI 工具（Claude Code / Codex / OpenClaw）"
   info "  2. 配置数据源优先级"
-  info "  3. 安装 17 个 sm-* skill"
+  info "  3. 安装 23 个 sm-* skill"
   info "  4. 创建投研工作区（可选）"
-  info "  5. 写入启用提示词到 ~/.claude/CLAUDE.md（自动备份）"
+  info "  5. 写入启用提示词到入口 MD（自动备份）"
   info "  6. 验证安装"
   echo
   info "Harness 位置: $HARNESS_DIR"
@@ -198,13 +237,11 @@ select_harnesses() {
 
 detect_mcps() {
   # 检测现有 .mcp.json
-  local found=""
   for mcp_path in "$HOME/.claude/mcp.json" "$HOME/.codex/mcp.json" "$HOME/.openclaw/mcp.json" "$PWD/.mcp.json"; do
     if [ -f "$mcp_path" ]; then
-      found="$found $mcp_path"
+      printf '%s\n' "$mcp_path"
     fi
   done
-  echo "${found# }"
 }
 
 select_data_sources() {
@@ -221,9 +258,9 @@ select_data_sources() {
 
   if [ -n "$mcp_files" ]; then
     info "检测到现有 MCP 配置文件："
-    for f in $mcp_files; do
-      echo "    - $f"
-    done
+    while IFS= read -r f; do
+      [ -n "$f" ] && echo "    - $f"
+    done <<< "$mcp_files"
     echo
   fi
 
@@ -350,8 +387,8 @@ create_workspace() {
   # 展开 ~
   WORKSPACE_ROOT="${WORKSPACE_ROOT/#\~/$HOME}"
 
-  if [ -d "$WORKSPACE_ROOT" ] && [ -f "$WORKSPACE_ROOT/CLAUDE.md" ]; then
-    warn "$WORKSPACE_ROOT 已存在且包含 CLAUDE.md"
+  if [ -d "$WORKSPACE_ROOT" ] && { [ -f "$WORKSPACE_ROOT/CLAUDE.md" ] || [ -f "$WORKSPACE_ROOT/AGENTS.md" ]; }; then
+    warn "$WORKSPACE_ROOT 已存在且包含入口 MD（CLAUDE.md 或 AGENTS.md）"
     if ! prompt_yn "强制覆盖？（原文件会被备份）" "n"; then
       info "跳过工作区创建"
       return
@@ -366,7 +403,7 @@ create_workspace() {
 }
 
 # ═══════════════════════════════════════════════════
-# Step 6: 注入 CLAUDE.md 启用提示词
+# Step 6: 注入入口 MD 启用提示词
 # ═══════════════════════════════════════════════════
 
 build_data_sources_chain() {
@@ -391,7 +428,7 @@ build_data_sources_chain() {
   printf "%b" "$chain"
 }
 
-render_claude_md_section() {
+render_entry_md_section() {
   local date_str ws_root coverage_root harness_path data_sources_str chain
   date_str="$(date +%Y-%m-%d)"
   ws_root="${WORKSPACE_ROOT:-~/investor-research}"
@@ -425,19 +462,29 @@ render_claude_md_section() {
 
 | 我说 | 你做 |
 |---|---|
-| "看一下 X" / "X 怎么样" | 走 \`sm-autopilot\` 自动路由 |
-| "深度看 X" / "起 coverage" | 走 \`sm-company-deepdive\` |
-| "X 财报前瞻" | 走 \`sm-earnings-preview\` |
-| "反过来想 X" / "X 空头逻辑" | 走 \`sm-red-team\` |
-| "X 预期差" | 走 \`sm-consensus-watch\` |
+| "看看 X" / "X 怎么样" / "帮我看下 X" | 走 \`sm-autopilot\` 自动路由 |
+| "master 模式" / "总控" / "全套跑一遍 X" | 走 \`sm-master\` |
+| "X 投资命题" / "做 X 的 thesis" / "X 投资逻辑" | 走 \`sm-thesis\` |
+| "X 行业框架" / "X 产业链地图" / "X 行业全景" | 走 \`sm-industry-map\` |
+| "X 深度报告" / "深度看 X" / "起 X 的 coverage" | 走 \`sm-company-deepdive\` |
+| "X 财报前瞻" / "X earnings preview" / "X 业绩前瞻" | 走 \`sm-earnings-preview\` |
+| "审 X 的模型" / "X 模型 sanity check" / "X 模型审阅" | 走 \`sm-model-check\` |
+| "X 预期差" / "X consensus" / "X 一致预期" | 走 \`sm-consensus-watch\` |
+| "X 催化剂" / "X catalyst" / "X 事件跟踪" | 走 \`sm-catalyst-monitor\` |
+| "怎么问 X 管理层" / "X 调研提纲" / "X 路演问题" | 走 \`sm-roadshow-questions\` |
+| "反过来想 X" / "X 空头逻辑" / "X red team" / "X 反方" | 走 \`sm-red-team\` |
+| "给 PM 一页纸" / "X 的 PM brief" / "IC 一页纸" | 走 \`sm-pm-brief\` |
 | "整理今天的 X" / "晨会" | 走 \`sm-briefing\` |
-| "给 PM 一页纸" | 走 \`sm-pm-brief\` |
-| "X 行业框架" | 走 \`sm-industry-map\` |
-| "怎么问 X 管理层" | 走 \`sm-roadshow-questions\` |
-| "看 X 的 K 线" / "复盘 X" | 走 \`sm-tape-review\` |
-| "做 X 的 PPT" / "生成 deck" / "IC pitch" / "路演材料" | 走 \`sm-deck-builder\` |
-| "刷新覆盖池" | 走 \`sm-batch-refresh\` |
-| "扫事件" | 走 \`sm-catalyst-sweep\` |
+| "看 X 的 K 线" / "复盘 X" / "X 盘面" / "X 技术面" | 走 \`sm-tape-review\` |
+| "做 X 的 deck" / "X 的 IC pitch PPT" / "X 路演 PPT" / "X 客户 pitch" | 走 \`sm-deck-builder\` |
+| "刷新覆盖池" / "批量过 X 列表" / "coverage refresh" | 走 \`sm-batch-refresh\` |
+| "财报季批量" / "批量前瞻" / "batch earnings" | 走 \`sm-batch-earnings\` |
+| "扫事件" / "今天有什么催化" / "catalyst sweep" | 走 \`sm-catalyst-sweep\` |
+| "起 X 的 wiki page" / "建 X 的 coverage" / "onboard X" | 走 \`sm-wiki-build\`（仅用户明示时） |
+| "刷 daily feed" / "跑每日扫描" / "今天看一下覆盖池" | 走 \`sm-daily-feed\`（仅用户明示时） |
+| "见 X 前过一遍 question list" / "准备 X 调研提纲" / "会前 briefing" | 走 \`sm-question-list\`（仅用户明示时） |
+| "跑健康检查" / "扫跨源矛盾" / "wiki 自检" | 走 \`sm-health-check\`（仅用户明示时） |
+| "会后归档" / "整理 X 的 Q&A" / "见完 X 后整理" | 走 \`sm-qa-archive\`（仅用户明示时） |
 
 ## Skill 调用的强制流程
 
@@ -449,7 +496,7 @@ render_claude_md_section() {
 4. **必须**输出 \`[Preflight]\` 取数计划
 5. 实际取数
 
-**输出时**：按 skill 结构；每条事实带 F1/F2/M1/C1/H1 证据等级；风险必须可观测可触发。
+**输出时**：按 skill 结构；每条事实带完整中文证据等级；风险必须可观测可触发。
 
 **结束后 Postamble 8 步**（读 \`${harness_path}/core/postamble.md\`）：
 0. 每完成一段写 .checkpoint
@@ -467,9 +514,9 @@ render_claude_md_section() {
 
 ${chain}
 
-## 17 个 skill
+## 28 个 skill
 
-sm-master · sm-autopilot · sm-thesis · sm-industry-map · sm-company-deepdive · sm-earnings-preview · sm-model-check · sm-consensus-watch · sm-catalyst-monitor · sm-roadshow-questions · sm-red-team · sm-pm-brief · sm-briefing · sm-tape-review · sm-deck-builder · sm-batch-refresh · sm-batch-earnings · sm-catalyst-sweep
+sm-master · sm-autopilot · sm-thesis · sm-industry-map · sm-company-deepdive · sm-earnings-preview · sm-model-check · sm-consensus-watch · sm-industry-database · sm-catalyst-monitor · sm-roadshow-questions · sm-red-team · sm-pm-brief · sm-briefing · sm-tape-review · sm-deck-builder · sm-batch-refresh · sm-batch-earnings · sm-catalyst-sweep · sm-wiki-build · sm-daily-feed · sm-question-list · sm-health-check · sm-qa-archive · sm-people-watch
 
 ## 硬约束
 
@@ -488,8 +535,8 @@ sm-master · sm-autopilot · sm-thesis · sm-industry-map · sm-company-deepdive
 EOF
 }
 
-inject_claude_md() {
-  say "▎ Step 6 · 写入启用提示词到 CLAUDE.md"
+inject_entry_md() {
+  say "▎ Step 6 · 写入启用提示词到入口 MD"
   echo
 
   info "启用提示词是让 LLM 自动按 Investor Harness 规则工作的关键一步。"
@@ -497,46 +544,46 @@ inject_claude_md() {
   echo
 
   # 目标文件
-  local default_target="$HOME/.claude/CLAUDE.md"
-  CLAUDE_MD_TARGET=$(prompt "写入到哪个 CLAUDE.md？" "$default_target")
-  CLAUDE_MD_TARGET="${CLAUDE_MD_TARGET/#\~/$HOME}"
+  local default_target
+  default_target="$(default_entry_md_target)"
+  ENTRY_MD_TARGET=$(prompt "写入到哪个入口 MD？" "$default_target")
+  ENTRY_MD_TARGET="${ENTRY_MD_TARGET/#\~/$HOME}"
 
   # 确保父目录存在
-  mkdir -p "$(dirname "$CLAUDE_MD_TARGET")"
+  mkdir -p "$(dirname "$ENTRY_MD_TARGET")"
 
   local new_section
-  new_section="$(render_claude_md_section)"
+  new_section="$(render_entry_md_section)"
+  local section_file
+  section_file="$(mktemp "${TMPDIR:-/tmp}/investor-harness-section.XXXXXX")"
+  printf '%s\n' "$new_section" > "$section_file"
 
-  if [ -f "$CLAUDE_MD_TARGET" ]; then
+  if [ -f "$ENTRY_MD_TARGET" ]; then
     # 备份
-    local backup="${CLAUDE_MD_TARGET}.backup-${TS}"
-    cp "$CLAUDE_MD_TARGET" "$backup"
+    local backup="${ENTRY_MD_TARGET}.backup-${TS}"
+    cp "$ENTRY_MD_TARGET" "$backup"
     ok "备份原文件到 $backup"
 
     # 检查是否已有 marker
-    if grep -q "<!-- INVESTOR_HARNESS:BEGIN" "$CLAUDE_MD_TARGET"; then
+    if grep -q "<!-- INVESTOR_HARNESS:BEGIN" "$ENTRY_MD_TARGET"; then
       # 已有 marker，替换中间内容
       info "检测到已有 Investor Harness 段（marker），替换内容..."
-      local tmp="${CLAUDE_MD_TARGET}.tmp.${TS}"
-      awk -v new_content="$new_section" '
-        /<!-- INVESTOR_HARNESS:BEGIN/ { in_block=1; print new_content; next }
-        /<!-- INVESTOR_HARNESS:END -->/ { in_block=0; next }
-        !in_block { print }
-      ' "$CLAUDE_MD_TARGET" > "$tmp"
-      mv "$tmp" "$CLAUDE_MD_TARGET"
+      replace_managed_block "$ENTRY_MD_TARGET" "^<!-- INVESTOR_HARNESS:BEGIN" "^<!-- INVESTOR_HARNESS:END -->$" "$section_file"
       ok "已更新 marker 之间的内容"
     else
       # 没有 marker，追加到末尾
       info "未检测到 marker，追加到文件末尾..."
-      echo "" >> "$CLAUDE_MD_TARGET"
-      echo "$new_section" >> "$CLAUDE_MD_TARGET"
+      echo "" >> "$ENTRY_MD_TARGET"
+      cat "$section_file" >> "$ENTRY_MD_TARGET"
       ok "已追加"
     fi
   else
     # 新文件
-    echo "$new_section" > "$CLAUDE_MD_TARGET"
-    ok "已创建 $CLAUDE_MD_TARGET"
+    cat "$section_file" > "$ENTRY_MD_TARGET"
+    ok "已创建 $ENTRY_MD_TARGET"
   fi
+
+  rm -f "$section_file"
 
   echo
 }
@@ -567,11 +614,11 @@ verify_install() {
     fi
   done
 
-  # 2. CLAUDE.md 注入
-  if [ -f "$CLAUDE_MD_TARGET" ] && grep -q "INVESTOR_HARNESS:BEGIN" "$CLAUDE_MD_TARGET"; then
-    ok "CLAUDE.md 启用提示词已写入"
+  # 2. 入口 MD 注入
+  if [ -f "$ENTRY_MD_TARGET" ] && grep -q "INVESTOR_HARNESS:BEGIN" "$ENTRY_MD_TARGET"; then
+    ok "入口 MD 启用提示词已写入"
   else
-    warn "CLAUDE.md 启用提示词未检测到（可能你选择了跳过）"
+    warn "入口 MD 启用提示词未检测到（可能你选择了跳过）"
   fi
 
   # 3. Workspace
@@ -598,13 +645,18 @@ show_completion() {
   info "资源位置："
   info "  Harness 源:     $HARNESS_DIR"
   [ -n "$WORKSPACE_ROOT" ] && info "  工作区:         $WORKSPACE_ROOT"
-  info "  启用提示词:     $CLAUDE_MD_TARGET"
+  info "  启用提示词:     $ENTRY_MD_TARGET"
   echo
   info "下一步："
   info "  1. ${BOLD}重启你的 AI 工具${NC}（Claude Code / Codex / OpenClaw）"
-  [ -n "$WORKSPACE_ROOT" ] && info "  2. cd ${WORKSPACE_ROOT}"
-  info "  3. 随便问一家公司，比如：'看一下 LITE'"
-  info "  4. 验证：LLM 应该先输出 [Preflight] 取数计划，而不是直接给百度百科段落"
+  if [ -n "$WORKSPACE_ROOT" ]; then
+    info "  2. cd ${WORKSPACE_ROOT}"
+    info "  3. 随便问一家公司，比如：'看一下 LITE'"
+    info "  4. 验证：LLM 应该先输出 [Preflight] 取数计划，而不是直接给百度百科段落"
+  else
+    info "  2. 随便问一家公司，比如：'看一下 LITE'"
+    info "  3. 验证：LLM 应该先输出 [Preflight] 取数计划，而不是直接给百度百科段落"
+  fi
   echo
   info "有问题？"
   info "  Issues:    https://github.com/joansongjr/investor-harness/issues"
@@ -624,7 +676,7 @@ main() {
   select_data_sources
   install_skills
   create_workspace
-  inject_claude_md
+  inject_entry_md
   verify_install
   show_completion
 }

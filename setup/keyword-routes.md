@@ -1,6 +1,6 @@
 # 关键词路由表（Single Source of Truth）
 
-> 这份文件是 23 个 sm-* skill 的关键词触发对照。**ONBOARDING.md 和 routes-block.template.md 都从这里同步**。
+> 这份文件是 27 个 sm-* skill 的关键词触发对照。**ONBOARDING.md 和 routes-block.template.md 都从这里同步**。
 > 修改时只改这里，再用 `setup/sync-routes.sh` 同步到其他文件（或手动 copy）。
 
 ## 触发原则
@@ -12,7 +12,7 @@
 
 ---
 
-## 默认路由（17 个原有 + 1 个 v0.8）
+## 默认路由（22 个）
 
 ### Entry / 入口
 
@@ -36,6 +36,7 @@
 | `X 财报前瞻` / `X earnings preview` / `X 业绩前瞻` | `sm-earnings-preview` | 财报前瞻 |
 | `审 X 的模型` / `X 模型 sanity check` / `X 模型审阅` | `sm-model-check` | 财务模型审阅 |
 | `X 预期差` / `X consensus` / `X 一致预期` | `sm-consensus-watch` | 一致预期 + 预期差 |
+| `数据库` / `产业数据库` / `公司数据库` / `数据底表` / `指标库` | `sm-industry-database` | 产业 / 公司数据库搭建 |
 
 ### Monitoring / 跟踪
 
@@ -43,12 +44,20 @@
 |---|---|---|
 | `X 催化剂` / `X catalyst` / `X 事件跟踪` | `sm-catalyst-monitor` | 事件 / 政策 / 订单跟踪 |
 | `怎么问 X 管理层` / `X 调研提纲` / `X 路演问题` | `sm-roadshow-questions` | 路演 / 调研问题设计 |
+| `盯盘` / `看盘` / `每小时看一下 X` / `X 盘中异动` | `sm-hourly-watch` | 股票池小时级盯盘 / 异动告警 |
+| `收盘后复盘` / `股票池复盘` / `今天为什么涨跌` / `盘后复盘` | `sm-close-recap` | 股票池收盘归因 / 原因变化 |
 
 ### Challenge / 反方
 
 | 关键词 | 触发 skill | 用途 |
 |---|---|---|
 | `反过来想 X` / `X 空头逻辑` / `X red team` / `X 反方` | `sm-red-team` | 反方审视 |
+
+### Discovery / 选股与发现
+
+| 关键词 | 触发 skill | 用途 |
+|---|---|---|
+| `选股` / `筛标的` / `挖标的` / `AI 链里还缺什么` / `涨得少的 AI 板块` | `sm-stock-screen` | 主题挖掘 / 低涨幅补涨 / 预期差选股 |
 
 ### Output / 输出
 
@@ -79,7 +88,7 @@
 
 ---
 
-## 🆕 Librarian 模式（v0.9 新增 · opt-in）
+## 🆕 Librarian 模式（v0.9+ · opt-in）
 
 > **关键**：以下 5 个 skill **不在 sm-autopilot 默认路由内**，必须用户明示对应关键词才启用。
 > 原因：Librarian 模式要求用户的 vault 已经按 Obsidian 形态组织好，不适合所有人。
@@ -91,6 +100,7 @@
 | `见 X 前过一遍 question list` / `准备 X 调研提纲` / `会前 briefing` | `sm-question-list` | question list + vault 扫描结论 |
 | `跑健康检查` / `扫跨源矛盾` / `wiki 自检` | `sm-health-check` | 双层健康检查 + 跨源仲裁 |
 | `会后归档` / `整理 X 的 Q&A` / `见完 X 后整理` | `sm-qa-archive` | Q&A 归档 + wiki 级联更新 |
+| `关键人物追踪` / `跟踪 X 博主` / `跟踪 Reddit` / `人物 watch` | `sm-people-watch` | 关键人物 / 社区信号流跟踪 |
 
 ---
 
@@ -102,6 +112,10 @@
 | 日常 Librarian loop | `刷今天的覆盖池` | `sm-daily-feed` → `sm-health-check` |
 | 会前准备 | `准备见 X` | `sm-question-list` |
 | 会后整理 | `见完 X 整理` | `sm-qa-archive` → `sm-health-check` |
+| 盘中盯盘 | `盯一下我的股票池` | `sm-hourly-watch` → `sm-catalyst-monitor` |
+| 收盘复盘 | `复盘今天的股票池` | `sm-close-recap` → `sm-tape-review` |
+| 主题选股 | `帮我筛 AI 链补涨标的` | `sm-stock-screen` → `sm-thesis` |
+| 人物信号流 | `跟一下 X 和 Reddit 上的关键人物` | `sm-people-watch` → `sm-catalyst-monitor` |
 | 加仓决策 | `X 要不要加仓` | `sm-thesis` → `sm-red-team` → `sm-tape-review` → `sm-pm-brief` |
 | IC pitch 全套 | `给 IC 做 X 的 pitch` | `sm-thesis` → `sm-company-deepdive` → `sm-consensus-watch` → `sm-red-team` → `sm-deck-builder` |
 | 财报季全套 | `X 财报季全套` | `sm-earnings-preview` → `sm-consensus-watch` → `sm-model-check` → `sm-pm-brief` |

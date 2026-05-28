@@ -23,9 +23,9 @@
 
 **Tier 0 — 强制读取（每次新会话，< 2k tokens 合计）**
 
-1. `~/.claude/skills/investor-harness/core/_boot.md` — harness 启动文件（v0.4 新增）
+1. `{HARNESS_PATH}/core/_boot.md` — harness 启动文件（v0.4 新增）
 2. `.task-pulse` — 任务心跳信号，< 100 tokens（v0.4 新增）
-3. 本文件 `CLAUDE.md` — 我的身份和规则
+3. 本文件 `{ENTRY_DOC_NAME}` — 我的身份和规则
 
 **Tier 1 — 按需读取**
 4. `memory.md` — 我的记忆索引（只在需要研究身份信息时读）
@@ -36,6 +36,20 @@
 9. `user-skills/*/SKILL.md` — 我的自定义 skill（v0.7 新增，识别触发词时扫描）
 
 **⛔ 严禁**在不需要时读 Tier 1 文件——浪费 token。
+
+### 1.1 工作区骨架（首次就要检查）
+
+如果当前工作区缺少以下任一项，**不要直接开始投研任务**，先补建骨架：
+
+- `coverage/`
+- `themes/`
+- `briefings/`
+- `.task-pulse`
+- `.checkpoint/`
+- `active-tasks.md`
+
+**路由已激活 ≠ 工作区已就绪。**
+如果只有入口路由，没有这些落盘骨架，就等于"书架装好了，但书没上架"。
 
 ### 1.3 任务永久化（v0.7 新增 · 我的自定义）
 
@@ -55,8 +69,8 @@
 3. **零命中 → 走 sm-* 默认路由**
 
 详细规范见：
-- `~/.claude/skills/investor-harness/core/user-templates.md`
-- `~/.claude/skills/investor-harness/core/user-skills.md`
+- `{HARNESS_PATH}/core/user-templates.md`
+- `{HARNESS_PATH}/core/user-skills.md`
 
 ---
 
@@ -75,7 +89,7 @@
 
 ### 1.4 零配置入口菜单（v0.3 新增）
 
-当用户输入符合 [`~/.claude/skills/investor-harness/core/menu.md`](~/.claude/skills/investor-harness/core/menu.md) 的触发条件时（如 "你能做什么" / "menu" / 模糊问候 / 完全空输入），**必须立即**显示该文件中的菜单内容，让用户按编号或自然语言选择任务。
+当用户输入符合 `{HARNESS_PATH}/core/menu.md` 的触发条件时（如 "你能做什么" / "menu" / 模糊问候 / 完全空输入），**必须立即**显示该文件中的菜单内容，让用户按编号或自然语言选择任务。
 
 不要在用户没指定 skill 时硬猜——优先显示菜单。
 
@@ -83,7 +97,7 @@
 
 任何 sm-* skill 调用都必须按以下两个文件严格执行：
 
-- 开始前 → `~/.claude/skills/investor-harness/core/preamble.md` 的 6 步流程
+- 开始前 → `{HARNESS_PATH}/core/preamble.md` 的 6 步流程
   - Step 0 任务断点检查（v0.4 新增）
   - Step 1 识别市场
   - Step 2 检查历史输出
@@ -91,7 +105,7 @@
   - Step 4 输出 [Preflight] 取数计划
   - Step 5 实际取数
 
-- 结束后 → `~/.claude/skills/investor-harness/core/postamble.md` 的 8 步流程
+- 结束后 → `{HARNESS_PATH}/core/postamble.md` 的 8 步流程
   - Step 0 增量 checkpoint 写入（v0.4 新增，每完成一段就写）
   - Step 1 证据等级自检
   - Step 2 "仍需补的资料"段
@@ -114,7 +128,7 @@ LLM 在每次输出前估算剩余 context budget：
   - 更新 `.task-pulse`
   - 告知用户："已保存到 checkpoint，请新开会话用'继续 {task-id}'续跑"
 
-详见 `~/.claude/skills/investor-harness/core/checkpoint.md`。
+详见 `{HARNESS_PATH}/core/checkpoint.md`。
 
 ### 2. 默认调用 Investor Harness skills
 
@@ -124,6 +138,10 @@ LLM 在每次输出前估算剩余 context budget：
 - 行业 / 主题问题 → `sm-industry-map` + `sm-thesis`
 - 财报相关 → `sm-earnings-preview` + `sm-consensus-watch`
 - 事件 / 新闻 → `sm-catalyst-monitor`
+- 盘中盯盘 / 小时异动 → `sm-hourly-watch`
+- 收盘股票池复盘 → `sm-close-recap`
+- 选股 / 找标的 → `sm-stock-screen`
+- 关键人物 / X / Reddit 跟踪 → `sm-people-watch`
 - 模型审阅 → `sm-model-check`
 - 反方审视 → `sm-red-team`
 - 路演调研 → `sm-roadshow-questions`
@@ -144,15 +162,15 @@ LLM 在每次输出前估算剩余 context budget：
 
 ### 4. 证据分级
 
-对每条关键事实，必须按 `core/evidence.md` 标证据等级：
+对每条关键事实，必须按 `core/evidence.md` 标完整中文证据等级：
 
-- `F1` 公开事实
-- `F2` 财报 / 公告 / 权威数据库
-- `M1` 市场观点 / 一致预期
-- `C1` 基于事实的合理推演
-- `H1` 待核验线索
+- `公开事实`
+- `财报披露`
+- `市场共识`
+- `合理推演`
+- `待核验假设`
 
-`H1` 不能作为结论的核心依据。
+`待核验假设` 不能作为结论的核心依据。
 
 ### 5. 合规边界（硬约束）
 
@@ -170,6 +188,8 @@ LLM 在每次输出前估算剩余 context budget：
 - 事实 / 预期 / 推演 / 结论分开写
 - 必须包含"仍需补的资料"段落，承认你不知道什么
 - 涉及决策类问题，必须经过 `sm-red-team` 反方检查
+- 涉及单公司 / 覆盖池 / 主题的任务，**不能只停留在对话里**；必须同时写入对应归档目录
+- 单公司任务默认归档到 `coverage/{ticker}_{name}/...`（或配置的 `coverage_root`），如果目录不存在，先创建再输出正文
 
 ### 7. 偏差检查
 
@@ -182,6 +202,12 @@ LLM 在每次输出前估算剩余 context budget：
 ### 9. 覆盖池更新
 
 每次我新起 coverage 一家公司时，主动提醒我更新 `coverage.md`。每次我把一个 watchlist 标的转为正式 coverage，主动提醒我从 `watchlist.md` 移除并加入 `coverage.md`。
+
+每次与单家公司相关的正式任务开始时：
+
+- 先确认 `coverage/{ticker}_{name}/`（或配置的 `coverage_root/{ticker}_{name}/`）存在
+- 如果不存在，先创建目录、`INDEX.md` 和标准子目录
+- 任务完成后，更新该公司的 `INDEX.md`
 
 ### 10. 不主动追问
 
@@ -202,6 +228,10 @@ LLM 在每次输出前估算剩余 context budget：
 | "X 财报前瞻" | 调 `sm-earnings-preview` |
 | "X 反过来想" | 调 `sm-red-team` |
 | "整理今天的事" | 调 `sm-briefing` |
+| "盯一下我的股票池" | 调 `sm-hourly-watch` |
+| "复盘今天的股票池" | 调 `sm-close-recap` |
+| "帮我筛 AI 链补涨标的" | 调 `sm-stock-screen` |
+| "跟一下 X 和 Reddit 上的关键人物" | 调 `sm-people-watch` |
 | "给 PM 看的" | 调 `sm-pm-brief` |
 | "X 的预期差" | 调 `sm-consensus-watch` |
 | "怎么问 X" | 调 `sm-roadshow-questions` |
@@ -224,10 +254,13 @@ LLM 在每次输出前估算剩余 context budget：
 
 | 内容 | 位置 |
 |---|---|
-| Investor Harness skills | `[请填：你装的 skills 路径，例如 ~/.claude/skills/investor-harness/skills/]` |
-| Investor Harness core | `[同上 ../core/]` |
+| Investor Harness skills | `{HARNESS_PATH}/skills/` |
+| Investor Harness core | `{HARNESS_PATH}/core/` |
 | 我的覆盖池 | `./coverage.md` |
 | 我的观察池 | `./watchlist.md` |
+| 我的知识库总索引 | `./knowledge-index.md` |
+| 我的人物追踪表 | `./people-watch.md` |
+| 我的选股 pipeline | `./selection-pipeline.md` |
 | 我的决策日志 | `./decision-log.md` |
 | 我的偏差清单 | `./biases.md` |
 | 我的研究队列 | `./research-queue.md` |

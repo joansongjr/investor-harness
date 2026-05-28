@@ -4,17 +4,17 @@
 
 ## What this is
 
-Investor Harness v0.9 — 投研人的 AI 任务执行规范。
+Investor Harness v0.9.2 — 投研人的 AI 任务执行规范。
 治三大痛点：**幻觉 / 健忘 / 不成体系**。
-v0.7 新增 L1/L2/L3 用户自定义。v0.8 新增 sm-deck-builder。**v0.9 新增 Librarian 升级**：从被动记忆系统 → 主动投研助手。
+v0.7 新增 L1/L2/L3 用户自定义。v0.8 新增 sm-deck-builder。**v0.9 新增 Librarian 升级**：从被动记忆系统 → 主动投研助手。**v0.9.2 新增 sm-industry-database**：产业 / 公司数据库搭建。
 
-## 23 skills (one-line each)
+## 28 skills (one-line each)
 
-**原有 18（默认路由）**
-`sm-master`(7 模式总控) · `sm-autopilot`(自动路由) · `sm-thesis`(命题构建) · `sm-industry-map`(行业框架) · `sm-company-deepdive`(公司深度) · `sm-earnings-preview`(财报前瞻) · `sm-model-check`(模型审阅) · `sm-consensus-watch`(预期差) · `sm-catalyst-monitor`(事件跟踪) · `sm-roadshow-questions`(路演问题) · `sm-red-team`(反方审视) · `sm-pm-brief`(PM 一页纸) · `sm-briefing`(晨会晚报) · `sm-tape-review`(盘面 + 技术面复盘) · `sm-deck-builder`(PPT 生成) · `sm-batch-refresh`(批量刷新) · `sm-batch-earnings`(财报季批量) · `sm-catalyst-sweep`(催化剂扫描)
+**默认路由 22 个**
+`sm-master`(7 模式总控) · `sm-autopilot`(自动路由) · `sm-thesis`(命题构建) · `sm-industry-map`(行业框架) · `sm-company-deepdive`(公司深度) · `sm-earnings-preview`(财报前瞻) · `sm-model-check`(模型审阅) · `sm-consensus-watch`(预期差) · `sm-industry-database`(产业 / 公司数据库) · `sm-catalyst-monitor`(事件跟踪) · `sm-roadshow-questions`(路演问题) · `sm-red-team`(反方审视) · `sm-pm-brief`(PM 一页纸) · `sm-briefing`(晨会晚报) · `sm-tape-review`(盘面 + 技术面复盘) · `sm-deck-builder`(PPT 生成) · `sm-batch-refresh`(批量刷新) · `sm-batch-earnings`(财报季批量) · `sm-catalyst-sweep`(催化剂扫描) · `sm-stock-screen`(选股筛标的) · `sm-hourly-watch`(小时级盯盘) · `sm-close-recap`(收盘复盘)
 
-**v0.9 Librarian 模式 5 个（opt-in，需用户明示）**
-`sm-wiki-build`(建 14 段 wiki) · `sm-daily-feed`(7 桶日刷) · `sm-question-list`(会前 vault 扫描) · `sm-health-check`(双层健康检查 + 跨源仲裁) · `sm-qa-archive`(会后归档 + 双链级联)
+**v0.9 Librarian 模式 6 个（opt-in，需用户明示）**
+`sm-wiki-build`(建 14 段 wiki) · `sm-daily-feed`(7 桶日刷) · `sm-question-list`(会前 vault 扫描) · `sm-health-check`(双层健康检查 + 跨源仲裁) · `sm-qa-archive`(会后归档 + 双链级联) · `sm-people-watch`(关键人物 / 社区信号流)
 
 ## Boot protocol (新会话/compact 后)
 
@@ -66,7 +66,7 @@ v0.7 新增 L1/L2/L3 用户自定义。v0.8 新增 sm-deck-builder。**v0.9 新�
 | 完整 6 步开始前 | core/preamble.md |
 | 完整 8 步结束后 | core/postamble.md |
 | 数据源决策树 | core/adapters.md |
-| 证据分级 F1-H1 | core/evidence.md |
+| 证据分级（完整中文） | core/evidence.md |
 | 合规边界 | core/compliance.md |
 | 归档命名规范 | core/output-archive.md |
 | 验收清单 | core/acceptance.md |

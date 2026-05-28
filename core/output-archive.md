@@ -56,6 +56,10 @@
 │   ├── pm-brief/                     ← sm-pm-brief 输出
 │   │   └── 2026-04-07-pmbrief.md
 │   │
+│   ├── database/                     ← sm-industry-database 输出
+│   │   ├── 2026-04-07-database.xlsx
+│   │   └── 2026-04-07-database.md
+│   │
 │   ├── data/                         ← 原始数据快照（财报、公告等）
 │   │   ├── 2024-annual-report.pdf
 │   │   └── 2025-Q3-financials.json
@@ -72,6 +76,9 @@
     ├── INDEX.md
     ├── 2026-04-07-industry-map.md       ← sm-industry-map 输出
     ├── 2026-04-07-thesis.md             ← sm-thesis 输出
+    ├── database/
+    │   ├── 2026-04-07-database.xlsx     ← sm-industry-database 输出
+    │   └── 2026-04-07-database.md
     └── members/                         ← 主题相关公司的索引（软链 / md 链接）
         ├── 寒武纪 → ../../coverage/688256_寒武纪/
         └── 海光信息 → ../../coverage/688041_海光信息/
@@ -120,6 +127,7 @@
 | `sm-red-team` | `redteam` |
 | `sm-pm-brief` | `pmbrief` |
 | `sm-briefing` | `briefing` |
+| `sm-industry-database` | `database` |
 | `sm-batch-refresh` | `batch-refresh` |
 | `sm-batch-earnings` | `batch-earnings` |
 | `sm-catalyst-sweep` | `catalyst-sweep` |

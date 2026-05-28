@@ -3,8 +3,8 @@
 
 name: investor-harness
 display_name: Investor Harness
-version: 0.9.1
-description: 投研人的 AI 任务执行规范。23 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.9.1 新增 ONBOARDING 流程——首次启动 agent 时自动展示功能 + 关键词路由表，用户输入"同意"后 agent 自动检测 harness 类型（Claude Code / Codex / OpenCode / OpenClaw）+ 在对应入口 MD（CLAUDE.md / AGENTS.md）追加带 BEGIN/END marker 的路由块。v0.9 Librarian 升级（5 个 opt-in skill）。v0.8 sm-deck-builder。v0.7 L1/L2/L3 用户自定义。
+version: 0.9.2
+description: 投研人的 AI 任务执行规范。28 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.9.2 新增 sm-industry-database（产业 / 公司数据库搭建）并把证据分级从字母缩写切换为完整中文标签。v0.9.1 新增 ONBOARDING 流程——首次启动 agent 时自动展示功能 + 关键词路由表，用户输入"同意"后 agent 自动检测 harness 类型（Claude Code / Codex / OpenCode / OpenClaw）+ 在对应入口 MD（CLAUDE.md / AGENTS.md）追加带 BEGIN/END marker 的路由块。v0.9 Librarian 升级（6 个 opt-in skill）。v0.8 sm-deck-builder。v0.7 L1/L2/L3 用户自定义。
 license: MIT
 author: Joan Song
 homepage: https://github.com/joansongjr/investor-harness
@@ -80,6 +80,10 @@ skills:
   - id: sm-consensus-watch
     path: skills/sm-consensus-watch
     tier: research
+  - id: sm-industry-database
+    path: skills/sm-industry-database
+    tier: research
+    description: 产业 / 公司数据库搭建，沉淀 Excel 指标库、来源日志和长期刷新底表 — v0.9.2 新增
   - id: sm-catalyst-monitor
     path: skills/sm-catalyst-monitor
     tier: monitoring
@@ -147,7 +151,7 @@ skills:
 
 core:
   - path: core/evidence.md
-    purpose: 证据分级 F1/F2/M1/C1/H1
+    purpose: 证据分级（公开事实 / 财报披露 / 市场共识 / 合理推演 / 待核验假设）
   - path: core/compliance.md
     purpose: 合规边界与表达规范
   - path: core/templates.md
@@ -200,10 +204,11 @@ user_install_prompt:
 
 onboarding:
   path: ONBOARDING.md
-  purpose: 首次启动 agent 时由 agent 读取的引导流程——列出 23 个 skill + 关键词路由表，等用户明确"同意"后自动写入 harness 入口 MD — v0.9.1 新增
+  purpose: 首次启动 agent 时由 agent 读取的引导流程——列出 28 个 skill + 关键词路由表，等用户明确"同意"后自动写入 harness 入口 MD — v0.9.1 新增
   critical: true
   related:
-    - setup/keyword-routes.md       # 23 个 skill 关键词路由表（single source of truth）
+    - setup/keyword-routes.md       # 28 个 skill 关键词路由表（single source of truth）
+    - skills/sm-industry-database/SKILL.md
     - setup/routes-block.template.md # 要插入用户入口 MD 的标准块（带 BEGIN/END marker）
 
 workspace_templates:

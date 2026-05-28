@@ -17,10 +17,14 @@ Usage:
   bash setup/bootstrap.sh <target-dir> [--force]
 
 This will create a new analyst workspace at <target-dir> with:
-  - CLAUDE.md          (analyst persona + harness rules)
+  - CLAUDE.md          (Claude Code / OpenClaw workspace entrypoint)
+  - AGENTS.md          (Codex / OpenCode workspace entrypoint)
   - memory.md          (research memory index)
   - coverage.md        (covered companies)
   - watchlist.md       (companies you're watching)
+  - knowledge-index.md (capacity-style wiki homepage / local KB index)
+  - people-watch.md    (key people / X / Reddit tracker)
+  - selection-pipeline.md (stock selection pipeline)
   - decision-log.md    (investment decision journal)
   - research-queue.md  (research backlog)
   - biases.md          (your known biases)
@@ -37,14 +41,17 @@ FORCE="${2:-}"
 SETUP_DIR="$(cd "$(dirname "$0")" && pwd)"
 TEMPLATE_DIR="$SETUP_DIR/workspace"
 WORKSPACE_NAME="$(basename "$TARGET_DIR")"
+HARNESS_PATH="$(cd "$SETUP_DIR/.." && pwd)"
 
 mkdir -p "$TARGET_DIR"
 
 FILES=(
-  "CLAUDE.md"
   "memory.md"
   "coverage.md"
   "watchlist.md"
+  "knowledge-index.md"
+  "people-watch.md"
+  "selection-pipeline.md"
   "decision-log.md"
   "research-queue.md"
   "biases.md"
@@ -58,9 +65,58 @@ CREATED=0
 SKIPPED=0
 OVERWRITTEN=0
 
+escape_sed_replacement() {
+  printf '%s' "$1" | sed 's/[&|]/\\&/g'
+}
+
+render_entry_template() {
+  local dest="$1"
+  local entry_doc_name="$2"
+  local src="$TEMPLATE_DIR/CLAUDE.md.template"
+  local workspace_escaped harness_escaped entry_escaped
+
+  workspace_escaped="$(escape_sed_replacement "$WORKSPACE_NAME")"
+  harness_escaped="$(escape_sed_replacement "$HARNESS_PATH")"
+  entry_escaped="$(escape_sed_replacement "$entry_doc_name")"
+
+  sed \
+    -e "s|{WORKSPACE_NAME}|$workspace_escaped|g" \
+    -e "s|{HARNESS_PATH}|$harness_escaped|g" \
+    -e "s|{ENTRY_DOC_NAME}|$entry_escaped|g" \
+    "$src" > "$dest"
+}
+
+write_entry_file() {
+  local entry_doc_name="$1"
+  local dest="$TARGET_DIR/$entry_doc_name"
+  local existed_before="no"
+
+  if [[ -f "$dest" && "$FORCE" != "--force" ]]; then
+    echo "  - skip (exists): $entry_doc_name"
+    SKIPPED=$((SKIPPED + 1))
+    return
+  fi
+
+  [[ -f "$dest" ]] && existed_before="yes"
+
+  render_entry_template "$dest" "$entry_doc_name"
+
+  if [[ "$FORCE" == "--force" && "$existed_before" == "yes" ]]; then
+    echo "  ✓ overwrote: $entry_doc_name"
+    OVERWRITTEN=$((OVERWRITTEN + 1))
+  else
+    echo "  ✓ created:  $entry_doc_name"
+    CREATED=$((CREATED + 1))
+  fi
+}
+
+write_entry_file "CLAUDE.md"
+write_entry_file "AGENTS.md"
+
 for f in "${FILES[@]}"; do
   src="$TEMPLATE_DIR/${f}.template"
   dest="$TARGET_DIR/$f"
+  existed_before="no"
 
   if [[ ! -f "$src" ]]; then
     echo "  ! template missing: $src" >&2
@@ -73,10 +129,12 @@ for f in "${FILES[@]}"; do
     continue
   fi
 
+  [[ -f "$dest" ]] && existed_before="yes"
+
   # Substitute {WORKSPACE_NAME} placeholder
   sed "s/{WORKSPACE_NAME}/$WORKSPACE_NAME/g" "$src" > "$dest"
 
-  if [[ "$FORCE" == "--force" && -f "$dest" ]]; then
+  if [[ "$FORCE" == "--force" && "$existed_before" == "yes" ]]; then
     echo "  ✓ overwrote: $f"
     OVERWRITTEN=$((OVERWRITTEN + 1))
   else
@@ -141,13 +199,15 @@ echo "Summary: created=$CREATED, overwritten=$OVERWRITTEN, skipped=$SKIPPED"
 echo
 echo "Next steps:"
 echo "  1. cd $TARGET_DIR"
-echo "  2. Edit CLAUDE.md and fill in your role + coverage scope"
+echo "  2. Edit AGENTS.md (Codex / OpenCode) or CLAUDE.md (Claude Code / OpenClaw)"
 echo "  3. Edit memory.md and fill in your research identity"
 echo "  4. Add your initial covered companies to coverage.md"
-echo "  5. (可选) 改 user-templates/daily-briefing.md 为你自己的日报模板"
-echo "  6. (可选) 把 user-skills/my-hk-ipo-analysis 改成你自己的定制 skill"
-echo "  7. 打开此目录，在 Claude Code / Codex / OpenCode 里开始提问："
+echo "  5. (可选) 用 knowledge-index.md / people-watch.md / selection-pipeline.md 起你的本地知识库"
+echo "  6. (可选) 改 user-templates/daily-briefing.md 为你自己的日报模板"
+echo "  7. (可选) 把 user-skills/my-hk-ipo-analysis 改成你自己的定制 skill"
+echo "  8. 打开此目录，在 Claude Code / Codex / OpenCode 里开始提问："
 echo "       看一下 LITE"
 echo "       跑一下日报"
+echo "       盯一下我的股票池"
 echo
 echo "Done."

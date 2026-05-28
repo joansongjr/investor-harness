@@ -37,12 +37,12 @@ fi
 
 echo
 echo "═══════════════════════════════════════════════════════════════"
-echo "  ✅ Investor Harness installed (17 skills)"
+echo "  ✅ Investor Harness installed (28 skills)"
 echo "═══════════════════════════════════════════════════════════════"
 echo
 echo "  ⚠️  关键最后一步："
 echo "  把 INSTALL-PROMPT.md 里的'启用提示词'复制到你 harness 的"
-echo "  CLAUDE.md / system prompt / 自定义指令位置。"
+echo "  AGENTS.md / CLAUDE.md / system prompt / 自定义指令位置。"
 echo
 echo "  完整说明：cat $HARNESS_DIR/INSTALL-PROMPT.md"
 echo

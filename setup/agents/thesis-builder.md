@@ -40,7 +40,7 @@
 ### Evidence Map
 | Claim | Evidence | Tag |
 |---|---|---|
-| ... | ... | F1/F2/M1/C1/H1 |
+| ... | ... | 公开事实 / 财报披露 / 市场共识 / 合理推演 / 待核验假设 |
 
 ### Verification Calendar
 - [日期/事件] → [应该看到什么]

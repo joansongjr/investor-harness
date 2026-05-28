@@ -1,11 +1,11 @@
 # Investor Harness · 启用提示词
 
-> 📋 **复制下面整段文字**，粘贴到你 AI 工具的"系统提示词"或 CLAUDE.md / agent.md 文件里。
+> 📋 **复制下面整段文字**，粘贴到你 AI 工具的"系统提示词"或 AGENTS.md / CLAUDE.md / agent.md 文件里。
 > 这是让 LLM **真正按 Investor Harness 规则工作**的关键。
 
 ---
 
-## 🚀 v0.9.1 推荐做法：让 agent 自动跑 onboarding
+## 🚀 v0.9.2 推荐做法：让 agent 自动跑 onboarding
 
 如果你用 **Claude Code / Codex / OpenCode / OpenClaw** 之类支持读取本地 markdown 的 agent，**不用**手动复制粘贴下面的内容。
 
@@ -19,21 +19,28 @@
 
 agent 会：
 
-1. 列出 23 个 skill 功能 + 关键词触发表给你看
+1. 列出 28 个 skill 功能 + 关键词触发表给你看
 2. 解释"自动写入 / 手动复制 / 每次显式调用" 三种激活方式
 3. **等你输入"同意"**（明确字面表达）
 4. 自动检测 agent 类型（Claude Code → `~/.claude/CLAUDE.md` / Codex → `~/.codex/AGENTS.md` / OpenCode → `~/.config/opencode/AGENTS.md`）
 5. 在对应入口 MD 末尾追加路由块（用 `<!-- investor-harness:keyword-routes:start -->` 包住，将来升级可整块替换、可整块移除）
+6. 审计当前工作区是否已经有 `coverage/` / `themes/` / `briefings/` / `.task-pulse` / `active-tasks.md`
+7. 如果缺骨架，继续征得你确认后运行 `bash setup/bootstrap.sh <workspace>` 补齐
+8. 从此把每次覆盖池相关任务自动归档到 `coverage/{ticker}_{name}/...`，而不是只留在对话里
 
 ⛔ 硬约束：**未读到用户明确"同意" / "agree" / "yes write"** → agent 绝对不动你的文件。
 
-详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)（完整 23 个 skill 关键词表）。
+详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)（完整 28 个 skill 关键词表）。
 
-**这是 v0.9.1 之后的首选方式**。下面的手动复制方法仍然保留——适合不希望 agent 自动改文件的用户。
+> **新的完成标准**：只有"路由已激活 + 工作区骨架已补齐"两件事都完成，才算真正 setup 好。
+
+**这是 v0.9.2 之后的首选方式**。下面的手动复制方法仍然保留——适合不希望 agent 自动改文件的用户。
 
 ---
 
 ## 老的手动方式（仍然支持）
+
+> 注：下面的手动提示词正文是 **Claude 风格的基线版本**。如果你用 Codex / OpenCode，优先走上面的 onboarding；若坚持手动粘贴，需要把里面的入口文件和 skills 路径改成你自己的实际安装位置。
 
 ---
 
@@ -45,22 +52,29 @@ Investor Harness 是一套 markdown 规范，但 markdown 本身没有强制力�
 - 你说"看一下 LITE"，LLM 会**自动**走 sm-company-deepdive 流程
 - 你不需要每次记得说"用 xxx skill"
 - LLM 会**自动**取数、标证据、写"仍需补的资料"、写文件、更新任务进度
+- 任何公司级任务都会优先落到对应的 `coverage/{ticker}_{name}/` 目录，而不是只存在于聊天记录里
 
 ---
 
 ## 三种粘贴方式（按你的技术水平选）
 
-### 🟢 方式 A：粘贴到全局 CLAUDE.md（推荐，一次配置永久生效）
+### 🟢 方式 A：粘贴到全局入口文件（推荐，一次配置永久生效）
 
-适合：用 Claude Code 的所有人
+适合：希望全局生效的用户
 
-打开（或创建）`~/.claude/CLAUDE.md`，把下面的"启用提示词"段落整段贴进去。以后**任何对话**只要涉及投研，LLM 都会自动遵守。
+把下面的"启用提示词"段落整段贴到你的全局入口文件里。常见路径：
+- Claude Code → `~/.claude/CLAUDE.md`
+- Codex → `~/.codex/AGENTS.md`
+- OpenCode → `~/.config/opencode/AGENTS.md`
 
-### 🟡 方式 B：粘贴到工作区目录的 CLAUDE.md / agent.md
+### 🟡 方式 B：粘贴到工作区目录的 AGENTS.md / CLAUDE.md / agent.md
 
 适合：你只想让某个特定文件夹（比如 `~/我的投研工作区/`）启用 harness
 
-把"启用提示词"贴到那个目录的 `CLAUDE.md` 或 `agent.md` 里。LLM 在这个目录启动会话时才会遵守。
+把"启用提示词"贴到那个目录的入口文件里。常见命名：
+- Codex / OpenCode → `AGENTS.md`
+- Claude Code / OpenClaw → `CLAUDE.md`
+- 其他兼容 harness → `agent.md`
 
 > 💡 用 `bash setup/bootstrap.sh ~/我的投研工作区` 一键创建带提示词的工作区。
 
@@ -117,11 +131,11 @@ Investor Harness 是一套 markdown 规范，但 markdown 本身没有强制力�
 
 - 按对应 skill 的固定结构（每个 skill 都有 9 段 / 7 段 / 一页纸等）
 - 每条事实**必须**带证据等级标签：
-  - F1 = 公开事实（如"2020 年上市"）
-  - F2 = 财报/公告/权威披露（如"2024 营收 X 亿"）
-  - M1 = 市场观点/一致预期（如"卖方一致预期 PE 50x"）
-  - C1 = 基于事实的合理推演（必须说明推演链路）
-  - H1 = 待核验线索（不能作为结论唯一依据）
+  - 公开事实 = 公开、稳定、可直接验证的事实（如"2020 年上市"）
+  - 财报披露 = 财报/公告/权威披露中的明确数字（如"2024 营收 X 亿"）
+  - 市场共识 = 市场观点/一致预期（如"卖方一致预期 PE 50x"）
+  - 合理推演 = 基于事实的合理推演（必须说明推演链路）
+  - 待核验假设 = 待核验线索（不能作为结论唯一依据）
 - 风险必须**可观测、可触发**（不能写"宏观波动""地缘政治"这种套话）
 
 ### 结束后（Postamble，强制 8 步）
@@ -138,7 +152,7 @@ Investor Harness 是一套 markdown 规范，但 markdown 本身没有强制力�
 - Step 6：跑 acceptance.md 验收清单
 - Step 7：**Dual Output Discipline** — 对话**贴出完整输出**（云端用户能直接读）+ **同时**写一份到文件做归档备份；末尾追加 `📁 已归档：{path}` + 关键统计 + 下一步建议
 
-## 17 个可用 skill
+## 18 个基础 skill
 
 需要时在工具调用里读对应文件 ~/.claude/skills/investor-harness/skills/{skill-name}/SKILL.md：
 
@@ -150,6 +164,7 @@ Investor Harness 是一套 markdown 规范，但 markdown 本身没有强制力�
 - sm-earnings-preview · 财报前瞻
 - sm-model-check · 模型审阅
 - sm-consensus-watch · 预期差
+- sm-industry-database · 产业 / 公司数据库搭建
 - sm-catalyst-monitor · 事件跟踪
 - sm-roadshow-questions · 路演提纲
 - sm-red-team · 反方审视
@@ -175,6 +190,7 @@ Investor Harness 是一套 markdown 规范，但 markdown 本身没有强制力�
 | "整理今天的 X" / "晨会" | sm-briefing |
 | "给 PM 一页纸" | sm-pm-brief |
 | "X 行业框架" | sm-industry-map |
+| "数据库" / "产业数据库" / "公司数据库" | sm-industry-database |
 | "怎么问 X 管理层" | sm-roadshow-questions |
 | "看一下 X 的 K 线" / "复盘 X" | sm-tape-review |
 | "做 X 的 PPT" / "生成 deck" / "IC pitch" / "路演材料" | sm-deck-builder |

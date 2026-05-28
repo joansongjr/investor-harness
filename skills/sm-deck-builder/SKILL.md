@@ -121,10 +121,10 @@ Recommended Action
 │ {3-5 句话业务描述}                      │
 ├────────────────────────────────────────┤
 │ Key Metrics (FY{N-1})                  │
-│  Revenue:    {XX} 亿 (F2)              │
-│  Net Profit: {XX} 亿 (F2)              │
-│  Margin:     {XX}%    (F2)             │
-│  Market Cap: {XX} 亿 (F1)              │
+│  Revenue:    {XX} 亿 (财报披露)              │
+│  Net Profit: {XX} 亿 (财报披露)              │
+│  Margin:     {XX}%    (财报披露)             │
+│  Market Cap: {XX} 亿 (公开事实)              │
 ├────────────────────────────────────────┤
 │ Positioning                            │
 │ {在产业链 / 行业中的位置}                │
@@ -153,7 +153,7 @@ Market Consensus      Your View           Gap
 ```
 Evidence 1: {要点}
   Data:   {数据}
-  Source: F2 (公司 2024 年报)
+  Source: 财报披露 (公司 2024 年报)
   Why it matters: {一句话解读}
 
 Evidence 2: ...
@@ -236,12 +236,12 @@ Metric 3: ...
 ### Slide 10 · 附录 & 合规 (Appendix)
 
 ```
-Sources Used (F1/F2/M1/C1/H1 Breakdown)
-  F1 公开事实:     {N} 条
-  F2 财报公告:     {N} 条
-  M1 市场观点:     {N} 条
-  C1 基于事实推演: {N} 条
-  H1 待核验线索:   {N} 条
+Sources Used (完整中文证据分布)
+  公开事实:     {N} 条
+  财报披露:     {N} 条
+  市场共识:     {N} 条
+  合理推演:     {N} 条
+  待核验假设:   {N} 条
 
 仍需补的资料 (Gaps)
   必需: {list}
@@ -310,7 +310,7 @@ typography:
     weight: Regular
     color: neutral_mid
 
-  evidence_tag:  # F1/F2/M1/C1/H1 标签
+  evidence_tag:  # 完整中文证据标签
     font: "Menlo / Courier"
     size: 9pt
     weight: Medium
@@ -321,7 +321,7 @@ typography:
 - 每页 **一个** H1，不超过 1 行
 - 每段正文不超过 5 行
 - 数字用等宽字体对齐
-- 证据等级标注用 `[F2]` 上标形式
+- 证据等级标注用 `[财报披露]` 这类上标形式
 
 ### 布局网格
 
@@ -355,7 +355,7 @@ typography:
 - ✅ 简洁线图 / 柱图 / 堆叠柱
 - ✅ 坐标轴单位清晰（亿元 / %）
 - ✅ Y 轴不从零开始时必须标注
-- ✅ 图表下方带数据来源标签 (F1/F2...)
+- ✅ 图表下方带完整中文数据来源标签（公开事实 / 财报披露等）
 - ❌ 不要用 3D 饼图 / 3D 柱状图
 - ❌ 不要用彩虹色
 - ❌ 不要用默认 Excel 风格

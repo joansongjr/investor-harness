@@ -81,6 +81,15 @@ LLM 在每次收到用户消息后，**第一件事**是扫描消息文本，匹
 | 假设怎么看 | assumptions check |
 | WACC / 永续增长 | WACC / terminal growth |
 
+### 数据库类 → `sm-industry-database`
+
+| 中文 | 英文 |
+|---|---|
+| 数据库 / 产业数据库 | database / industry database |
+| 公司数据库 | company database |
+| 数据底表 / 指标库 | data workbook / indicator database |
+| 数据库搭建 / 搭数据库 | build database / build dataset |
+
 ### 催化剂 / 触发事件类 → `sm-catalyst-monitor`
 
 | 中文 | 英文 |

@@ -29,16 +29,17 @@ fi
 
 echo
 echo "═══════════════════════════════════════════════════════════════"
-echo "  ✅ Investor Harness installed (17 skills)"
+echo "  ✅ Investor Harness installed (28 skills)"
 echo "═══════════════════════════════════════════════════════════════"
 echo
-echo "  ⚠️  关键最后一步："
-echo "  把 INSTALL-PROMPT.md 里的'启用提示词'复制到："
-echo "    📋 ~/.config/opencode/CLAUDE.md (或 OpenCode 的系统提示位置)"
+echo "  推荐下一步（v0.9.2）："
+echo "  1. 重启 OpenCode"
+echo "  2. 在 OpenCode 里说："
+echo "       跑一下 investor-harness onboarding"
+echo "  3. 它会引导你把路由写到："
+echo "       📋 ~/.config/opencode/AGENTS.md"
 echo
-echo "  完整说明：cat $HARNESS_DIR/INSTALL-PROMPT.md"
+echo "  手动说明：cat $HARNESS_DIR/INSTALL-PROMPT.md"
 echo
 echo "  否则 LLM 不会自动按 Investor Harness 流程工作。"
-echo
-echo "  Restart OpenCode to pick up the new skills."
 echo "═══════════════════════════════════════════════════════════════"

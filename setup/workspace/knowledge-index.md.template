@@ -1,0 +1,62 @@
+# 知识库索引
+
+> 这是本地知识库的总入口。定位上接近 Capacity / Wiki 的首页：
+> 不直接放长内容，只维护"入口、分组、关系、最近更新"。
+
+---
+
+## 1. 公司入口
+
+| 类型 | 名称 | 路径 / 链接 | 最近更新 | 备注 |
+|---|---|---|---|---|
+| Coverage | [示例] 寒武纪 | `vault/688256/wiki.md` | 2026-05-01 | AI 芯片 |
+| Watchlist | [示例] 中际旭创 | `vault/300308/wiki.md` | 2026-05-01 | 光模块 |
+
+---
+
+## 2. 主题入口
+
+| 主题 | 主文档 | 相关公司 | 最近更新 | 当前状态 |
+|---|---|---|---|---|
+| AI 训练链 | `themes/ai-training/index.md` | 寒武纪 / 浪潮信息 / 工业富联 |  | 跟踪中 |
+| 光模块 | `themes/optical/index.md` | 中际旭创 / 新易盛 / 天孚通信 |  | 跟踪中 |
+
+---
+
+## 3. 人物 / 社区入口
+
+| 对象 | 平台 | 主题 | 索引位置 | 可信度 |
+|---|---|---|---|---|
+| [示例] @semi_analysis | X | GPU / 服务器 | `people-watch.md` | A |
+| [示例] r/hardware | Reddit | 供应链讨论 | `people-watch.md` | B |
+
+---
+
+## 4. 每日 / 每周信息流
+
+| 类型 | 文件 | 覆盖范围 | 最近一期 |
+|---|---|---|---|
+| Daily Feed | `daily-feed/` | coverage + holdings |  |
+| Hourly Watch | `monitoring/hourly-watch/` | 自选股 / 股票池 |  |
+| Close Recap | `monitoring/close-recap/` | 股票池收盘复盘 |  |
+| People Watch | `monitoring/people-watch/` | 关键人物 / 社区 |  |
+
+---
+
+## 5. 选股 / 想法池
+
+| 条目 | 文件 | 当前阶段 | 下一步 |
+|---|---|---|---|
+| AI 链低涨幅补涨 | `selection-pipeline.md` | A 级筛选中 | 调 `sm-stock-screen` |
+| MLCC / 被动件 | `selection-pipeline.md` | 初筛 | 补产业链验证 |
+
+---
+
+## 6. 维护规则
+
+- 新起一家公司 wiki 时，把入口补到 §1
+- 新建主题或板块索引时，把入口补到 §2
+- 新增关键人物 / 社区时，把入口补到 §3
+- 每次跑 `sm-daily-feed`、`sm-hourly-watch`、`sm-close-recap`、`sm-people-watch` 后，检查 §4 是否需要更新
+- 每次跑 `sm-stock-screen` 后，把筛选主题补到 §5
+

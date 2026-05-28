@@ -59,7 +59,7 @@
 
 ### 输出时
 - 按 skill 结构
-- 每条事实必须带证据等级：F1 / F2 / M1 / C1 / H1
+- 每条事实必须带完整中文证据等级：公开事实 / 财报披露 / 市场共识 / 合理推演 / 待核验假设
 - 风险必须可观测可触发（不要"宏观波动"套话）
 
 ### 结束后 · Postamble 8 步
@@ -83,9 +83,9 @@
 
 按上面的优先级链自动降级。缺失数据时走兜底协议让用户贴材料。
 
-## 17 个 skill
+## 18 个基础 skill
 
-`sm-master` · `sm-autopilot` · `sm-thesis` · `sm-industry-map` · `sm-company-deepdive` · `sm-earnings-preview` · `sm-model-check` · `sm-consensus-watch` · `sm-catalyst-monitor` · `sm-roadshow-questions` · `sm-red-team` · `sm-pm-brief` · `sm-briefing` · `sm-tape-review` · `sm-deck-builder` · `sm-batch-refresh` · `sm-batch-earnings` · `sm-catalyst-sweep`
+`sm-master` · `sm-autopilot` · `sm-thesis` · `sm-industry-map` · `sm-company-deepdive` · `sm-earnings-preview` · `sm-model-check` · `sm-consensus-watch` · `sm-industry-database` · `sm-catalyst-monitor` · `sm-roadshow-questions` · `sm-red-team` · `sm-pm-brief` · `sm-briefing` · `sm-tape-review` · `sm-deck-builder` · `sm-batch-refresh` · `sm-batch-earnings` · `sm-catalyst-sweep`
 
 ## 硬约束（违反等于未完成任务）
 
