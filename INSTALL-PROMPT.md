@@ -5,7 +5,41 @@
 
 ---
 
-## 🚀 v0.9.2 推荐做法：让 agent 自动跑 onboarding
+## 🚀 推荐安装法：GitHub + onboarding
+
+GitHub 仓库：
+
+- `https://github.com/joansongjr/investor-harness`
+
+最短安装路径：
+
+```bash
+git clone https://github.com/joansongjr/investor-harness.git ~/investor-harness
+cd ~/investor-harness
+bash setup.sh
+```
+
+如果你想直接先建一个带骨架的工作区，也可以：
+
+```bash
+git clone https://github.com/joansongjr/investor-harness.git ~/investor-harness
+cd ~/investor-harness
+bash setup/bootstrap.sh ~/my-investor-workspace
+```
+
+装完后，在你的 agent 里直接说：
+
+> **"跑一下 investor-harness onboarding"**
+
+或
+
+> **"读 ~/investor-harness/ONBOARDING.md 然后引导我激活"**
+
+这是当前最推荐的激活方式，因为它会把**安装、路由激活、工作区骨架检查**三件事串起来。
+
+---
+
+## 🚀 v0.9.3 推荐做法：让 agent 自动跑 onboarding
 
 如果你用 **Claude Code / Codex / OpenCode / OpenClaw** 之类支持读取本地 markdown 的 agent，**不用**手动复制粘贴下面的内容。
 
@@ -110,7 +144,7 @@ Investor Harness 是一套 markdown 规范，但 markdown 本身没有强制力�
 简化版：
 - Step 0：检查 .task-pulse 是否有相关 in_progress 任务，有就续跑
 - Step 1：识别市场（A 股/港股/美股/基金/跨市场）
-- Step 2：检查同标的的历史输出（{coverage_root}/{ticker}/）
+- Step 2：检查同标的的历史输出（{coverage_root}/{ticker}_{name}/）
 - Step 3：检查 active-tasks
 - Step 4：**必须**输出一段 [Preflight] 取数计划：
   ```
@@ -147,7 +181,7 @@ Investor Harness 是一套 markdown 规范，但 markdown 本身没有强制力�
 - Step 1：自检证据等级覆盖度
 - Step 2：写"仍需补的资料"段（必需 / 建议 / 不确定 三档，**这段不能为空**）
 - Step 3：写合规声明
-- Step 4：把完整输出写入文件 {coverage_root}/{ticker}/{skill}/YYYY-MM-DD-{skill}.md
+- Step 4：把完整输出写入文件 {coverage_root}/{ticker}_{name}/{skill}/YYYY-MM-DD-{skill}.md
 - Step 5：更新 .task-pulse + active-tasks.md
 - Step 6：跑 acceptance.md 验收清单
 - Step 7：**Dual Output Discipline** — 对话**贴出完整输出**（云端用户能直接读）+ **同时**写一份到文件做归档备份；末尾追加 `📁 已归档：{path}` + 关键统计 + 下一步建议

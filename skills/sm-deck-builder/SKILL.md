@@ -9,9 +9,9 @@ inputs:
   - 可选：品牌色 / logo
 outputs:
   - .pptx 文件 + 内容摘要
-  - 归档到 {coverage}/{ticker}/decks/{YYYY-MM-DD}-{deck-type}.pptx
+  - 归档到 {coverage}/{ticker}_{name}/decks/{YYYY-MM-DD}-{deck-type}.pptx
 data_sources:
-  - 优先：{coverage_root}/{ticker}/ 下的历史研究（thesis / deepdive / red-team / earnings）
+  - 优先：{coverage_root}/{ticker}_{name}/ 下的历史研究（thesis / deepdive / red-team / earnings）
   - 备选：见 ../../core/adapters.md
 markets: [CN-A, HK, US, GLOBAL]
 ---
@@ -254,7 +254,7 @@ Sources Used (完整中文证据分布)
 整须经持牌分析师人工复核。投资有风险，入市需谨慎。
 
 Analyst: {Name}  Date: {YYYY-MM-DD}  Version: {v}
-Sources archived at: {coverage}/{ticker}/
+Sources archived at: {coverage}/{ticker}_{name}/
 ```
 
 ---
@@ -374,7 +374,7 @@ typography:
 ```
 1. Preamble (6 steps)
    ↓
-2. 读取工作区 {coverage_root}/{ticker}/
+2. 读取工作区 {coverage_root}/{ticker}_{name}/
    - latest thesis
    - latest deepdive
    - latest red-team
@@ -388,10 +388,10 @@ typography:
    - 传入 10 slides 的内容 dict
    ↓
 5. 保存文件到归档路径:
-   {coverage}/{ticker}/decks/{YYYY-MM-DD}-{deck-type}.pptx
+   {coverage}/{ticker}_{name}/decks/{YYYY-MM-DD}-{deck-type}.pptx
    ↓
 6. 同时输出 markdown 版本（方便对话里预览）:
-   {coverage}/{ticker}/decks/{YYYY-MM-DD}-{deck-type}.md
+   {coverage}/{ticker}_{name}/decks/{YYYY-MM-DD}-{deck-type}.md
    ↓
 7. Postamble (8 steps)
    ↓
@@ -416,24 +416,24 @@ deck_spec:
 
   inherited_research:
     thesis:
-      path: "{coverage}/{ticker}/thesis/latest.md"
+      path: "{coverage}/{ticker}_{name}/thesis/latest.md"
       one_liner: "..."
       pillars: ["...", "...", "..."]
     deepdive:
-      path: "{coverage}/{ticker}/deepdive/latest.md"
+      path: "{coverage}/{ticker}_{name}/deepdive/latest.md"
       company_overview: {...}
       business_model: "..."
       key_metrics: {revenue, profit, margin, market_cap}
     red_team:
-      path: "{coverage}/{ticker}/red-team/latest.md"
+      path: "{coverage}/{ticker}_{name}/red-team/latest.md"
       risks: ["...", "...", "..."]
       kill_switch_triggers: ["...", "...", "..."]
     earnings:
-      path: "{coverage}/{ticker}/earnings/latest.md"
+      path: "{coverage}/{ticker}_{name}/earnings/latest.md"
       next_date: "{YYYY-MM-DD}"
       sensitive_vars: [...]
     consensus_watch:
-      path: "{coverage}/{ticker}/consensus/latest.md"
+      path: "{coverage}/{ticker}_{name}/consensus/latest.md"
       priced_in: [...]
       not_priced_in: [...]
 
@@ -456,8 +456,8 @@ deck_spec:
 
 ```
 Files created:
-  📊 {coverage}/{ticker}/decks/{YYYY-MM-DD}-{deck-type}.pptx    ← 真正的 PPT
-  📝 {coverage}/{ticker}/decks/{YYYY-MM-DD}-{deck-type}.md     ← markdown 预览
+  📊 {coverage}/{ticker}_{name}/decks/{YYYY-MM-DD}-{deck-type}.pptx    ← 真正的 PPT
+  📝 {coverage}/{ticker}_{name}/decks/{YYYY-MM-DD}-{deck-type}.md     ← markdown 预览
 
 Preview in chat (dual output):
   [每页的标题 + 核心要点，markdown 版]

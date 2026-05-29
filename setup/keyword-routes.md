@@ -100,7 +100,7 @@
 | `见 X 前过一遍 question list` / `准备 X 调研提纲` / `会前 briefing` | `sm-question-list` | question list + vault 扫描结论 |
 | `跑健康检查` / `扫跨源矛盾` / `wiki 自检` | `sm-health-check` | 双层健康检查 + 跨源仲裁 |
 | `会后归档` / `整理 X 的 Q&A` / `见完 X 后整理` | `sm-qa-archive` | Q&A 归档 + wiki 级联更新 |
-| `关键人物追踪` / `跟踪 X 博主` / `跟踪 Reddit` / `人物 watch` | `sm-people-watch` | 关键人物 / 社区信号流跟踪 |
+| `关键人物追踪` / `关键人物观点` / `X观点` / `X 观点` / `外网观点` / `外网怎么说` / `海外社区怎么看` / `推特观点` / `Reddit 观点` / `外网情绪` / `跟踪 X 博主` / `跟踪 Reddit` / `人物 watch` | `sm-people-watch` | 关键人物 / 社区信号流跟踪 |
 
 ---
 
@@ -115,7 +115,7 @@
 | 盘中盯盘 | `盯一下我的股票池` | `sm-hourly-watch` → `sm-catalyst-monitor` |
 | 收盘复盘 | `复盘今天的股票池` | `sm-close-recap` → `sm-tape-review` |
 | 主题选股 | `帮我筛 AI 链补涨标的` | `sm-stock-screen` → `sm-thesis` |
-| 人物信号流 | `跟一下 X 和 Reddit 上的关键人物` | `sm-people-watch` → `sm-catalyst-monitor` |
+| 人物信号流 | `跟一下 X 和 Reddit 上的关键人物` / `抓一下外网观点` / `看看关键人物观点` | `sm-people-watch` → `sm-catalyst-monitor` |
 | 加仓决策 | `X 要不要加仓` | `sm-thesis` → `sm-red-team` → `sm-tape-review` → `sm-pm-brief` |
 | IC pitch 全套 | `给 IC 做 X 的 pitch` | `sm-thesis` → `sm-company-deepdive` → `sm-consensus-watch` → `sm-red-team` → `sm-deck-builder` |
 | 财报季全套 | `X 财报季全套` | `sm-earnings-preview` → `sm-consensus-watch` → `sm-model-check` → `sm-pm-brief` |

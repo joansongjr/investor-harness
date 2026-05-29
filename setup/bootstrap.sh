@@ -29,6 +29,10 @@ This will create a new analyst workspace at <target-dir> with:
   - research-queue.md  (research backlog)
   - biases.md          (your known biases)
   - active-tasks.md    (in-progress task state, v0.3+)
+  - coverage/          (per-company archive root)
+  - themes/            (theme / industry archive root)
+  - briefings/         (daily / weekly / monthly archive root)
+  - .task-pulse + .checkpoint/ (resume state)
 
 Example:
   bash setup/bootstrap.sh ~/my-research
@@ -160,6 +164,46 @@ if [[ ! -d "$CKPT_DIR" ]]; then
   echo "  ✓ created:  .checkpoint/ (resume directory)"
 fi
 
+# Archive roots required by output-archive.md
+COVERAGE_ARCHIVE_DIR="$TARGET_DIR/coverage"
+THEMES_DIR="$TARGET_DIR/themes"
+BRIEFINGS_DIR="$TARGET_DIR/briefings"
+
+if [[ ! -d "$COVERAGE_ARCHIVE_DIR" ]]; then
+  mkdir -p "$COVERAGE_ARCHIVE_DIR"
+  echo "  ✓ created:  coverage/ (company archive root)"
+fi
+
+if [[ ! -f "$COVERAGE_ARCHIVE_DIR/INDEX.md" ]]; then
+  cat > "$COVERAGE_ARCHIVE_DIR/INDEX.md" <<'EOF'
+# Coverage Archive Index
+
+> Investor Harness 的单公司归档根目录。
+> 每家覆盖公司一个子目录：`{ticker}_{name}/`
+
+## 当前覆盖目录
+
+- [ ] 在首次正式任务后补上公司目录链接
+
+## 使用规则
+
+1. 任何单公司 / 覆盖池任务都必须归档到这里
+2. 第一次做某家公司时，先创建 `{ticker}_{name}/` 和该目录下的 `INDEX.md`
+3. 结果只留在对话里、不进入本目录，视为任务未完成
+EOF
+  echo "  ✓ created:  coverage/INDEX.md"
+fi
+
+if [[ ! -d "$THEMES_DIR" ]]; then
+  mkdir -p "$THEMES_DIR"
+  echo "  ✓ created:  themes/ (industry / theme archive root)"
+fi
+
+if [[ ! -d "$BRIEFINGS_DIR" ]]; then
+  mkdir -p "$BRIEFINGS_DIR"
+  echo "  ✓ created:  briefings/ (briefing archive root)"
+fi
+
 # v0.7: create user-templates/ and user-skills/ for task permanence
 USER_TEMPLATES_DIR="$TARGET_DIR/user-templates"
 USER_SKILLS_DIR="$TARGET_DIR/user-skills"
@@ -202,10 +246,12 @@ echo "  1. cd $TARGET_DIR"
 echo "  2. Edit AGENTS.md (Codex / OpenCode) or CLAUDE.md (Claude Code / OpenClaw)"
 echo "  3. Edit memory.md and fill in your research identity"
 echo "  4. Add your initial covered companies to coverage.md"
-echo "  5. (可选) 用 knowledge-index.md / people-watch.md / selection-pipeline.md 起你的本地知识库"
-echo "  6. (可选) 改 user-templates/daily-briefing.md 为你自己的日报模板"
-echo "  7. (可选) 把 user-skills/my-hk-ipo-analysis 改成你自己的定制 skill"
-echo "  8. 打开此目录，在 Claude Code / Codex / OpenCode 里开始提问："
+echo "  5. Confirm coverage/ themes/ briefings/ were created — these are the mandatory archive roots"
+echo "  6. First company task should land in coverage/{ticker}_{name}/, not only in chat"
+echo "  7. (可选) 用 knowledge-index.md / people-watch.md / selection-pipeline.md 起你的本地知识库"
+echo "  8. (可选) 改 user-templates/daily-briefing.md 为你自己的日报模板"
+echo "  9. (可选) 把 user-skills/my-hk-ipo-analysis 改成你自己的定制 skill"
+echo "  10. 打开此目录，在 Claude Code / Codex / OpenCode 里开始提问："
 echo "       看一下 LITE"
 echo "       跑一下日报"
 echo "       盯一下我的股票池"

@@ -1,4 +1,4 @@
-<!-- investor-harness:keyword-routes:start v0.9.2 -->
+<!-- investor-harness:keyword-routes:start v0.9.3 -->
 <!--
   这块由 investor-harness ONBOARDING.md 自动管理。
   下次升级时整块替换。**不要手动编辑**——改 setup/keyword-routes.md 然后重跑 onboarding。
@@ -47,7 +47,7 @@
 | **见 X 前过一遍 question list / 准备 X 调研提纲 / 会前 briefing** | `sm-question-list` |
 | **跑健康检查 / 扫跨源矛盾 / wiki 自检** | `sm-health-check` |
 | **会后归档 / 整理 X 的 Q&A / 见完 X 后整理** | `sm-qa-archive` |
-| **关键人物追踪 / 跟踪 X 博主 / 跟踪 Reddit / 人物 watch** | `sm-people-watch` |
+| **关键人物追踪 / 关键人物观点 / X观点 / X 观点 / 外网观点 / 外网怎么说 / 海外社区怎么看 / 推特观点 / Reddit 观点 / 外网情绪 / 跟踪 X 博主 / 跟踪 Reddit / 人物 watch** | `sm-people-watch` |
 
 ### 硬约束（所有路由都强制）
 

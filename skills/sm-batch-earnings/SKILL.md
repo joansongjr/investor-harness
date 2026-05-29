@@ -56,7 +56,7 @@ Batch Earnings 特别注意：每家公司的子任务必须**完整调用 `sm-e
 对每家公司：
 - 调 `sm-earnings-preview` 完整流程
 - 输出按 sm-earnings-preview 的结构
-- 单家归档到 `{coverage_root}/{ticker}/earnings/{YYYY-QN}-preview.md`
+- 单家归档到 `{coverage_root}/{ticker}_{name}/earnings/{YYYY-QN}-preview.md`
 
 ### 第三步：生成总体节奏摘要
 

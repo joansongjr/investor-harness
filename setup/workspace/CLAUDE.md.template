@@ -141,7 +141,7 @@ LLM 在每次输出前估算剩余 context budget：
 - 盘中盯盘 / 小时异动 → `sm-hourly-watch`
 - 收盘股票池复盘 → `sm-close-recap`
 - 选股 / 找标的 → `sm-stock-screen`
-- 关键人物 / X / Reddit 跟踪 → `sm-people-watch`
+- 关键人物 / X / Reddit / 外网观点 跟踪 → `sm-people-watch`
 - 模型审阅 → `sm-model-check`
 - 反方审视 → `sm-red-team`
 - 路演调研 → `sm-roadshow-questions`
@@ -231,7 +231,7 @@ LLM 在每次输出前估算剩余 context budget：
 | "盯一下我的股票池" | 调 `sm-hourly-watch` |
 | "复盘今天的股票池" | 调 `sm-close-recap` |
 | "帮我筛 AI 链补涨标的" | 调 `sm-stock-screen` |
-| "跟一下 X 和 Reddit 上的关键人物" | 调 `sm-people-watch` |
+| "跟一下 X 和 Reddit 上的关键人物" / "抓一下外网观点" / "看看关键人物观点" | 调 `sm-people-watch` |
 | "给 PM 看的" | 调 `sm-pm-brief` |
 | "X 的预期差" | 调 `sm-consensus-watch` |
 | "怎么问 X" | 调 `sm-roadshow-questions` |

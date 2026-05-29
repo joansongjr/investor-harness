@@ -135,7 +135,7 @@ v0.7 支持**自动路由 + 显式调用**两种触发方式。
 
 用户模板的 `output_to` **覆盖** `core/output-archive.md` 的默认路径。例如：
 - `output_to: "briefings/{YYYY-MM-DD}-morning.md"`
-- 默认：`coverage/{ticker}/briefing/{YYYY-MM-DD}.md`
+- 默认：`coverage/{ticker}_{name}/briefing/{YYYY-MM-DD}.md`
 - 模板优先 → 归档到 `briefings/{YYYY-MM-DD}-morning.md`
 
 支持变量：

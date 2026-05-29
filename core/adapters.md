@@ -27,6 +27,8 @@ Step 1 — 判断标的市场
 
 Step 2 — 按市场分支获取数据
 
+Step 2.5 — 如任务涉及关键人物 / 社区 / 公开平台观点流，并行补 §P
+
 Step 3 — 若全部失败 → 走"兜底协议"
 ```
 
@@ -128,6 +130,30 @@ Step 3 — 若全部失败 → 走"兜底协议"
 **优先级 3：其他公开财经源**（WSJ、Reuters、Bloomberg 摘要、公司 IR 页）
 
 **优先级 4：兜底协议**
+
+---
+
+## §P — 关键人物 / 社区层（GLOBAL signal layer）
+
+适用场景：
+
+- `sm-people-watch`
+- `sm-close-recap`
+- `sm-catalyst-sweep`
+- 任何用户明确要求看 `X / Reddit / Substack / Blog / SemiAnalysis / Jukan / WallStreetBets` 等公开人物与社区信号的任务
+
+推荐组合：
+
+- 先读工作区 `people-watch.md`
+- 如果工作区还没有，回退到 `setup/workspace/people-watch.md.template`
+- 再按名单去扫公开帖子 / 文章 / 讨论串
+
+使用原则：
+
+- 这是**逻辑增强层 / 情绪温度层**，不是事实层
+- 优先提炼**核心逻辑、边际变化、影响股票 / 主题、待验证点**
+- 如果与公告 / 财报 / 官方公开口径冲突，以官方口径为准
+- 如果没有命中，也要明确写"未检索到相关关键人物 / 社区线索"
 
 ---
 

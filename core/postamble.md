@@ -1,6 +1,6 @@
 # Postamble · 强制结束后流程
 
-> 所有 sm-* skill 在产生分析输出**之后**，必须按本文件依序完成 7 个步骤。
+> 所有 sm-* skill 在产生分析输出**之后**，必须按本文件依序完成 8 个步骤。
 > 跳过任何一步视为未完成任务。
 >
 > 这是治"幻觉"和"不成体系"的核心机制。
@@ -97,7 +97,7 @@
 按 [output-archive.md](output-archive.md) 的命名规范，把本次输出写入归档路径：
 
 ```
-{coverage_root}/{ticker}/{skill}/{YYYY-MM-DD}-{skill}.md
+{coverage_root}/{ticker}_{name}/{skill}/{YYYY-MM-DD}-{skill}.md
 ```
 
 或对于行业 / 主题任务：
@@ -112,7 +112,14 @@
 - 跨 skill 引用可以读到（preamble.md Step 2）
 - 如果不归档，等于没做
 
-如果用户没设置 coverage_root，归档到默认 `./output/{YYYY-MM-DD}-{skill}-{target}.md`。
+**强制规则**：
+
+- **单公司 / 覆盖池任务**：如果用户没显式设置 `coverage_root`，默认就是 `./coverage`，**不是** `./output`
+- 写文件前必须确保父目录存在；不存在就立即创建
+- 如果该 ticker 的 `INDEX.md` 不存在，先创建后归档
+- 如果输出只存在于对话里、没有进入归档目录，这次任务视为**未完成**
+
+只有完全不属于公司 / 主题 / 简报归档体系的临时任务，才允许退到 `./output/`。
 
 ---
 
@@ -168,7 +175,7 @@
 ```
 ---
 
-📁 **已归档**：{coverage_root}/{ticker}/{skill}/{YYYY-MM-DD}-{skill}.md
+📁 **已归档**：{coverage_root}/{ticker}_{name}/{skill}/{YYYY-MM-DD}-{skill}.md
 📊 文件大小：{N} KB · 段落数：{X/Y} · 证据：公开事实×{N} 财报披露×{N} 市场共识×{N} 合理推演×{N} 待核验假设×{N}
 🆔 Task ID：{task-id} · 状态：done
 

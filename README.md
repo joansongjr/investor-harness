@@ -762,7 +762,7 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 
 - `ONBOARDING.md` — 主流程文件。给 agent 看的执行指令 + 给用户看的功能清单。包含 6 步：① 检测是否已 onboard → ② 展示 28 个 skill + 关键词表 → ③ 解释三种激活方式 → ④ 请求精确"同意" → ⑤ 检测 harness + 入口 MD 路径 → ⑥ 写入 + 验证。
 - `setup/keyword-routes.md` — 28 个 skill 关键词路由表 single source of truth。
-- `setup/routes-block.template.md` — 要写入用户入口 MD 的标准块，带 `<!-- investor-harness:keyword-routes:start v0.9.1 -->` 到 `:end` marker，未来升级整块替换、用户想退出可整块移除。
+- `setup/routes-block.template.md` — 要写入用户入口 MD 的标准块，带 `<!-- investor-harness:keyword-routes:start v0.9.3 -->` 到 `:end` marker，未来升级整块替换、用户想退出可整块移除。
 
 **Harness 兼容**：自动检测 6 个常见入口 MD 路径（项目级 + 用户级 × Claude Code / Codex / OpenCode / OpenClaw），优先项目级。
 
@@ -861,7 +861,7 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 - 从研究归档提炼内容
 - 应用 UI 设计系统（色板 / 字体 / 布局）
 - 强制证据等级标注
-- 归档到 `{coverage}/{ticker}/decks/` 同时保存 .pptx + .md 两份
+- 归档到 `{coverage}/{ticker}_{name}/decks/` 同时保存 .pptx + .md 两份
 
 **双输出**：对话里贴 markdown 大纲（云端用户直接读），文件写 .pptx（打印 / 演示用）。
 

@@ -100,6 +100,13 @@ LLM 启动时第一个读的文件，决定加载什么上下文。骨架包括�
 - Substack / 播客 / 行业博客
 - 每个对象的主题、可信度、命中记录
 
+setup 默认会带一份 starter list，包含：
+- 产业逻辑锚：`SemiAnalysis` / `Dylan Patel`
+- 高频信息流 / 超级散户：`Jukan` / `Serenity`
+- 社区温度计：`r/wallstreetbets` / `r/smallstreetbets` / `r/Semiconductors`
+
+这样新工作区一创建，就能直接把关键人物信号接进 `sm-people-watch` 和 `sm-close-recap`。
+
 ### `selection-pipeline.md` — 选股流程池
 
 用于把"我想找票"结构化，而不是直接跳进深度：

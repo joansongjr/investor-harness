@@ -15,12 +15,32 @@
 
 ---
 
+## onboarding / bootstrap 硬约束
+
+Investor Harness **不能**只停留在"路由已激活"。
+
+首次 setup 时，工作区至少要有以下归档骨架：
+
+- `coverage/`
+- `coverage/INDEX.md`
+- `themes/`
+- `briefings/`
+- `.task-pulse`
+- `.checkpoint/`
+- `active-tasks.md`
+
+如果这些对象不存在，agent 必须先提示用户补建，再开始正式投研任务。
+**只把结果写在对话里、没有进入这些目录，不算完成。**
+
+---
+
 ## 默认目录结构
 
 ### 单股研究
 
 ```
 {coverage_root}/
+├── INDEX.md                          ← 覆盖池总索引（bootstrap 先创建）
 ├── {ticker}_{name}/                  ← 一家公司一个目录
 │   ├── INDEX.md                      ← 公司元数据 + 当前命题摘要
 │   │
@@ -141,6 +161,7 @@
 - `ticker` 优先用交易所代码（A 股 6 位、港股 4-5 位、美股字母）
 - `name` 用公司中文名（A 股、港股）或英文名（美股）
 - 例：`688256_寒武纪/`、`0700_腾讯控股/`、`NVDA_NVIDIA/`
+- 第一次做该公司的正式任务时，agent 应在 **preamble** 阶段就创建此目录和 `INDEX.md`
 
 ---
 

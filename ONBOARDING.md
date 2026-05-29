@@ -154,7 +154,7 @@ grep -l "investor-harness:keyword-routes" \
 即将写入：
   目标文件: ~/.claude/CLAUDE.md
   块大小: ~80 行
-  marker: <!-- investor-harness:keyword-routes:start v0.9.1 -->
+  marker: <!-- investor-harness:keyword-routes:start v0.9.3 -->
   会保留: marker 外的所有现有内容
 确认写入？输入"确认"或"算了"。
 ```
@@ -172,7 +172,7 @@ grep -c "investor-harness:keyword-routes" <target_md>
 输出给用户：
 
 > ✅ 已写入 `~/.claude/CLAUDE.md`（追加 ~80 行，未改动已有内容）
-> 📁 路由块版本：v0.9.1
+> 📁 路由块版本：v0.9.3
 > 🔄 **重启你的 AI agent**（重开一个 claude / codex 会话）即可生效
 >
 > 验证方式：重启后说"看看 NVDA"，agent 会自动按 `sm-autopilot` 工作（而不是裸 LLM 乱答）。

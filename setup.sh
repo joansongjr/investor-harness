@@ -503,7 +503,7 @@ render_entry_md_section() {
 1. 证据等级自检
 2. "仍需补的资料"段非空
 3. 合规声明
-4. 归档到 \`${coverage_root}/{ticker}/{skill}/YYYY-MM-DD-{skill}.md\`
+4. 归档到 \`${coverage_root}/{ticker}_{name}/{skill}/YYYY-MM-DD-{skill}.md\`
 5. 更新 .task-pulse + active-tasks.md
 6. 验收清单
 7. **Dual Output** — 对话贴完整输出 + 同时写文件；末尾追加 📁 已归档提示 + 关键统计

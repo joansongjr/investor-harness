@@ -111,9 +111,24 @@
 按 [output-archive.md](output-archive.md) 的归档路径检查：
 
 ```
-{coverage_root}/{ticker}/research/
-{coverage_root}/{ticker}/{skill}/
+{coverage_root}/{ticker}_{name}/INDEX.md
+{coverage_root}/{ticker}_{name}/{skill}/
 ```
+
+在读取历史输出之前，**先确保归档骨架存在**：
+
+- **单公司 / 覆盖池任务**：
+  - 如果 `coverage_root` 不存在 → 立即创建（默认 `./coverage`）
+  - 如果 `{coverage_root}/INDEX.md` 不存在 → 创建占位索引
+  - 如果 `{coverage_root}/{ticker}_{name}/` 不存在 → 立即创建该目录
+  - 如果该目录下的 `INDEX.md` 不存在 → 先创建占位版 `INDEX.md`
+- **行业 / 主题任务**：
+  - 如果 `{workspace_root}/themes/` 不存在 → 立即创建
+  - 如果 `{workspace_root}/themes/{theme-slug}/` 不存在 → 立即创建，并补 `database/`、`members/`
+- **晨会 / 简报任务**：
+  - 如果 `{workspace_root}/briefings/` 不存在 → 立即创建
+
+**这一步发生在正文输出之前，不许拖到 postamble 才补目录。**
 
 **如果存在同标的、同 skill 的历史输出**：
 - 读取最近一次输出
@@ -152,6 +167,7 @@
 市场：{Step 1 的结果}
 历史状态：{Step 2 的结果，"首次研究" 或 "更新（上次 YYYY-MM-DD）"}
 任务进度：{Step 3 的结果，"新任务" 或 "续 task-id"}
+归档目标：{coverage_root}/{ticker}_{name}/... 或 {workspace_root}/themes/{theme-slug}/...
 
 数据源优先级链：
   1. {工具 A} → {预期拉取什么}
