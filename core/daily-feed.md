@@ -44,7 +44,7 @@
 - 标题（wikilink 到原始文件）
 - 日期
 - 一句话摘要
-- 来源标签（A 级 / B 级，对齐 [evidence.md](evidence.md)）
+- 证据等级（完整中文：公开事实 / 财报披露 / 市场共识 / 合理推演 / 待核验假设，对齐 [evidence.md](evidence.md)）
 
 ⛔ daily feed 不引用没有 wikilink 的来源。
 ⛔ daily feed 里的每条 1-2 句话；要展开看就点 wikilink 到原始文件。
@@ -52,5 +52,5 @@
 ## 相关
 
 - [wiki-architecture.md](wiki-architecture.md) — 14 段 wiki page 中 §4 的位置
-- [evidence.md](evidence.md) — A/B 级信源
+- [evidence.md](evidence.md) — 证据等级（完整中文标签）
 - [health-check.md](health-check.md) — 每天巡查 daily feed 是否过期

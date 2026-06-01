@@ -78,4 +78,4 @@ Librarian 升级**不会自动启用**——它需要用户的 vault 已经按 O
 - [qa-double-link.md](qa-double-link.md) — Question List + Q&A 双链机制
 - [health-check.md](health-check.md) — 双层健康检查 + 跨源仲裁
 - [full-qc.md](full-qc.md) — 全链路 QC 五层
-- [evidence.md](evidence.md) — 信源置信度 A/B 级（与跨源仲裁对齐）
+- [evidence.md](evidence.md) — 证据等级（完整中文标签）

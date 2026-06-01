@@ -42,6 +42,6 @@ trigger: 用户明示"建 coverage / 起 wiki page / onboard XXX"
 
 - [ ] 14 段齐全（缺的段标"待补 + 缺什么"）
 - [ ] §2 / §3 数字全部带 wikilink 到原始文件
-- [ ] §5 / §10 管理层口径全部标 B 级 + talk-book 风险
+- [ ] §5 / §10 管理层口径（尤其是 forward-looking 指引）标 `待核验假设` + talk-book 风险
 - [ ] §14 不为空——写明下一步需要什么
 - [ ] 末尾合规声明
