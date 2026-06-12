@@ -3,6 +3,8 @@
 > 用于 `sm-stock-screen` 的外部 strategy 花名册。  
 > 本文件不是"推荐榜"，而是可比策略的**出处登记 + 家族映射 + 投票角色说明**。
 >
+> **Mode B 默认规则**：如果用户没有明确要求改用本地已安装 skill，本文件就是 `sm-stock-screen` 模式 B 的 **canonical roster**。不要自动用当前环境里可用的本地 skill 替换这里的 strategy。
+>
 > Snapshot：`2026-05-29`
 
 ## 字段说明

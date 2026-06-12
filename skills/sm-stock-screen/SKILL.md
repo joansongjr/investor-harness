@@ -65,8 +65,9 @@ Stock Screen 特别注意：
 ### 读取规则
 
 - 进入 **模式 B** 时，先读 [`references/strategy-compare-contract.md`](references/strategy-compare-contract.md)
-- 用户提到 **ClawHub / 外部 skill / registry / 出处** 时，再读 [`references/clawhub-quant-registry.md`](references/clawhub-quant-registry.md)
+- 进入 **模式 B** 时，**必须**读 [`references/clawhub-quant-registry.md`](references/clawhub-quant-registry.md)，并把它当作本模式的**默认 canonical roster**
 - 用户要求 **刷新、增删、补录外部策略** 时，再读 [`references/strategy-refresh-playbook.md`](references/strategy-refresh-playbook.md)
+- **不要**因为当前工作区恰好装了某些本地 skill，就自动改用本地 roster；除非用户明确说"改用本地已安装 skill"或"把本地 skill 也并入比较"
 
 ## 五种默认筛法（模式 A）
 
@@ -120,6 +121,10 @@ Stock Screen 特别注意：
 
 ### 模式 B 的硬规则
 
+- **默认 roster 只认** `references/clawhub-quant-registry.md` 里登记过的 strategy；没有登记的 strategy，哪怕当前工作区可用，**也不能自动纳入**
+- **本地已安装 skill 不等于 mode B roster**；本地 skill 只有两种情况下才能进入：
+  1. 它在 registry 里有对应 `owner/slug` / strategy card
+  2. 用户明确要求切到 `local roster mode`
 - **外部 skill 默认视为 strategy card，不等于真的安装进当前工作区**
 - **只有 `generator` 才能直接投票产出候选池**
 - **`validator` 只能做通过/否决/降级，不单独制造 universe**
@@ -228,6 +233,7 @@ Stock Screen 特别注意：
 - ❌ 不把选股候选池写成深度报告
 - ❌ 不把 `data` / `meta` / `router` 技能当成投票器
 - ❌ 不让同一家族的重复策略无限加权
+- ❌ 用户未明示时，用当前环境里"恰好可用"的本地 skill 替代 registry 里的 Claude Hub strategy
 - ✅ 必须分层（A/B/C）
 - ✅ 必须说明这次筛法或策略 roster
 - ✅ 必须明确下一步是调哪个 skill 去深挖
@@ -254,3 +260,4 @@ themes/{theme-slug}/stock-screen/{YYYY-MM-DD}-{screen-slug}.md
 - 用户说"把这些 skill 装进来"时，默认理解为**装进选股方法板块 / registry**，不是立刻安装所有外部 skill
 - 只有用户明确要求安装某个外部 skill 时，才进入真实安装流程
 - 默认先做 registry、对比、共识和研究顺序；把"方法编排"和"真实执行"分开
+- 如果用户没有特别说明，模式 B 的 strategy roster 以 `clawhub-quant-registry.md` 为准，不做本地自动发现

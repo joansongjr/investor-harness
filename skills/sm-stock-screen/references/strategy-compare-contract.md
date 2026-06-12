@@ -3,6 +3,24 @@
 > 当 `sm-stock-screen` 进入多策略模式时，按本合同统一口径。  
 > 目标不是把每个 skill 都"跑一遍"，而是把**不同角色的 strategy**装进同一个比较语言。
 
+## 0. Canonical roster 约束
+
+模式 B 默认使用：
+
+- `references/clawhub-quant-registry.md`
+
+作为**唯一 canonical roster**。
+
+这意味着：
+
+- 默认只比较 registry 里已经登记过的 strategy
+- **不能**因为当前工作区或当前 agent 恰好安装了某些本地 skill，就自动把它们替换进 roster
+- 本地 skill 只有在以下两种情况才能进入本次 roster：
+  1. 它在 registry 中已有对应记录
+  2. 用户明确要求使用 `local roster mode`
+
+如果用户没有特别说明，`mode B = registry mode`，不是 `workspace auto-discovery mode`。
+
 ## 1. 先分角色
 
 ### A. `generator`
@@ -160,6 +178,7 @@
 
 ## 7. 不允许的错误比较
 
+- ❌ 未经用户许可，用当前环境里可用的本地 skill 替换 canonical roster
 - ❌ 把 `validator` 当成 generator 直接报全市场 Top10
 - ❌ 把 `data` 技能当成策略票
 - ❌ 把同一家族重复记成多个独立共识来源
