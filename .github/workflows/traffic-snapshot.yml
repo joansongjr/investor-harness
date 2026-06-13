@@ -21,7 +21,8 @@ jobs:
 
       - name: Fetch & merge traffic data
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 内置 GITHUB_TOKEN 对 traffic API 无权限（403），必须用自建 PAT
+          GH_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
