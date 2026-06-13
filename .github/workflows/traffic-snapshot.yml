@@ -1,0 +1,87 @@
+name: Traffic Snapshot
+
+# 每天把 GitHub Traffic（clone / 访客）数据快照下来并 commit 回仓库，
+# 突破 GitHub 自带「只保留 14 天」的限制，长期积累历史曲线。
+
+on:
+  schedule:
+    # 每天 UTC 03:00（北京时间 11:00）跑一次
+    - cron: '0 3 * * *'
+  workflow_dispatch:        # 也允许在 Actions 页面手动触发
+
+permissions:
+  contents: write           # 需要写权限把数据 commit 回来
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch & merge traffic data
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p traffic
+
+          # 拉取 clone 与 views（GitHub 各返回最近 14 天的逐日数据）
+          gh api "repos/$REPO/traffic/clones" > /tmp/clones_new.json
+          gh api "repos/$REPO/traffic/views"  > /tmp/views_new.json
+
+          merge() {
+            local key="$1" old="$2" new="$3"
+            # 旧文件不存在则给个空数组
+            [ -f "$old" ] || echo '{"days":[]}' > "$old"
+            # 按日期合并，新数据覆盖同日旧数据，按时间排序
+            jq -s '
+              {
+                days: ([.[0].days[], .[1].'"$key"'[]]
+                  | group_by(.timestamp)
+                  | map(.[-1])
+                  | sort_by(.timestamp))
+              }
+            ' "$old" "$new" > /tmp/merged.json
+            mv /tmp/merged.json "$old"
+          }
+
+          merge "clones" traffic/clones.json /tmp/clones_new.json
+          merge "views"  traffic/views.json  /tmp/views_new.json
+
+          # 顺带把 Release 附件的累计下载数也快照一份（如果有 Release）
+          gh api "repos/$REPO/releases" \
+            --jq '[.[] | {tag: .tag_name, assets: [.assets[]? | {name, download_count}]}]' \
+            > traffic/release_downloads.json || echo '[]' > traffic/release_downloads.json
+
+          # 生成一个人类可读的汇总
+          {
+            echo "# Traffic 累计快照"
+            echo
+            echo "_最后更新（UTC）: $(date -u '+%Y-%m-%d %H:%M')_"
+            echo
+            echo "## Clones"
+            echo "- 累计 clone 次数: $(jq '[.days[].count] | add // 0' traffic/clones.json)"
+            echo "- 累计独立 clone 者: $(jq '[.days[].uniques] | add // 0' traffic/clones.json)"
+            echo "- 已记录天数: $(jq '.days | length' traffic/clones.json)"
+            echo
+            echo "## Views"
+            echo "- 累计浏览量: $(jq '[.days[].count] | add // 0' traffic/views.json)"
+            echo "- 累计独立访客: $(jq '[.days[].uniques] | add // 0' traffic/views.json)"
+            echo
+            echo "> 注：count/uniques 为按日去重后跨天求和，独立数会有重复计入（同一人不同天各算一次），属正常口径。"
+          } > traffic/SUMMARY.md
+
+      - name: Commit & push if changed
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add traffic/
+          if git diff --staged --quiet; then
+            echo "无变化，跳过 commit"
+          else
+            git commit -m "chore: traffic snapshot $(date -u '+%Y-%m-%d')"
+            git push
+          fi
