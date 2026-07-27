@@ -56,7 +56,8 @@ Model Check 特别注意：preamble Step 4 必须包含对比基线（模型输�
 
 ## 检查重点
 
-- 收入增长是否能拆到量、价、结构或客户层面
+- 收入增长是否能拆到量、价、结构或客户层面（拆分框架见 [`../../core/moat-analysis.md`](../../core/moat-analysis.md) §4；模型收入 ÷ 市场空间的隐含份额是否越界）
+- 各财务指标假设是否符合 [`../../core/financial-metrics.md`](../../core/financial-metrics.md) 的分析纪律（趋势 + 同行对比 + 异常解释）
 - 毛利率变化是否有合理驱动
 - 费用率变化是否和扩张节奏匹配
 - 现金流是否支持利润表结论

@@ -1,6 +1,6 @@
 # 关键词路由表（Single Source of Truth）
 
-> 这份文件是 27 个 sm-* skill 的关键词触发对照。**ONBOARDING.md 和 routes-block.template.md 都从这里同步**。
+> 这份文件是 31 个 sm-* skill 的关键词触发对照。**ONBOARDING.md 和 routes-block.template.md 都从这里同步**。
 > 修改时只改这里，再用 `setup/sync-routes.sh` 同步到其他文件（或手动 copy）。
 
 ## 触发原则
@@ -37,6 +37,7 @@
 | `审 X 的模型` / `X 模型 sanity check` / `X 模型审阅` | `sm-model-check` | 财务模型审阅 |
 | `X 预期差` / `X consensus` / `X 一致预期` | `sm-consensus-watch` | 一致预期 + 预期差 |
 | `数据库` / `产业数据库` / `公司数据库` / `数据底表` / `指标库` | `sm-industry-database` | 产业 / 公司数据库搭建 |
+| `X 估值` / `X 贵不贵` / `X 怎么估` / `X 同业估值对比` | `sm-valuation` | 估值方法选择 + 测算 + 同业对比（v0.9.5）|
 
 ### Monitoring / 跟踪
 
@@ -71,6 +72,13 @@
 | 关键词 | 触发 skill | 用途 |
 |---|---|---|
 | `看 X 的 K 线` / `复盘 X` / `X 盘面` / `X 技术面` | `sm-tape-review` | 盘面 + 技术面复盘 |
+| `量化看盘` / `X 缠论` / `X 的缠论结构` / `X 买卖点` / `X 中枢` / `X 背驰` | `sm-quant-tape` | 量化看盘 · 缠论结构标注（v0.9.5）|
+
+### Supervision / 三方任务组（v0.9.6）
+
+| 关键词 | 触发 skill | 用途 |
+|---|---|---|
+| `监工 X` / `盯着 X 的任务` / `做 X 的监督` / `开个监工` / `三方任务组` | `sm-supervisor` | 第二会话监督执行 agent（可挂实时语音），巡检 + 分级干预 + 收尾验收 |
 
 ### Presentation / PPT 输出（v0.8）
 
@@ -117,6 +125,9 @@
 | 主题选股 | `帮我筛 AI 链补涨标的` | `sm-stock-screen` → `sm-thesis` |
 | 人物信号流 | `跟一下 X 和 Reddit 上的关键人物` / `抓一下外网观点` / `看看关键人物观点` | `sm-people-watch` → `sm-catalyst-monitor` |
 | 加仓决策 | `X 要不要加仓` | `sm-thesis` → `sm-red-team` → `sm-tape-review` → `sm-pm-brief` |
+| 估值重检 | `X 贵不贵 / 重新估一下 X` | `sm-company-deepdive` → `sm-valuation` → `sm-red-team` |
+| 受监督深度 | `深度看 X，另开一个监工` | 终端 A：`sm-company-deepdive` ∥ 终端 B：`sm-supervisor`（并行，走 .supervision 工单）|
+| 结构择时 | `X 走到哪一段了 / 找 X 的买卖点` | `sm-thesis` → `sm-quant-tape` → `sm-tape-review` → `sm-pm-brief` |
 | IC pitch 全套 | `给 IC 做 X 的 pitch` | `sm-thesis` → `sm-company-deepdive` → `sm-consensus-watch` → `sm-red-team` → `sm-deck-builder` |
 | 财报季全套 | `X 财报季全套` | `sm-earnings-preview` → `sm-consensus-watch` → `sm-model-check` → `sm-pm-brief` |
 | 日常晨会路由 | `晨会` | `sm-catalyst-sweep` → `sm-briefing` |

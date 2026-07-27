@@ -52,7 +52,7 @@ inputs:
   - 公司名 / 代码
   - 可选：ESG 评级数据
 outputs:
-  - 继承 sm-company-deepdive 的 9 段 + §9.5 ESG 专项
+  - 继承 sm-company-deepdive 的 13 段 + ESG 专项段
 data_sources: 见 ../../../core/adapters.md + MSCI ESG / 中证 ESG
 markets: [CN-A, HK, US]
 ---
@@ -65,7 +65,7 @@ markets: [CN-A, HK, US]
 
 **继承的**：
 - 强制流程（preamble + postamble）
-- 9 段输出结构（§1 公司定位 ... §9 仍需补的资料）
+- 13 段输出结构（§1 公司定位 ... §13 仍需补的资料，v0.9.5）
 - 证据分级纪律
 - 合规边界
 - 归档协议

@@ -53,7 +53,7 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 
 agent 会：
 
-1. 列出 28 个 skill 功能 + 关键词触发表给你看
+1. 列出 31 个 skill 功能 + 关键词触发表给你看
 2. 解释"自动写入 / 手动复制 / 每次显式调用" 三种激活方式
 3. **等你输入"同意"**（明确字面表达）
 4. 自动检测 agent 类型（Claude Code → `~/.claude/CLAUDE.md` / Codex → `~/.codex/AGENTS.md` / OpenCode → `~/.config/opencode/AGENTS.md`）
@@ -64,7 +64,7 @@ agent 会：
 
 ⛔ 硬约束：**未读到用户明确"同意" / "agree" / "yes write"** → agent 绝对不动你的文件。
 
-详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)（完整 28 个 skill 关键词表）。
+详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)（完整 31 个 skill 关键词表）。
 
 > **新的完成标准**：只有"路由已激活 + 工作区骨架已补齐"两件事都完成，才算真正 setup 好。
 
@@ -163,7 +163,7 @@ Investor Harness 是一套 markdown 规范，但 markdown 本身没有强制力�
 
 ### 输出时（Skill 主体）
 
-- 按对应 skill 的固定结构（每个 skill 都有 9 段 / 7 段 / 一页纸等）
+- 按对应 skill 的固定结构（每个 skill 都有 13 段 / 7 段 / 一页纸等固定结构）
 - 每条事实**必须**带证据等级标签：
   - 公开事实 = 公开、稳定、可直接验证的事实（如"2020 年上市"）
   - 财报披露 = 财报/公告/权威披露中的明确数字（如"2024 营收 X 亿"）
@@ -274,7 +274,7 @@ Investor Harness 是一套 markdown 规范，但 markdown 本身没有强制力�
 **预期表现**：
 - LLM 不会直接给段落
 - LLM 会先输出 `[Preflight]` 取数计划
-- 然后按 sm-company-deepdive 9 段结构输出
+- 然后按 sm-company-deepdive 13 段结构输出
 - 每段带证据等级
 - 末尾有"仍需补的资料"+"合规声明"
 - 最后回的是摘要 + 文件路径，不是完整内容

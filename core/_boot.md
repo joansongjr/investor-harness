@@ -4,14 +4,14 @@
 
 ## What this is
 
-Investor Harness v0.9.2 — 投研人的 AI 任务执行规范。
+Investor Harness v0.9.6 — 投研人的 AI 任务执行规范。
 治三大痛点：**幻觉 / 健忘 / 不成体系**。
-v0.7 新增 L1/L2/L3 用户自定义。v0.8 新增 sm-deck-builder。**v0.9 新增 Librarian 升级**：从被动记忆系统 → 主动投研助手。**v0.9.2 新增 sm-industry-database**：产业 / 公司数据库搭建。
+**v0.9.5 深度研究升级**：deepdive 壁垒五维量化 + 量价拆分 + 财务指标分析；新增 `sm-valuation` 与 `sm-quant-tape`。**v0.9.6 三方任务组**：新增 `sm-supervisor` 监工 skill + core/supervisor.md 协议——用户 + 执行 agent + 监督 agent（第二会话，可挂实时语音）通过 `.supervision/` 文件总线协作，全模型 / 全 harness 通用。
 
-## 28 skills (one-line each)
+## 31 skills (one-line each)
 
-**默认路由 22 个**
-`sm-master`(7 模式总控) · `sm-autopilot`(自动路由) · `sm-thesis`(命题构建) · `sm-industry-map`(行业框架) · `sm-company-deepdive`(公司深度) · `sm-earnings-preview`(财报前瞻) · `sm-model-check`(模型审阅) · `sm-consensus-watch`(预期差) · `sm-industry-database`(产业 / 公司数据库) · `sm-catalyst-monitor`(事件跟踪) · `sm-roadshow-questions`(路演问题) · `sm-red-team`(反方审视) · `sm-pm-brief`(PM 一页纸) · `sm-briefing`(晨会晚报) · `sm-tape-review`(盘面 + 技术面复盘) · `sm-deck-builder`(PPT 生成) · `sm-batch-refresh`(批量刷新) · `sm-batch-earnings`(财报季批量) · `sm-catalyst-sweep`(催化剂扫描) · `sm-stock-screen`(选股筛标的) · `sm-hourly-watch`(小时级盯盘) · `sm-close-recap`(收盘复盘)
+**默认路由 25 个**
+`sm-master`(7 模式总控) · `sm-autopilot`(自动路由) · `sm-thesis`(命题构建) · `sm-industry-map`(行业框架) · `sm-company-deepdive`(公司深度) · `sm-valuation`(估值 + 同业对比) · `sm-earnings-preview`(财报前瞻) · `sm-model-check`(模型审阅) · `sm-consensus-watch`(预期差) · `sm-industry-database`(产业 / 公司数据库) · `sm-catalyst-monitor`(事件跟踪) · `sm-roadshow-questions`(路演问题) · `sm-red-team`(反方审视) · `sm-pm-brief`(PM 一页纸) · `sm-briefing`(晨会晚报) · `sm-tape-review`(盘面 + 技术面复盘) · `sm-quant-tape`(量化看盘 · 缠论结构) · `sm-deck-builder`(PPT 生成) · `sm-batch-refresh`(批量刷新) · `sm-batch-earnings`(财报季批量) · `sm-catalyst-sweep`(催化剂扫描) · `sm-stock-screen`(选股筛标的) · `sm-hourly-watch`(小时级盯盘) · `sm-close-recap`(收盘复盘) · `sm-supervisor`(三方任务组监工)
 
 **v0.9 Librarian 模式 6 个（opt-in，需用户明示）**
 `sm-wiki-build`(建 14 段 wiki) · `sm-daily-feed`(7 桶日刷) · `sm-question-list`(会前 vault 扫描) · `sm-health-check`(双层健康检查 + 跨源仲裁) · `sm-qa-archive`(会后归档 + 双链级联) · `sm-people-watch`(关键人物 / 社区信号流)
@@ -76,6 +76,9 @@ v0.7 新增 L1/L2/L3 用户自定义。v0.8 新增 sm-deck-builder。**v0.9 新�
 | 断点续跑细节 | core/checkpoint.md |
 | 用户任务模板 (L1) | core/user-templates.md |
 | 用户自定义 skill (L2+L3) | core/user-skills.md |
+| **壁垒 / 空间 / 量价拆分框架 (v0.9.5)** | **core/moat-analysis.md** |
+| **财务指标分析手册 (v0.9.5)** | **core/financial-metrics.md** |
+| **三方任务组协议 (v0.9.6)** | **core/supervisor.md** |
 | **Librarian 模式总览 (v0.9)** | **core/librarian.md** |
 | 14 段 wiki 标准结构 | core/wiki-architecture.md |
 | 7 桶 daily feed | core/daily-feed.md |

@@ -67,16 +67,17 @@ grep -l "investor-harness:keyword-routes" \
 
 > 你装了 **Investor Harness**——投研人的 AI 任务执行规范。下面是它能帮你做的事 + 对应触发关键词。
 >
-> **28 个 sm-* skill，分 10 大类**：
+> **31 个 sm-* skill，分 11 大类**：
 >
 > ▸ **入口路由**（2）：`sm-autopilot`（模糊请求自动判断走哪个）/ `sm-master`（7 模式总控）
-> ▸ **命题与框架**（2）：`sm-thesis`（投资命题）/ `sm-industry-map`（行业框架）
-> ▸ **单点研究**（5）：`sm-company-deepdive`（公司深度 9 段）/ `sm-earnings-preview`（财报前瞻）/ `sm-model-check`（模型审阅）/ `sm-consensus-watch`（一致预期 + 预期差）/ `sm-industry-database`（产业 / 公司数据库搭建）
+> ▸ **命题与框架**（2）：`sm-thesis`（投资命题）/ `sm-industry-map`（行业框架 + 空间测算 + 环节壁垒）
+> ▸ **单点研究**（6）：`sm-company-deepdive`（公司深度 13 段：壁垒五维量化 + 量价拆分）/ `sm-valuation`（估值方法选择 + 同业对比，v0.9.5）/ `sm-earnings-preview`（财报前瞻）/ `sm-model-check`（模型审阅）/ `sm-consensus-watch`（一致预期 + 预期差）/ `sm-industry-database`（产业 / 公司数据库搭建）
 > ▸ **跟踪监控**（5）：`sm-catalyst-monitor`（催化剂事件）/ `sm-roadshow-questions`（路演调研问题）/ `sm-catalyst-sweep`（覆盖池催化扫描）/ `sm-hourly-watch`（小时级盯盘）/ `sm-close-recap`（收盘复盘）
 > ▸ **反方挑战**（1）：`sm-red-team`（空头逻辑 / 反方审视）
 > ▸ **选股发现**（1）：`sm-stock-screen`（选股 / 主题筛标的）
 > ▸ **输出交付**（3）：`sm-pm-brief`（PM 一页纸）/ `sm-briefing`（晨会 / 晚报 / 纪要）/ `sm-deck-builder`（PPT 生成）
-> ▸ **技术面**（1）：`sm-tape-review`（K 线 + 量价复盘）
+> ▸ **技术面**（2）：`sm-tape-review`（K 线 + 量价复盘）/ `sm-quant-tape`（量化看盘 · 缠论结构，v0.9.5）
+> ▸ **三方任务组**（1，v0.9.6）：`sm-supervisor`（监工——第二会话监督执行 agent，可挂实时语音，巡检 + 分级干预 + 收尾验收）
 > ▸ **批量**（2）：`sm-batch-refresh`（覆盖池批量刷新）/ `sm-batch-earnings`（财报季批量）
 > ▸ **🆕 Librarian 模式**（6，v0.9+，opt-in）：`sm-wiki-build`（建 14 段 wiki）/ `sm-daily-feed`（7 桶日刷）/ `sm-question-list`（会前 vault 扫描）/ `sm-health-check`（健康检查 + 跨源仲裁）/ `sm-qa-archive`（会后归档 + 双链）/ `sm-people-watch`（关键人物 / Reddit / X 跟踪）
 
@@ -154,7 +155,7 @@ grep -l "investor-harness:keyword-routes" \
 即将写入：
   目标文件: ~/.claude/CLAUDE.md
   块大小: ~80 行
-  marker: <!-- investor-harness:keyword-routes:start v0.9.3 -->
+  marker: <!-- investor-harness:keyword-routes:start v0.9.6 -->
   会保留: marker 外的所有现有内容
 确认写入？输入"确认"或"算了"。
 ```
@@ -172,7 +173,7 @@ grep -c "investor-harness:keyword-routes" <target_md>
 输出给用户：
 
 > ✅ 已写入 `~/.claude/CLAUDE.md`（追加 ~80 行，未改动已有内容）
-> 📁 路由块版本：v0.9.3
+> 📁 路由块版本：v0.9.6
 > 🔄 **重启你的 AI agent**（重开一个 claude / codex 会话）即可生效
 >
 > 验证方式：重启后说"看看 NVDA"，agent 会自动按 `sm-autopilot` 工作（而不是裸 LLM 乱答）。
@@ -235,14 +236,14 @@ grep -c "investor-harness:keyword-routes" <target_md>
 
 ### 你装的是什么
 
-**Investor Harness v0.9.2** — 投研人的 AI 任务执行规范。开源，MIT 协议。
+**Investor Harness v0.9.6** — 投研人的 AI 任务执行规范。开源，MIT 协议。
 GitHub: https://github.com/joansongjr/investor-harness
 
 ### 它解决的问题
 
 - ❶ **幻觉**：AI 不再编数据——每条事实必须标完整中文证据等级、列"仍需补的资料"
 - ❷ **健忘**：跨 session 续跑、覆盖池持久化
-- ❸ **不成体系**：28 个标准化 skill，所有输出归档到固定路径
+- ❸ **不成体系**：31 个标准化 skill，所有输出归档到固定路径
 - ❹ **上下文溢出**：三层加载 + checkpoint 续跑
 - ❺ **🆕 被动**（v0.9 Librarian 解决）：AI 不再只是"你问什么它答什么"——每天主动扫 vault、刷新 wiki、跑健康检查
 

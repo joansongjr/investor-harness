@@ -99,6 +99,9 @@ LLM 看到以下任一情况，立即显示菜单：
 | 15 | sm-catalyst-sweep | 每日催化剂扫描 |
 | 16 | sm-autopilot | 自动路由 |
 | 17 | sm-master | 全能 7 模式 |
+| 18 | sm-valuation | 估值分析 + 同业对比（v0.9.5）|
+| 19 | sm-quant-tape | 量化看盘 · 缠论结构（v0.9.5）|
+| 20 | sm-supervisor | 三方任务组监工（第二会话 / 可挂语音，v0.9.6）|
 
 ---
 
@@ -122,7 +125,10 @@ LLM 自动识别用户意图，匹配最合适的 skill：
 - 出现 "晨会 / 简报 / 整理" → sm-briefing
 - 出现 "PM / 一页纸 / 给老板" → sm-pm-brief
 - 出现 "调研 / 路演 / 业绩会问题" → sm-roadshow-questions
-- 出现 "模型 / 估值 / DCF" → sm-model-check
+- 出现 "估值 / 贵不贵 / 怎么估 / 同业对比" → sm-valuation
+- 出现 "模型 / 模型审阅 / sanity check" → sm-model-check
+- 出现 "量化看盘 / 缠论 / 买卖点 / 中枢 / 背驰" → sm-quant-tape
+- 出现 "监工 / 盯着任务 / 三方任务组 / 监督" → sm-supervisor
 - 出现 "一致预期 / 预期差" → sm-consensus-watch
 - 出现 "催化 / 事件 / 政策" → sm-catalyst-monitor
 - 出现 "刷新覆盖池 / 周度更新" → sm-batch-refresh

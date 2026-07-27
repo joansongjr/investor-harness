@@ -23,7 +23,7 @@
 
 不要等任务全部完成才写文件。每完成一段就更新 checkpoint。
 
-例：sm-company-deepdive 9 段，每完成 §1、§2、§3... 都更新 checkpoint。
+例：sm-company-deepdive 13 段，每完成 §1、§2、§3... 都更新 checkpoint。
 
 ### Rule 2：每次取数后写 checkpoint
 
@@ -196,7 +196,7 @@ LLM 加载 sm-company-deepdive
 ### Q: checkpoint 文件本身丢了怎么办？
 - LLM 检测到 .task-pulse 有 task 但 ckpt 文件不存在 → 警告用户 → 提供"从头开始"或"标记 abandoned"选项
 
-### Q: 任务没有明确 9 段结构（比如 sm-briefing）怎么 checkpoint？
+### Q: 任务没有明确分段结构（比如 sm-briefing）怎么 checkpoint？
 - 用 logical sections（"今日事件 1 - 已完成"、"事件 2 - 进行中"）
 - step 字段写 "2/3" 等
 

@@ -1,4 +1,4 @@
-<!-- investor-harness:keyword-routes:start v0.9.3 -->
+<!-- investor-harness:keyword-routes:start v0.9.6 -->
 <!--
   这块由 investor-harness ONBOARDING.md 自动管理。
   下次升级时整块替换。**不要手动编辑**——改 setup/keyword-routes.md 然后重跑 onboarding。
@@ -9,7 +9,7 @@
 
 当用户对话里出现以下关键词时，**LLM 必须按对应 skill 的规则工作**（按 core/_boot.md 三层加载）：
 
-### 默认路由（22 个）
+### 默认路由（25 个）
 
 | 用户说 | 走 skill |
 |---|---|
@@ -22,6 +22,7 @@
 | 审 X 的模型 / X 模型 sanity check / X 模型审阅 | `sm-model-check` |
 | **X 预期差 / X consensus / X 一致预期** | `sm-consensus-watch` |
 | 数据库 / 产业数据库 / 公司数据库 / 数据底表 / 指标库 | `sm-industry-database` |
+| **X 估值 / X 贵不贵 / X 怎么估 / X 同业估值对比** | `sm-valuation` |
 | X 催化剂 / X catalyst / X 事件跟踪 | `sm-catalyst-monitor` |
 | 怎么问 X 管理层 / X 调研提纲 / X 路演问题 | `sm-roadshow-questions` |
 | 盯盘 / 看盘 / 每小时看一下 X / X 盘中异动 | `sm-hourly-watch` |
@@ -31,10 +32,12 @@
 | **给 PM 一页纸 / X 的 PM brief / IC 一页纸** | `sm-pm-brief` |
 | 晨会 / 晚报 / 整理今天的 X / 路演摘要 | `sm-briefing` |
 | 看 X 的 K 线 / 复盘 X / X 盘面 / X 技术面 | `sm-tape-review` |
+| **量化看盘 / X 缠论 / X 的缠论结构 / X 买卖点 / X 中枢 / X 背驰** | `sm-quant-tape` |
 | **做 X 的 deck / X 的 IC pitch PPT / X 路演 PPT / X 客户 pitch** | `sm-deck-builder` |
 | 刷新覆盖池 / 批量过 X 列表 / coverage refresh | `sm-batch-refresh` |
 | 财报季批量 / 批量前瞻 / batch earnings | `sm-batch-earnings` |
 | 扫事件 / 今天有什么催化 / catalyst sweep | `sm-catalyst-sweep` |
+| **监工 X / 盯着 X 的任务 / 开个监工 / 三方任务组** | `sm-supervisor` |
 
 ### Librarian 模式（v0.9+ · opt-in · 6 个）
 

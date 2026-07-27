@@ -3,13 +3,20 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.9.2** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.9.6** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+
+> 🆕 **v0.9.6 — 三方任务组：给你的执行 agent 配一个监工（可挂实时语音）**
+> 新增 **`sm-supervisor`** 监工 skill + [`core/supervisor.md`](core/supervisor.md) 三方任务组协议：终端 A 正常跑任务，终端 B（任意模型 / 任意 harness，支持实时语音的桌面端体验最佳）说一句"监工 X 的深度报告"就化身监工——巡检 checkpoint 与草稿、抽查数字来源、按 🔴 立即打断 / 🟡 段间修正 / 🟢 建议三级干预、收尾按验收清单出监工总结。三方通信全部走工作区 `.supervision/` 文件总线，**不依赖任何私有 API，全模型 / 全 harness 通用**；语音只是播报层，没有语音照样跑。执行侧零负担：无监督工单时一切照旧。
+> 灵感来自客户实践：Codex 桌面版实时语音上线后，"一对一任务 + 一个语音监工"的三人任务组工作流。
+
+> 🆕 **v0.9.5 — 深度研究升级：壁垒量化 + 量价拆分 + 估值 + 量化看盘**
+> `sm-company-deepdive` 从 9 段扩为 13 段：核心壁垒五维量化拆解（市场地位 / 品牌 / 技术 / 成本 / 转换成本）+ 竞对差距量化（追平年限与资本）+ 市场空间量价拆分测算 + 盈利预测量价拆分 + 财务指标分析。`sm-industry-map` 同步新增行业空间测算与环节壁垒段。新增 **`sm-valuation`**（估值方法选择 PE/PB/PS/PEG/EV-EBITDA/DCF/SOTP + 三档测算 + 敏感性 + 同业对比 + 隐含预期反推）与 **`sm-quant-tape`**（量化看盘 · 缠论结构：分型 / 笔 / 线段 / 中枢 / 三类买卖点 / 背驰）。共享框架沉淀在 [`core/moat-analysis.md`](core/moat-analysis.md) 与 [`core/financial-metrics.md`](core/financial-metrics.md)。
 
 > 🆕 **v0.9.2 — sm-industry-database：产业 / 公司数据库搭建**
 > 只要提到 **数据库 / 产业数据库 / 公司数据库 / 指标库**，就能直接触发数据库搭建 workflow：从公开市场、公司披露、卖方报告、行业数据库里抓数据，按完整中文证据等级落到 Excel，并同步生成来源日志与缺口清单。
 
 > 🆕 **v0.9.1 — Onboarding 流程：让 agent 自动激活路由**
-> 装完 investor-harness 后跟你的 agent 说 **"跑一下 investor-harness onboarding"**——agent 列出全部 28 个 skill + 关键词路由表，等你输入"**同意**"后自动检测 harness 类型（Claude Code / Codex / OpenCode / OpenClaw）+ 在对应入口 MD（CLAUDE.md / AGENTS.md）追加带 BEGIN/END marker 的路由块。之后还会继续审计当前工作区是否缺 `coverage/` / `.task-pulse` / `active-tasks.md` / `themes/` / `briefings/`，必要时引导你跑 `setup/bootstrap.sh` 补齐。**未明确同意前绝对不写文件**；**只有路由 + 工作区骨架都完成，才算 setup 好**。
+> 装完 investor-harness 后跟你的 agent 说 **"跑一下 investor-harness onboarding"**——agent 列出全部 31 个 skill + 关键词路由表，等你输入"**同意**"后自动检测 harness 类型（Claude Code / Codex / OpenCode / OpenClaw）+ 在对应入口 MD（CLAUDE.md / AGENTS.md）追加带 BEGIN/END marker 的路由块。之后还会继续审计当前工作区是否缺 `coverage/` / `.task-pulse` / `active-tasks.md` / `themes/` / `briefings/`，必要时引导你跑 `setup/bootstrap.sh` 补齐。**未明确同意前绝对不写文件**；**只有路由 + 工作区骨架都完成，才算 setup 好**。
 > 详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)
 
 > 🆕 **v0.9.0 — Librarian 升级：从记忆系统到主动投研助手**
@@ -108,7 +115,7 @@ LLM 的行为会变成这样——
 → 这些将在"仍需补的资料"段列出
 ```
 
-#### 第二步：按 9 段结构输出，每条带证据等级
+#### 第二步：按 13 段结构输出，每条带证据等级
 
 ```markdown
 # 寒武纪 (688256.SH) · Coverage Deepdive
@@ -609,9 +616,9 @@ Q4 是"指引 > 业绩"的财报：市场已经 price in 收入同比高增，
 
 ---
 
-## 三个能力之外：另外 24 个 skill
+## 三个能力之外：另外 28 个 skill
 
-上面三个是**你最值得体验的**。Investor Harness 现在一共 28 个 skill，另外 25 个按同样纪律设计：
+上面三个是**你最值得体验的**。Investor Harness 现在一共 31 个 skill，另外 28 个按同样纪律设计：
 
 ### 🆕 Librarian 模式 skills（v0.9 新增，opt-in）
 
@@ -760,8 +767,8 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 
 **新增文件**：
 
-- `ONBOARDING.md` — 主流程文件。给 agent 看的执行指令 + 给用户看的功能清单。包含 6 步：① 检测是否已 onboard → ② 展示 28 个 skill + 关键词表 → ③ 解释三种激活方式 → ④ 请求精确"同意" → ⑤ 检测 harness + 入口 MD 路径 → ⑥ 写入 + 验证。
-- `setup/keyword-routes.md` — 28 个 skill 关键词路由表 single source of truth。
+- `ONBOARDING.md` — 主流程文件。给 agent 看的执行指令 + 给用户看的功能清单。包含 6 步：① 检测是否已 onboard → ② 展示 31 个 skill + 关键词表 → ③ 解释三种激活方式 → ④ 请求精确"同意" → ⑤ 检测 harness + 入口 MD 路径 → ⑥ 写入 + 验证。
+- `setup/keyword-routes.md` — 31 个 skill 关键词路由表 single source of truth。
 - `setup/routes-block.template.md` — 要写入用户入口 MD 的标准块，带 `<!-- investor-harness:keyword-routes:start v0.9.3 -->` 到 `:end` marker，未来升级整块替换、用户想退出可整块移除。
 
 **Harness 兼容**：自动检测 6 个常见入口 MD 路径（项目级 + 用户级 × Claude Code / Codex / OpenCode / OpenClaw），优先项目级。
