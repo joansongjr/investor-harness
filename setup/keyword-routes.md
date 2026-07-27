@@ -138,6 +138,7 @@
 
 无论走哪个路由，所有 sm-* skill 都强制：
 
+0. **⛔ 置顶：本地资料优先**——外部取数前先扫描用户本地已有资料（手稿 / 规范 / 模板 / 归档，preamble Step 2.0）；用户本地规范是最高优先级要求来源，高于 harness 默认方法论
 1. 开始前：[`core/preamble.md`](../core/preamble.md) 6 步流程
 2. 输出时：[`core/evidence.md`](../core/evidence.md) 证据分级（公开事实 / 财报披露 / 市场共识 / 合理推演 / 待核验假设）
 3. 结束后：[`core/postamble.md`](../core/postamble.md) 8 步流程

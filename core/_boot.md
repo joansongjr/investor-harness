@@ -24,6 +24,8 @@ Investor Harness v0.9.6 — 投研人的 AI 任务执行规范。
 4. 用户选了某 skill 才加载 SKILL.md
 5. SKILL 内按需加载 core/preamble.md 等
 
+⛔ **置顶要求来源**：任何任务先扫描用户本地已有资料（手稿 / 规范 / 模板 / 归档，preamble Step 2.0）——本地规范 > harness 默认 > 外部惯例，本地已有研究是工作起点。
+
 ## 三层加载（节省 token）
 
 - **Tier 0** (always): _boot.md + .task-pulse + CLAUDE.md ≈ 1.5k
