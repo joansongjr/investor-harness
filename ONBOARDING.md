@@ -6,6 +6,26 @@
 
 ---
 
+## 🔄 已安装用户：升级入口
+
+如果用户**已经安装过** investor-harness，这次不是首次激活，而是想把本地框架**保守升级到 v0.9.6**，同时保留：
+
+- 个性化设置
+- `user-templates/` / `user-skills/`
+- 工作区
+- `.task-pulse` / `active-tasks.md`
+- 历史研究底稿和归档
+
+不要把这类请求当成首次 onboarding，也不要直接重跑 bootstrap 或重写整个入口文件。
+
+默认让用户对 agent 说：
+
+> **"读 `~/investor-harness/UPGRADE-PROMPT.md`，然后帮我把本地 investor-harness 保守升级到 v0.9.6。"**
+
+详细升级规则见 [`UPGRADE-PROMPT.md`](UPGRADE-PROMPT.md)。
+
+---
+
 ## 给 LLM 的执行指令（你正在读这段，意味着你是 agent）
 
 ### 第 0 步 · 是否已经 onboard？
@@ -281,3 +301,13 @@ agent 会找 marker 然后整块移除，不动其他内容。
 ```
 
 agent 读这份文件，检测到已 onboard 后会问你要不要刷新到最新版本——同意后整块替换。
+
+### 想升级整个框架（不是只换路由）
+
+如果你已经安装过 investor-harness，想把本地框架升级到新版本，同时保留原来的工作区、任务底稿和个性化设置，对 agent 说：
+
+```
+你：读 ~/investor-harness/UPGRADE-PROMPT.md，然后帮我把本地 investor-harness 保守升级到 v0.9.6
+```
+
+agent 会按 `UPGRADE-PROMPT.md` 的规则执行：先做升级审计，再增量更新框架层，只替换 marker 内的入口块，保留用户资产，不做重装。
