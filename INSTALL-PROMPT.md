@@ -5,6 +5,26 @@
 
 ---
 
+## 🔄 已安装用户：推荐升级法（保守升级，不重装）
+
+如果你已经装过 investor-harness，只想同步新版本框架，同时保留你原来的：
+
+- 个性化设置
+- `user-templates/` / `user-skills/`
+- 工作区
+- `.task-pulse` / `active-tasks.md`
+- 历史研究底稿和归档
+
+直接对你的 agent 说：
+
+> **"读 `~/investor-harness/UPGRADE-PROMPT.md`，然后帮我把本地 investor-harness 保守升级到 v0.9.6。"**
+
+如果你的安装路径不是 `~/investor-harness`，把上面的路径改成你自己的实际路径。
+
+升级规则详见 [`UPGRADE-PROMPT.md`](UPGRADE-PROMPT.md)。
+
+---
+
 ## 🚀 推荐安装法：GitHub + onboarding
 
 GitHub 仓库：

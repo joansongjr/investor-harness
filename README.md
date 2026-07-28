@@ -5,6 +5,11 @@
 
 **v0.9.6** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
 
+> 🔄 **已安装用户升级**
+> 如果你已经装过 investor-harness，不想重装、只想把框架保守升级到 v0.9.6，同时保留个性化配置、工作区、任务底稿和历史归档，直接对 agent 说：
+> **"读 `~/investor-harness/UPGRADE-PROMPT.md`，然后帮我把本地 investor-harness 保守升级到 v0.9.6。"**
+> 详见 [`UPGRADE-PROMPT.md`](UPGRADE-PROMPT.md)
+
 > 🆕 **v0.9.6 — 三方任务组：给你的执行 agent 配一个监工（可挂实时语音）**
 > 新增 **`sm-supervisor`** 监工 skill + [`core/supervisor.md`](core/supervisor.md) 三方任务组协议：终端 A 正常跑任务，终端 B（任意模型 / 任意 harness，支持实时语音的桌面端体验最佳）说一句"监工 X 的深度报告"就化身监工——巡检 checkpoint 与草稿、抽查数字来源、按 🔴 立即打断 / 🟡 段间修正 / 🟢 建议三级干预、收尾按验收清单出监工总结。三方通信全部走工作区 `.supervision/` 文件总线，**不依赖任何私有 API，全模型 / 全 harness 通用**；语音只是播报层，没有语音照样跑。执行侧零负担：无监督工单时一切照旧。
 > 灵感来自客户实践：Codex 桌面版实时语音上线后，"一对一任务 + 一个语音监工"的三人任务组工作流。
