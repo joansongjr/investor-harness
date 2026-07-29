@@ -4,9 +4,9 @@
 
 ## What this is
 
-Investor Harness v0.9.7 — 投研人的 AI 任务执行规范。
+Investor Harness v0.9.6 — 投研人的 AI 任务执行规范。
 治三大痛点：**幻觉 / 健忘 / 不成体系**。
-**v0.9.5 深度研究升级**：deepdive 壁垒五维量化 + 量价拆分 + 财务指标分析；新增 `sm-valuation` 与 `sm-quant-tape`。**v0.9.6 三方任务组**：`sm-supervisor` 把第二任务的实时语音变成第三方监工——用户 + worker + supervisor 通过 `.supervision/` 双向 mailbox 协作。**v0.9.7 deepdive 结论前置**：`sm-company-deepdive` 输出格式改为 §0 结论前置（核心逻辑 / 核心叙事 / 走到什么位置 / 核心关注点）+ §1-§13 底稿；强制写作顺序为"先做完底稿并按 🔴/🟡/🟢 标结论支撑权重，再回来综合 §0"。
+**v0.9.5 深度研究升级**：deepdive 壁垒五维量化 + 量价拆分 + 财务指标分析；新增 `sm-valuation` 与 `sm-quant-tape`。**v0.9.6 三方任务组**：`sm-supervisor` 把第二任务的实时语音变成第三方监工——用户 + worker + supervisor 通过 `.supervision/` 双向 mailbox 协作。**v0.9.6 · deepdive 结论前置**：`sm-company-deepdive` 输出格式改为 §0 结论前置（核心逻辑 / 核心叙事 / 走到什么位置 / 核心关注点）+ §1-§13 底稿；强制写作顺序为"先做完底稿并按 🔴/🟡/🟢 标结论支撑权重，再回来综合 §0"。
 
 ## 31 skills (one-line each)
 
