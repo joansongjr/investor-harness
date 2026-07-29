@@ -29,8 +29,10 @@
    - 如果 > 180k → 强制只完成当前段，写 checkpoint，停止
 
 5. **监督检测（v0.9.6 三方任务组）**
-   - 检查 `.supervision/{task-id}.md` 是否存在
-   - 存在 → 本任务处于受监督状态，[Preflight] 中加一行 `监督：on`，后续每段按 [supervisor.md](supervisor.md) §4 处理监工干预
+   - 检查 `.supervision/{task-id}.md` 或 `.supervision/{task-id}/state.json` 是否存在
+   - 存在 → 本任务处于受监督状态，[Preflight] 中加一行 `监督：on`
+   - mailbox 目录存在时按 [supervisor.md](supervisor.md) §3-§6 处理；只有单文件时兼容旧版原地回执
+   - 监工可以中途接入，因此后续每个 checkpoint / 外部工具批次前后还要重查，不能只在任务开始时检查一次
    - 不存在 → 一切照旧，零额外动作
 
 ---

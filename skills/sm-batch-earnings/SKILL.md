@@ -78,8 +78,8 @@ Batch Earnings 特别注意：每家公司的子任务必须**完整调用 `sm-e
 - 🟡 {ticker}：{为什么}
 
 ## 各家详细前瞻链接
-- [688256 寒武纪 Q1 Preview](coverage/688256_寒武纪/earnings/2026-Q1-preview.md)
-- [688981 中芯国际 Q4 Preview](coverage/688981_中芯国际/earnings/2026-Q4-preview.md)
+- 688256 寒武纪 Q1 Preview → `coverage/688256_寒武纪/earnings/2026-Q1-preview.md`
+- 688981 中芯国际 Q4 Preview → `coverage/688981_中芯国际/earnings/2026-Q4-preview.md`
 - ...
 ```
 

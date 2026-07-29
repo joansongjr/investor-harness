@@ -37,7 +37,7 @@
 | 刷新覆盖池 / 批量过 X 列表 / coverage refresh | `sm-batch-refresh` |
 | 财报季批量 / 批量前瞻 / batch earnings | `sm-batch-earnings` |
 | 扫事件 / 今天有什么催化 / catalyst sweep | `sm-catalyst-sweep` |
-| **监工 X / 盯着 X 的任务 / 开个监工 / 三方任务组** | `sm-supervisor` |
+| **监工 X / 盯着 X 的任务 / 开个监工 / 三方任务组 / 语音监工 / 开实时语音监督 / 边做边监督** | `sm-supervisor` |
 
 ### Librarian 模式（v0.9+ · opt-in · 6 个）
 
@@ -56,9 +56,9 @@
 
 0. **⛔ 置顶：本地资料优先**——任何任务开工、调用任何外部数据源之前，先扫描并调用用户本地电脑里已有的全部相关资料（手稿 / 笔记 / 规范 / 模板 / 模型 / 纪要 / 归档产出）。用户本地规范与要求是**最高优先级的要求来源**，高于本路由表和 harness 默认方法论；本地已有研究是工作起点，不做重复劳动。[Preflight] 必须列出扫描到的本地资料清单（或写明"本地无相关资料"）
 1. 如果当前工作区缺少 `coverage/` / `themes/` / `briefings/` / `.task-pulse` / `active-tasks.md`，先提示用户补建；**只装路由不算 setup 完成**
-2. 开始前：跑 [`core/preamble.md`](INVESTOR_HARNESS_PATH/core/preamble.md) 6 步
+2. 开始前：跑 `{INVESTOR_HARNESS_PATH}/core/preamble.md` 6 步
 3. 输出时：每条事实带证据等级（公开事实 / 财报披露 / 市场共识 / 合理推演 / 待核验假设）
-4. 结束后：跑 [`core/postamble.md`](INVESTOR_HARNESS_PATH/core/postamble.md) 8 步
+4. 结束后：跑 `{INVESTOR_HARNESS_PATH}/core/postamble.md` 8 步
 5. 覆盖池 / 单标的任务必须归档到 `{coverage_root}/{ticker}_{name}/...`，只留在对话里视为未完成
 6. 双输出：对话贴完整内容 + 写入文件，末尾追加 📁 已归档提示
 

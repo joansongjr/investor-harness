@@ -10,8 +10,8 @@
 > **"读 `~/investor-harness/UPGRADE-PROMPT.md`，然后帮我把本地 investor-harness 保守升级到 v0.9.6。"**
 > 详见 [`UPGRADE-PROMPT.md`](UPGRADE-PROMPT.md)
 
-> 🆕 **v0.9.6 — 三方任务组：给你的执行 agent 配一个监工（可挂实时语音）**
-> 新增 **`sm-supervisor`** 监工 skill + [`core/supervisor.md`](core/supervisor.md) 三方任务组协议：终端 A 正常跑任务，终端 B（任意模型 / 任意 harness，支持实时语音的桌面端体验最佳）说一句"监工 X 的深度报告"就化身监工——巡检 checkpoint 与草稿、抽查数字来源、按 🔴 立即打断 / 🟡 段间修正 / 🟢 建议三级干预、收尾按验收清单出监工总结。三方通信全部走工作区 `.supervision/` 文件总线，**不依赖任何私有 API，全模型 / 全 harness 通用**；语音只是播报层，没有语音照样跑。执行侧零负担：无监督工单时一切照旧。
+> 🆕 **v0.9.6 — 三方任务组：给你的执行 agent 配一个实时语音监工**
+> 新增 **`sm-supervisor`** 监工 skill + [`core/supervisor.md`](core/supervisor.md) 三方任务组协议：任务 A 正常执行研究，任务 B 在同一工作区开启实时语音，说一句“用 sm-supervisor 监工 X”就成为第三方监工。它可以回答进度、抽查最新段落、把用户口头意见转成 worker 消息、按 🔴 下一安全点立即处理 / 🟡 段间修正 / 🟢 收尾建议三级干预，并在结束时独立验收。通信走 `.supervision/` 双向 mailbox，双方各写自己的信箱，避免并发覆盖；**不依赖私有 API，全模型 / 全 harness 通用**。没有语音也能用文字跑同一协议。
 > 灵感来自客户实践：Codex 桌面版实时语音上线后，"一对一任务 + 一个语音监工"的三人任务组工作流。
 
 > 🆕 **v0.9.5 — 深度研究升级：壁垒量化 + 量价拆分 + 估值 + 量化看盘**
@@ -25,7 +25,7 @@
 > 详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)
 
 > 🆕 **v0.9.0 — Librarian 升级：从记忆系统到主动投研助手**
-> 28 个 skill（默认路由 22 + Librarian opt-in 6）+ 6 份新核心文档。重点：让 AI 不只是帮你**记住**了什么，而是**在你需要之前**就把跨源综合做完、矛盾标红、判断点摆好——你做 PM 的判断，机器干苦活。
+> 该版本累计 28 个 skill（默认路由 22 + Librarian opt-in 6）+ 6 份新核心文档；当前 v0.9.6 已扩展到 31 个 skill（默认路由 25 + Librarian opt-in 6）。重点：让 AI 不只是帮你**记住**了什么，而是**在你需要之前**就把跨源综合做完、矛盾标红、判断点摆好——你做 PM 的判断，机器干苦活。
 > 完整设计参见 [`core/librarian.md`](core/librarian.md) · HTML 介绍 deck：[`docs/v0.9-librarian-deck.html`](docs/v0.9-librarian-deck.html)
 
 ---
@@ -890,7 +890,7 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 |---|---|---|---|
 | **L1 · 用户模板** | 复用 sm-* skill，自定义输出结构 + 归档路径 | `{workspace}/user-templates/*.md` | 日报 / 周报 / 月报 / 财报季流程 |
 | **L2 · 继承扩展** | 在现有 sm-* 基础上新增段（不改原 skill）| `{workspace}/user-skills/my-xxx/SKILL.md` 带 `extends:` | sm-company-deepdive + ESG 专项 |
-| **L3 · 自创 skill** | 完全新场景，17 个 sm-* 都没有 | `{workspace}/user-skills/my-xxx/SKILL.md` | 港股打新 / 可转债 / ETF 对比 |
+| **L3 · 自创 skill** | 完全新场景，31 个 sm-* 都没有 | `{workspace}/user-skills/my-xxx/SKILL.md` | 港股打新 / 可转债 / ETF 对比 |
 
 **新增文件**：
 

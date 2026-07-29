@@ -1,100 +1,215 @@
-# Supervisor · 三方任务组协议（v0.9.6 新增）
+# Supervisor · 三方任务组协议（v0.9.6）
 
-> 把"用户 ↔ 执行 agent"的一对一任务，升级为"**用户 + 执行 agent + 监督 agent**"的三方任务组。
-> 监督 agent（监工）可以是任何模型、任何 harness、任何形态——桌面实时语音、另一个 CLI 会话、手机上的对话窗口。
-> **通用化的关键**：三方之间不走任何私有 API，只走**工作区文件**。任何能读写文件的 agent 都能上岗。
+> 把“用户 ↔ 执行 agent”的一对一任务升级为“用户 + 执行 agent + 监督 agent”的三方任务组。
+> 监督 agent 可以运行在桌面实时语音、另一个终端或另一个模型中。协议不依赖私有 API，只依赖三个角色可访问同一工作区。
 
 ---
 
 ## §1 三个角色
 
-| 角色 | 职责 | 载体 |
+| 角色 | 职责 | 不做什么 |
 |---|---|---|
-| **用户** | 出题、仲裁、最终验收 | 人 |
-| **执行 agent（worker）** | 按 sm-* skill 正常干活，每段写 checkpoint | 任意 harness 会话 |
-| **监督 agent（监工）** | 巡检执行质量，按严重度干预，收尾出监工总结 | 任意第二会话（加载 `sm-supervisor`）|
+| 用户 | 出题、调整优先级、仲裁分歧、最终验收 | 不需要手工搬运两个 agent 的上下文 |
+| 执行 agent（worker） | 取数、分析、写 checkpoint 和正式产出 | 不替监工关闭未处理的干预 |
+| 监督 agent（supervisor） | 读进度、抽查质量、分级干预、口头汇报、收尾验收 | 不取代 worker 写研究正文，不替用户做最终决策 |
 
-监工**不替执行 agent 干活**，也**不替用户做决策**。它只做三件事：发现违规 → 分级干预 → 收尾验收。
+实时语音不是 worker 的问答入口，而是监督 agent 的交互界面。用户可以一边让 worker 干活，一边问监工“做到哪了”“这段可靠吗”“让它重做市场空间”。
 
-## §2 通信总线（全模型通用的核心）
+## §2 能做到的“实时”边界
 
-三方共享同一工作区，通信全部走文件：
+- 文件协议是**协作式实时**：worker 在安全点检查监工消息，supervisor 在被会话唤醒后检查 checkpoint。
+- 🔴 干预会在 worker 的**下一个安全点**生效，不能中断正在执行中的单次工具调用。
+- 安全点包括：外部工具批次前后、每个 H2 段开始前、每次 checkpoint 后、最终归档前。
+- 如果宿主支持文件事件、heartbeat 或定时唤醒，可按用户要求启用主动巡检；如果不支持，监工必须明确说明“需要会话被唤醒后巡检”，不能假装在后台持续运行。
+- 实时语音关闭不影响任务：所有决定都已落到工作区文件。
 
-```
+## §3 通信总线
+
+### 3.1 新任务默认使用 mailbox 协议（protocol 1.1）
+
+```text
 {workspace}/
-  .task-pulse                      # 执行 agent 维护（已有机制）
-  .checkpoint/{task-id}.md         # 执行 agent 每段更新（已有机制）
-  .supervision/{task-id}.md        # 🆕 监督工单：监工写干预，执行 agent 写回执
-  coverage/... themes/...          # 归档产出（监工巡检的最终对象）
+  .task-pulse
+  .checkpoint/{task-id}.md
+  .supervision/
+    pending-{target-slug}.md              # 可选：监工先启动时的等待请求
+    {task-id}.md                         # 监工拥有：人类可读的巡检与验收总账
+    {task-id}/
+      state.json                         # 监工拥有：游标、状态、巡检节奏
+      to-worker/S-{timestamp}.md         # 监工拥有：干预 / 用户口头指令
+      to-supervisor/W-{message-id}.md    # worker 拥有：采纳 / 申辩回执
+  coverage/... 或 themes/...
 ```
 
-**为什么这样通用**：
-- 不依赖语音 API、agent 间消息协议、MCP——Claude Code / Codex / OpenCode / OpenClaw / 任何 generic harness 都能跑
-- 语音只是**播报层**：有实时语音的 harness（如 Codex 桌面版）把干预记录念出来、把用户口头指令写回工单；没有语音的 harness 用文字呈现同一份工单。**协议不变，载体可换**
-- 监工甚至可以不和执行 agent 同模型、同机器——只要能访问同一工作区（本地 / 云盘同步均可）
+**单写者规则**：
 
-## §3 监督工单格式（.supervision/{task-id}.md）
+- supervisor 只能写 `{task-id}.md`、`state.json`、`to-worker/`
+- worker 只能写 `to-supervisor/`、checkpoint 和正式产出
+- 任何一方都不得改写对方拥有的文件
+
+这个规则用于避免两个会话同时更新一个 Markdown 工单时发生覆盖。
+
+如果 supervisor 先启动且 `.task-pulse` 里还没有目标任务：
+
+1. 不得猜测或占用一个 task-id。
+2. 可创建 `.supervision/pending-{target-slug}.md`，记录目标、skill、语音模式和巡检节奏。
+3. 目标任务出现后，按真实 task-id 初始化 mailbox，并在 pending 文件写 `resolved_to: {task-id}`。
+4. pending 文件只属于 supervisor，worker 不需要读取。
+
+### 3.2 兼容 v0.9.6 早期单文件工单
+
+如果只有 `.supervision/{task-id}.md`、没有同名目录，继续使用旧协议：supervisor 追加干预，worker 在原条目下补回执。
+
+如果同名目录存在，**mailbox 协议优先**；worker 不再编辑 `{task-id}.md`。
+
+## §4 状态与消息格式
+
+### 4.1 `state.json`
+
+```json
+{
+  "protocol": "1.1",
+  "task_id": "task-007",
+  "status": "waiting",
+  "voice_mode": true,
+  "cadence": "checkpoint",
+  "last_seen_step": null,
+  "last_checked_at": null
+}
+```
+
+`status` 只使用：
+
+- `waiting`：目标任务尚未出现在 `.task-pulse`
+- `watching`：正在监督
+- `needs_user`：有分歧等待用户仲裁
+- `done`：监工总结已完成
+
+### 4.2 supervisor → worker
+
+文件名使用 `S-{UTC 时间}-{短随机串}.md`，确保并发时不重名。
 
 ```markdown
-# 监督工单 · {task-id}
-监工会话：{harness/model，自由填}    开始：{ISO 时间}
-巡检节奏：每段 checkpoint 后 / 每 N 分钟（二选一，默认每段）
+# 监工消息 · S-20260728T120000Z-a1b2
 
-## 干预记录
-
-### [{序号}] {ISO 时间} · {🔴/🟡/🟢} · 针对 §{段号}
-问题：{一句话，指向具体段落/数字/表述}
-依据：{违反了哪条纪律，引用 acceptance / evidence / 方法论具体条目}
-要求：{执行 agent 应该做什么}
-状态：⏳待回执 → ✅已采纳 / ⚖️已申辩（执行 agent 填）
-回执：{执行 agent 写：怎么改的，或为什么不改}
+- source: supervisor | user_voice
+- severity: red | yellow | green
+- target: §5 市场空间
+- created_at: 2026-07-28T12:00:00Z
+- problem: 800G 出货量没有来源
+- basis: core/evidence.md · 使用原则 1
+- request: 补官方来源；拿不到则改为待核验假设并降低结论强度
 ```
 
-**干预分级**（监工必须分级，禁止一律大惊小怪）：
+### 4.3 worker → supervisor
 
-| 级别 | 含义 | 执行 agent 义务 | 语音播报 |
+回复文件名使用 `W-{原 message-id}.md`：
+
+```markdown
+# Worker 回执 · S-20260728T120000Z-a1b2
+
+- decision: accepted | disputed
+- updated_at: 2026-07-28T12:03:00Z
+- changed: themes/ai-capex/2026-07-28-industry.md · §5
+- response: 已补官方口径并重写该结论
+- evidence: Microsoft FY26 Q3 transcript
+```
+
+`disputed` 必须说明理由。supervisor 可以接受申辩，也可以把双方观点压缩成一条待用户裁决事项，但不得和 worker 往返争论超过一轮。
+
+## §5 干预分级
+
+| 级别 | 使用场景 | worker 义务 | 语音行为 |
 |---|---|---|---|
-| 🔴 立即打断 | 幻觉/编数字/方向性错误/合规红线 | **停下当前段**，先处理回执再继续 | 立即念出 |
-| 🟡 段间修正 | 证据等级缺失/结构漏段/口径不一致 | 下一段开始前处理 | 段间念出 |
-| 🟢 建议 | 可改可不改的优化 | 收尾时统一回应 | 不主动念 |
+| 🔴 red | 编数字、方向性错误、合规红线、用户要求暂停 | 到下一个安全点先处理，再继续 | 立即播报 |
+| 🟡 yellow | 证据等级缺失、结构漏段、口径不一致 | 下一段开始前处理 | 段间播报 |
+| 🟢 green | 表达或结构优化，不影响正确性 | 收尾统一回应 | 默认不打扰 |
 
-## §4 执行 agent 的义务（挂载到已有流程，不加新负担）
+每轮最多 3 条干预。每条都必须指向具体段落并引用 `acceptance.md`、`evidence.md`、`compliance.md` 或目标 skill 的明确要求。
 
-- **preamble Step 0**（任务断点检查时）：顺带检查 `.supervision/{task-id}.md` 是否存在 → 存在则本任务处于受监督状态，在 [Preflight] 里加一行 `监督：on`
-- **postamble Step 0**（每段写 checkpoint 时）：顺带读工单，有 ⏳待回执 的 🔴/🟡 干预 → 按 §3 义务处理并写回执，然后才继续下一段
-- 回执可以**申辩**：不同意干预时写明理由（引用数据/方法论），标 ⚖️已申辩。监工不得反复纠缠同一条已申辩项——升级给用户裁决
-- 无监督工单时，一切照旧，零额外开销
+用户口头指令的权威级别最高，但严重度仍按紧急程度选择；如果用户指令与合规或事实纪律冲突，worker 应写 `disputed` 并交用户确认，不得静默执行。
 
-## §5 监工的巡检清单（做什么、不做什么）
+## §6 worker 侧义务
 
-**每次巡检**（读 .checkpoint 最新段 + 对应归档草稿）：
-1. 数字有源吗？——抽查 2-3 个关键数字的证据等级与来源标注（治幻觉的第一优先）
-2. 结构对吗？——对照该 skill 的输出格式（如 deepdive 13 段），漏段/顺序错立刻 🟡
-3. 口径一致吗？——量价假设是否同源（moat-analysis §4.3）、可比池是否前后一致
-4. 套话吗？——风险段是否可观测可触发，壁垒是否有量化锚
-5. 合规吗？——目标价/评级/券商引用/纪要外发 → 一律 🔴
+1. 在 preamble 创建 task-id 后，检查单文件工单和 mailbox 目录；命中则在 `[Preflight]` 写 `监督：on`。
+2. 在每个安全点读取尚无对应 `W-*.md` 的 `to-worker/` 消息。
+3. 按 red → yellow → green 顺序处理，并在 `to-supervisor/` 写独立回执。
+4. 处理 red / yellow 后再进入下一段；green 可在收尾统一处理。
+5. 监工在任务中途接入也必须生效，因此不能只在任务启动时检查一次。
+6. 最终归档前确认没有未回执的 red / yellow 消息。
 
-**收尾**（任务 done 时）：按 [acceptance.md](acceptance.md) 通用 + 专属清单逐条打勾，输出**监工总结**（见 sm-supervisor SKILL）。
+没有监督工单时，一切照旧，零额外流程。
 
-**禁止**：
-- ❌ 替执行 agent 重写内容（只指出问题 + 要求，不代笔）
-- ❌ 无依据的干预（每条必须引用具体纪律条目）
-- ❌ 对 🟢 级问题打断节奏
-- ❌ 和执行 agent 在工单里对线超过一轮——分歧升级给用户
+## §7 supervisor 巡检循环
 
-## §6 语音播报层（可选，harness 有语音能力时启用）
+每次被唤醒后：
 
-- 🔴 干预：写入工单的**同时**口头播报（"停一下，§5 市场空间那个 800G 出货量没有来源"）
-- 🟡 干预：攒到执行 agent 段间处理时播报
-- 用户口头指令（"让它把估值那段重做"）→ 监工翻译成一条标准干预写入工单
-- 语音不可用时零损失：工单本身就是完整通信记录
+1. 读 `.task-pulse`，确认任务是否存在、当前 step 是否变化。
+2. 读 `.checkpoint/{task-id}.md` 的新增部分和正式产出草稿。
+3. 读 `to-supervisor/`，关闭已采纳事项或整理申辩。
+4. 对新增内容检查：
+   - 数字：抽 2-3 个关键数字，查证据标签和来源
+   - 结构：对照目标 skill 的必需段落
+   - 一致性：量价、可比池、时间口径、隐含份额
+   - 反套话：风险是否可观测，壁垒是否有量化锚
+   - 合规：评级、目标价、收益承诺、非公开信息包装
+5. 有问题才写新消息；无问题只更新 `state.json` 游标与总账巡检时间。
+6. `.task-pulse` 中任务消失后，结合 `active-tasks.md` 和归档结果判断是 done、abandoned 还是异常丢失，不能仅凭“消失”宣布通过。
 
-## §7 启动方式（写给用户）
+## §8 实时语音交互
 
+### 接入时
+
+用不超过 20 秒的口头简报说明：
+
+> “监工已接入 task-007，worker 正在做 AI CapEx 行业框架，目前 4/10。默认每个 checkpoint 巡检；红色问题立即提醒你，黄色问题段间汇报。”
+
+### 用户可以直接说
+
+- “现在做到哪了？”→ 读 `.task-pulse` + checkpoint，口头汇报进度和当前段。
+- “刚才那段可靠吗？”→ 对最新段做一次定向数字与证据抽查。
+- “让它把估值那段重做。”→ 写 `source: user_voice` 的标准消息。
+- “先别打断，只记问题。”→ 后续非合规问题降为 green；合规红线仍必须 red。
+- “暂停它。”→ 写 red 暂停消息，并明确“会在 worker 下一个安全点生效”。
+- “有什么需要我裁决？”→ 汇总 `needs_user` 项，只讲分歧和后果。
+
+### 默认保持安静
+
+只有以下情况主动说话：red、yellow 到达段间、需要用户仲裁、任务完成。没有问题时不反复播报“正常”。
+
+## §9 收尾
+
+任务完成后，supervisor：
+
+1. 按 `acceptance.md` 通用清单 + 目标 skill 专属清单逐项验收。
+2. 把所有消息与回执状态汇总到 `.supervision/{task-id}.md`。
+3. 更新 `state.json`：`status: done`。
+4. 在语音和文字中给出同一结论：通过 / 有条件通过 / 不通过。
+5. 保留 `.supervision/` 全部记录，不随 checkpoint 删除。
+
+监工总结格式：
+
+```markdown
+## 监工总结 · {ISO 时间}
+
+验收：
+- [x/ ] {通用 + 专属清单}
+
+干预统计：🔴 {n} 条（采纳 {n}）· 🟡 {n} 条（采纳 {n}）· 🟢 {n} 条 · 待用户裁决 {n} 条
+
+遗留问题：{未解决项，或“无”}
+
+监工结论：{通过 / 有条件通过 / 不通过}
 ```
-终端 A（执行）：正常发任务，如 "深度看 300308"
-终端 B（监工）：开新会话，说 "监工 300308 的深度报告"（触发 sm-supervisor）
-             或在 Codex/其他带语音的 harness 里开着实时语音说同一句话
+
+## §10 启动方式
+
+```text
+任务 A（执行）：
+  “用 sm-company-deepdive 深度看 300308。”
+
+任务 B（实时语音监工，同一工作区）：
+  “用 sm-supervisor 监工 300308 的 deepdive，开启语音模式。”
 ```
 
-顺序无所谓：监工先开会自动等待 .task-pulse 出现目标任务；执行先开则监工从当前 checkpoint 接入。
+顺序无所谓。监工先开时创建 pending 请求并等待真实 task-id；worker 先开时从当前 checkpoint 接入。最稳妥的体验是两个任务共享同一工作区，但各自只写自己拥有的文件。

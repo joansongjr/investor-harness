@@ -17,9 +17,12 @@
 
 1. 写入 `.checkpoint/{task-id}.md` 的对应段落
 2. 更新 `.task-pulse` 的 `step` 字段（如 "5/9" → "6/9"）
-2.5. **监督回执**（仅当 `.supervision/{task-id}.md` 存在，见 [supervisor.md](supervisor.md) §4）：
-   - 读工单，有 ⏳待回执 的 🔴 干预 → **先处理并写回执，再继续**；🟡 → 下一段开始前处理；🟢 → 收尾统一回应
-   - 回执可申辩（写明理由标 ⚖️已申辩），分歧升级给用户裁决
+2.5. **监督回执**（见 [supervisor.md](supervisor.md) §3-§6）：
+   - 每次 checkpoint 后重查 `.supervision/{task-id}.md` 和 `.supervision/{task-id}/state.json`，支持监工中途接入
+   - mailbox 协议：读 `to-worker/` 中尚无对应 `to-supervisor/W-{message-id}.md` 的消息；🔴 先处理再继续，🟡 下一段前处理，🟢 收尾统一回应
+   - 回执只写 `to-supervisor/`，不要修改监工拥有的工单、状态或消息文件，避免并发覆盖
+   - 旧版只有单文件工单时，继续在原条目下写采纳 / 申辩回执
+   - 回执可申辩（写明理由），分歧升级给用户裁决
 3. 估算剩余 context budget：
    - 剩余 > 30k → 继续下一段
    - 剩余 < 30k → 写完当前段后**主动提醒**用户"context 紧张，建议本任务跑完后开新会话"

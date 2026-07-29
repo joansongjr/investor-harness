@@ -69,7 +69,7 @@ Librarian 升级**不会自动启用**——它需要用户的 vault 已经按 O
 - 用户说"跑健康检查"、"扫跨源矛盾"
 - 用户说"按 Librarian 流程跑"
 
-未明示则按原有 17 个 sm-* skill 的规则工作（参见 [_boot.md](_boot.md)）。
+未明示则按默认路由的 25 个 sm-* skill 规则工作（参见 [_boot.md](_boot.md)）。
 
 ## 相关 core 文档
 

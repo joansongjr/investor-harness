@@ -12,7 +12,7 @@
 |---|---|---|---|
 | **L1 模板** | 重复格式化任务，分析流程不变 | 日报 / 周报 / 月报 | ⭐ |
 | **L2 继承** | 现有 skill 差一小段，想补而不改原 skill | sm-company-deepdive + ESG 专项 | ⭐⭐ |
-| **L3 自创** | 全新场景，17 个 sm-* 都没有 | 港股打新 / 可转债 / ETF 持仓对比 | ⭐⭐⭐ |
+| **L3 自创** | 全新场景，31 个 sm-* 都没有 | 港股打新 / 可转债 / ETF 持仓对比 | ⭐⭐⭐ |
 
 **选择原则**：能用 L1 解决的不用 L2，能用 L2 扩展的不用 L3。
 
@@ -157,8 +157,8 @@ version: 0.1
 
 > ⛔ 本 skill 自创但**仍然**遵守 Investor Harness 的核心流程。
 >
-> 开始前：[`../../../core/preamble.md`](../../../core/preamble.md) 6 步
-> 结束后：[`../../../core/postamble.md`](../../../core/postamble.md) 8 步
+> 开始前：`../../../core/preamble.md` 6 步
+> 结束后：`../../../core/postamble.md` 8 步
 > 归档：按 `../../../core/output-archive.md` 命名规范
 > 验收：按 `../../../core/acceptance.md` 清单
 
@@ -395,6 +395,6 @@ Step 1.5 · 检查 user-templates 和 user-skills
 - 升级时 update.sh 不会覆盖你的 user-skills/
 
 **L3 自创**：
-- 完全自由，可以做 17 个 sm-* 没覆盖的任何场景
+- 完全自由，可以做 31 个 sm-* 没覆盖的任何场景
 - 仍然继承 Investor Harness 的纪律（preamble / postamble / 合规）
 - 可以回流贡献到主库，成为 sm-*

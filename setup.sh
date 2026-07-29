@@ -626,6 +626,7 @@ verify_install() {
     ok "工作区：$WORKSPACE_ROOT"
     [ -f "$WORKSPACE_ROOT/.task-pulse" ] && ok "  .task-pulse 存在" || warn "  .task-pulse 缺失"
     [ -d "$WORKSPACE_ROOT/.checkpoint" ] && ok "  .checkpoint/ 存在" || warn "  .checkpoint/ 缺失"
+    [ -d "$WORKSPACE_ROOT/.supervision" ] && ok "  .supervision/ 存在" || warn "  .supervision/ 缺失（首次监工任务会自动创建）"
   fi
 
   echo

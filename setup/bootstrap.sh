@@ -33,6 +33,7 @@ This will create a new analyst workspace at <target-dir> with:
   - themes/            (theme / industry archive root)
   - briefings/         (daily / weekly / monthly archive root)
   - .task-pulse + .checkpoint/ (resume state)
+  - .supervision/      (third-party / voice supervisor bus)
 
 Example:
   bash setup/bootstrap.sh ~/my-research
@@ -162,6 +163,13 @@ CKPT_DIR="$TARGET_DIR/.checkpoint"
 if [[ ! -d "$CKPT_DIR" ]]; then
   mkdir -p "$CKPT_DIR"
   echo "  ✓ created:  .checkpoint/ (resume directory)"
+fi
+
+# v0.9.6: shared bus for worker + supervisor + optional realtime voice.
+SUPERVISION_DIR="$TARGET_DIR/.supervision"
+if [[ ! -d "$SUPERVISION_DIR" ]]; then
+  mkdir -p "$SUPERVISION_DIR"
+  echo "  ✓ created:  .supervision/ (third-party supervisor bus)"
 fi
 
 # Archive roots required by output-archive.md

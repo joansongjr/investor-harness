@@ -78,7 +78,7 @@
 
 | 关键词 | 触发 skill | 用途 |
 |---|---|---|
-| `监工 X` / `盯着 X 的任务` / `做 X 的监督` / `开个监工` / `三方任务组` | `sm-supervisor` | 第二会话监督执行 agent（可挂实时语音），巡检 + 分级干预 + 收尾验收 |
+| `监工 X` / `盯着 X 的任务` / `做 X 的监督` / `开个监工` / `三方任务组` / `语音监工` / `开实时语音监督` / `边做边监督` | `sm-supervisor` | 第二会话监督 worker；实时语音负责进度问答、分级干预、用户口令转写与收尾验收 |
 
 ### Presentation / PPT 输出（v0.8）
 
@@ -126,7 +126,7 @@
 | 人物信号流 | `跟一下 X 和 Reddit 上的关键人物` / `抓一下外网观点` / `看看关键人物观点` | `sm-people-watch` → `sm-catalyst-monitor` |
 | 加仓决策 | `X 要不要加仓` | `sm-thesis` → `sm-red-team` → `sm-tape-review` → `sm-pm-brief` |
 | 估值重检 | `X 贵不贵 / 重新估一下 X` | `sm-company-deepdive` → `sm-valuation` → `sm-red-team` |
-| 受监督深度 | `深度看 X，另开一个监工` | 终端 A：`sm-company-deepdive` ∥ 终端 B：`sm-supervisor`（并行，走 .supervision 工单）|
+| 受监督深度 | `深度看 X，另开一个实时语音监工` | 任务 A：`sm-company-deepdive` ∥ 任务 B：`sm-supervisor`（并行，走 `.supervision/` 双向 mailbox）|
 | 结构择时 | `X 走到哪一段了 / 找 X 的买卖点` | `sm-thesis` → `sm-quant-tape` → `sm-tape-review` → `sm-pm-brief` |
 | IC pitch 全套 | `给 IC 做 X 的 pitch` | `sm-thesis` → `sm-company-deepdive` → `sm-consensus-watch` → `sm-red-team` → `sm-deck-builder` |
 | 财报季全套 | `X 财报季全套` | `sm-earnings-preview` → `sm-consensus-watch` → `sm-model-check` → `sm-pm-brief` |

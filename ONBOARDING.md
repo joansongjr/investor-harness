@@ -97,11 +97,15 @@ grep -l "investor-harness:keyword-routes" \
 > ▸ **选股发现**（1）：`sm-stock-screen`（选股 / 主题筛标的）
 > ▸ **输出交付**（3）：`sm-pm-brief`（PM 一页纸）/ `sm-briefing`（晨会 / 晚报 / 纪要）/ `sm-deck-builder`（PPT 生成）
 > ▸ **技术面**（2）：`sm-tape-review`（K 线 + 量价复盘）/ `sm-quant-tape`（量化看盘 · 缠论结构，v0.9.5）
-> ▸ **三方任务组**（1，v0.9.6）：`sm-supervisor`（监工——第二会话监督执行 agent，可挂实时语音，巡检 + 分级干预 + 收尾验收）
+> ▸ **三方任务组**（1，v0.9.6）：`sm-supervisor`（在第二任务开启实时语音，作为第三方监工监督 worker：随时问进度、抽查可靠性、口头下达修正、需要时请用户仲裁）
 > ▸ **批量**（2）：`sm-batch-refresh`（覆盖池批量刷新）/ `sm-batch-earnings`（财报季批量）
 > ▸ **🆕 Librarian 模式**（6，v0.9+，opt-in）：`sm-wiki-build`（建 14 段 wiki）/ `sm-daily-feed`（7 桶日刷）/ `sm-question-list`（会前 vault 扫描）/ `sm-health-check`（健康检查 + 跨源仲裁）/ `sm-qa-archive`（会后归档 + 双链）/ `sm-people-watch`（关键人物 / Reddit / X 跟踪）
 
 然后展示完整路由表（从 [`setup/keyword-routes.md`](setup/keyword-routes.md) 拉，用 markdown 表格呈现，**至少包含每个 skill 一行**——不允许省略）。
+
+展示 `sm-supervisor` 时必须补一句实际启动方式：
+
+> “任务 A 正常跑研究；任务 B 进入同一工作区并开启实时语音，说‘用 sm-supervisor 监工 X’，两边通过 `.supervision/` 双向 mailbox 协作。语音监工不写正文，只负责进度、质检、干预和仲裁。”
 
 ### 第 2 步 · 解释三种激活方式
 
