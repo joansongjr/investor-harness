@@ -4,6 +4,7 @@
 > 这是治"幻觉"和"健忘"的核心机制——跳过任何一步视为未完成任务。
 >
 > v0.4 改动：新增 Step 0（任务断点检查），Steps 1-5 保留。
+> v0.9.7 改动：新增 Step 0.7（加载学习产物），原步骤保留。
 
 ---
 
@@ -96,6 +97,38 @@
 - ❌ Dual Output Discipline
 
 详见 [`user-templates.md`](user-templates.md) 和 [`user-skills.md`](user-skills.md)。
+
+---
+
+## Step 0.7 · 加载学习产物（v0.9.7 新增 · 治重复提问）
+
+在确定本次实际执行的 skill 之后（含 Step 0.5 命中的用户模板 / 用户 skill），加载自主学习产物：
+
+1. **查 overlay**：`{workspace_root}/user-skills/overlays/{skill}.overlay.md`
+   - 不存在 → 无学习产物，跳过，零额外动作
+   - 存在 → 读取三锚点段；L2 用户 skill 时父 skill 的 overlay 也一并加载（先父后子）
+2. **查全局规则**：`{workspace_root}/.learning/learned-rules.md`（不存在 → 跳过）
+3. **合并规则（只增不删）**——加载顺序：主库 SKILL.md → overlay 追加 → 全局规则：
+   - `## 必答问题（新增）` → 逐条追加到该 skill 必答问题末尾（主库无此段 → 新建）
+   - `## 输出段（新增）` → 按段名锚点插入；锚点找不到 → 尾插并在输出注明一行
+   - `## 降权段` → 按声明压缩 / 移附录，⛔ 不得因此删除任何段
+   - **适用条件过滤**：带条件从句的规则（scene / 板块 / 快看类任务 / 触发条件）只在当次任务满足条件时生效
+   - **冲突裁决**：适用条件越窄越优先（ticker questions > 条件规则 > overlay > 全局无条件规则）；执行中遇到规则互斥 → 窄者赢 + 输出注明一行 + postamble 落 rule-conflict 事件
+   - overlay 条目若要求删除 / 替换主库必答问题或必需段 → 该条不生效，输出 `⚠️ overlay 条目 L-xxx 与主库冲突，已跳过`
+4. **试用期规则标记**：`status: trial` 的规则本次会话计入试用（postamble Step 5.5 落 trial-log，本 step 只读不写）
+5. **交代义务**：[Preflight] 增加一行 `学习产物：{overlay N 条 + 全局 M 条已加载（试用中 K 条）| 无}`；
+   `coverage/{ticker}_{name}/questions.md` 存在时（Step 2.1 顺带查）把其中问题并入本次必答清单
+
+### 不能被学习产物覆盖的规则
+
+无论 overlay / learned-rules 里写了什么，以下**永远不能绕过**：
+
+- ❌ `core/preamble.md` 6 步 / `core/postamble.md` 8 步
+- ❌ 证据分级（完整中文五档）/ "仍需补的资料"段 / 合规声明 / Dual Output
+- ❌ 数据源纪律（adapters.md / compliance.md）
+- ❌ 删除主库任何必答问题或必需输出段（学习产物只能新增与降权）
+
+详见 [`learning.md`](learning.md)。
 
 ---
 

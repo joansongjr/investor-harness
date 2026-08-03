@@ -3,12 +3,16 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.9.6** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.9.7** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
 
 > 🔄 **已安装用户升级**
-> 如果你已经装过 investor-harness，不想重装、只想把框架保守升级到 v0.9.6，同时保留个性化配置、工作区、任务底稿和历史归档，直接对 agent 说：
-> **"读 `~/investor-harness/UPGRADE-PROMPT.md`，然后帮我把本地 investor-harness 保守升级到 v0.9.6。"**
+> 如果你已经装过 investor-harness，不想重装、只想把框架保守升级到 v0.9.7，同时保留个性化配置、工作区、任务底稿和历史归档，直接对 agent 说：
+> **"读 `~/investor-harness/UPGRADE-PROMPT.md`，然后帮我把本地 investor-harness 保守升级到 v0.9.7。"**
 > 详见 [`UPGRADE-PROMPT.md`](UPGRADE-PROMPT.md)
+
+> 🆕 **v0.9.7 — 自主学习：它记住你的问法，不需要你说任何话**
+> 新增 **`sm-learn`** + [`core/learning.md`](core/learning.md) 提问驱动自主学习协议：你每次用 skill 时的提问、追问、纠正被 postamble 静默采集（每会话 ≤200 tokens），每 3-5 次会话**自动**归纳一轮——按"**问题回家**"原则聚类（做模型时问的问法反补 `sm-model-check`，复盘的问法反补 `sm-close-recap`），过阈值（≥3 次 · ≥2 标的 · ≥2 天）与三重冲突检查的规则**自动生效进试用期**（每轮 ≤3 条），会话尾一行摘要告知。你只保留否决权："撤销 L-xxx" 一键回滚。试用期三信号自动验证，失败规则自动停用。老师的问题清单可以"把这些问题学进去"高权威导入。全部学习产物留在工作区（`.learning/` + overlay），git-ignore、升级安全、绝不修改 harness 主库、绝不覆盖证据分级与合规硬约束。
+> **越用越懂你——而且这份"懂"完全属于你的本地工作区，可审计、可回滚、可迁移。**
 
 > 🆕 **v0.9.6 — 三方任务组：给你的执行 agent 配一个实时语音监工**
 > 新增 **`sm-supervisor`** 监工 skill + [`core/supervisor.md`](core/supervisor.md) 三方任务组协议：任务 A 正常执行研究，任务 B 在同一工作区开启实时语音，说一句“用 sm-supervisor 监工 X”就成为第三方监工。它可以回答进度、抽查最新段落、把用户口头意见转成 worker 消息、按 🔴 下一安全点立即处理 / 🟡 段间修正 / 🟢 收尾建议三级干预，并在结束时独立验收。通信走 `.supervision/` 双向 mailbox，双方各写自己的信箱，避免并发覆盖；**不依赖私有 API，全模型 / 全 harness 通用**。没有语音也能用文字跑同一协议。
@@ -21,11 +25,11 @@
 > 只要提到 **数据库 / 产业数据库 / 公司数据库 / 指标库**，就能直接触发数据库搭建 workflow：从公开市场、公司披露、卖方报告、行业数据库里抓数据，按完整中文证据等级落到 Excel，并同步生成来源日志与缺口清单。
 
 > 🆕 **v0.9.1 — Onboarding 流程：让 agent 自动激活路由**
-> 装完 investor-harness 后跟你的 agent 说 **"跑一下 investor-harness onboarding"**——agent 列出全部 31 个 skill + 关键词路由表，等你输入"**同意**"后自动检测 harness 类型（Claude Code / Codex / OpenCode / OpenClaw）+ 在对应入口 MD（CLAUDE.md / AGENTS.md）追加带 BEGIN/END marker 的路由块。之后还会继续审计当前工作区是否缺 `coverage/` / `.task-pulse` / `active-tasks.md` / `themes/` / `briefings/`，必要时引导你跑 `setup/bootstrap.sh` 补齐。**未明确同意前绝对不写文件**；**只有路由 + 工作区骨架都完成，才算 setup 好**。
+> 装完 investor-harness 后跟你的 agent 说 **"跑一下 investor-harness onboarding"**——agent 列出全部 32 个 skill + 关键词路由表，等你输入"**同意**"后自动检测 harness 类型（Claude Code / Codex / OpenCode / OpenClaw）+ 在对应入口 MD（CLAUDE.md / AGENTS.md）追加带 BEGIN/END marker 的路由块。之后还会继续审计当前工作区是否缺 `coverage/` / `.task-pulse` / `active-tasks.md` / `themes/` / `briefings/`，必要时引导你跑 `setup/bootstrap.sh` 补齐。**未明确同意前绝对不写文件**；**只有路由 + 工作区骨架都完成，才算 setup 好**。
 > 详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)
 
 > 🆕 **v0.9.0 — Librarian 升级：从记忆系统到主动投研助手**
-> 该版本累计 28 个 skill（默认路由 22 + Librarian opt-in 6）+ 6 份新核心文档；当前 v0.9.6 已扩展到 31 个 skill（默认路由 25 + Librarian opt-in 6）。重点：让 AI 不只是帮你**记住**了什么，而是**在你需要之前**就把跨源综合做完、矛盾标红、判断点摆好——你做 PM 的判断，机器干苦活。
+> 该版本累计 28 个 skill（默认路由 22 + Librarian opt-in 6）+ 6 份新核心文档；当前 v0.9.7 已扩展到 32 个 skill（默认路由 26 + Librarian opt-in 6）。重点：让 AI 不只是帮你**记住**了什么，而是**在你需要之前**就把跨源综合做完、矛盾标红、判断点摆好——你做 PM 的判断，机器干苦活。
 > 完整设计参见 [`core/librarian.md`](core/librarian.md) · HTML 介绍 deck：[`docs/v0.9-librarian-deck.html`](docs/v0.9-librarian-deck.html)
 
 ---
@@ -621,9 +625,9 @@ Q4 是"指引 > 业绩"的财报：市场已经 price in 收入同比高增，
 
 ---
 
-## 三个能力之外：另外 28 个 skill
+## 三个能力之外：另外 29 个 skill
 
-上面三个是**你最值得体验的**。Investor Harness 现在一共 31 个 skill，另外 28 个按同样纪律设计：
+上面三个是**你最值得体验的**。Investor Harness 现在一共 32 个 skill，另外 29 个按同样纪律设计：
 
 ### 🆕 Librarian 模式 skills（v0.9 新增，opt-in）
 
@@ -682,6 +686,12 @@ Q4 是"指引 > 业绩"的财报：市场已经 price in 收入同比高增，
 | `sm-batch-refresh` | 覆盖池批量刷新（行情/财务/股东/催化）— 每周/每月跑 |
 | `sm-batch-earnings` | 财报季批量前瞻 / 复盘 — 财报季密集时跑 |
 | `sm-catalyst-sweep` | 覆盖池每日 / 每周催化剂扫描 — 晨会前 30 分钟跑 |
+
+### 自主学习 skill（v0.9.7 新增）
+
+| Skill | 适用场景 |
+|---|---|
+| `sm-learn` | **自主学习** — 自动采集你的提问 / 追问 / 纠正，每 3-5 次会话自动归纳，按"问题回家"原则反补进对应 skill 的必答问题（overlay）；自动生效进试用期，你只保留"撤销 L-xxx"否决权。协议见 [`core/learning.md`](core/learning.md) |
 
 每个 skill 都强制：
 - **开始前**：执行 [`core/preamble.md`](core/preamble.md) 的 6 步流程（任务断点 → 识别市场 → 检查历史 → 检查任务 → Preflight → 实际取数）
@@ -772,8 +782,8 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 
 **新增文件**：
 
-- `ONBOARDING.md` — 主流程文件。给 agent 看的执行指令 + 给用户看的功能清单。包含 6 步：① 检测是否已 onboard → ② 展示 31 个 skill + 关键词表 → ③ 解释三种激活方式 → ④ 请求精确"同意" → ⑤ 检测 harness + 入口 MD 路径 → ⑥ 写入 + 验证。
-- `setup/keyword-routes.md` — 31 个 skill 关键词路由表 single source of truth。
+- `ONBOARDING.md` — 主流程文件。给 agent 看的执行指令 + 给用户看的功能清单。包含 6 步：① 检测是否已 onboard → ② 展示 32 个 skill + 关键词表 → ③ 解释三种激活方式 → ④ 请求精确"同意" → ⑤ 检测 harness + 入口 MD 路径 → ⑥ 写入 + 验证。
+- `setup/keyword-routes.md` — 32 个 skill 关键词路由表 single source of truth。
 - `setup/routes-block.template.md` — 要写入用户入口 MD 的标准块，带 `<!-- investor-harness:keyword-routes:start v0.9.3 -->` 到 `:end` marker，未来升级整块替换、用户想退出可整块移除。
 
 **Harness 兼容**：自动检测 6 个常见入口 MD 路径（项目级 + 用户级 × Claude Code / Codex / OpenCode / OpenClaw），优先项目级。
@@ -890,7 +900,7 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 |---|---|---|---|
 | **L1 · 用户模板** | 复用 sm-* skill，自定义输出结构 + 归档路径 | `{workspace}/user-templates/*.md` | 日报 / 周报 / 月报 / 财报季流程 |
 | **L2 · 继承扩展** | 在现有 sm-* 基础上新增段（不改原 skill）| `{workspace}/user-skills/my-xxx/SKILL.md` 带 `extends:` | sm-company-deepdive + ESG 专项 |
-| **L3 · 自创 skill** | 完全新场景，31 个 sm-* 都没有 | `{workspace}/user-skills/my-xxx/SKILL.md` | 港股打新 / 可转债 / ETF 对比 |
+| **L3 · 自创 skill** | 完全新场景，32 个 sm-* 都没有 | `{workspace}/user-skills/my-xxx/SKILL.md` | 港股打新 / 可转债 / ETF 对比 |
 
 **新增文件**：
 

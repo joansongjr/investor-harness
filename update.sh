@@ -126,11 +126,19 @@ render_legacy_entry_section() {
 | "刷新覆盖池" / "批量过 X 列表" / "coverage refresh" | 走 \`sm-batch-refresh\` |
 | "财报季批量" / "批量前瞻" / "batch earnings" | 走 \`sm-batch-earnings\` |
 | "扫事件" / "今天有什么催化" / "catalyst sweep" | 走 \`sm-catalyst-sweep\` |
+| "X 估值" / "X 贵不贵" / "X 怎么估" | 走 \`sm-valuation\` |
+| "量化看盘" / "X 缠论" / "X 买卖点" | 走 \`sm-quant-tape\` |
+| "盯盘" / "每小时看一下 X" / "X 盘中异动" | 走 \`sm-hourly-watch\` |
+| "收盘后复盘" / "股票池复盘" | 走 \`sm-close-recap\` |
+| "选股" / "筛标的" / "挖标的" | 走 \`sm-stock-screen\` |
+| "监工 X" / "三方任务组" / "语音监工" | 走 \`sm-supervisor\` |
+| "归纳提问" / "把这些问题学进去" / "看看学了什么" / "撤销 L-xxx" | 走 \`sm-learn\`（主要靠自动触发） |
 | "起 X 的 wiki page" / "建 X 的 coverage" / "onboard X" | 走 \`sm-wiki-build\`（仅用户明示时） |
 | "刷 daily feed" / "跑每日扫描" / "今天看一下覆盖池" | 走 \`sm-daily-feed\`（仅用户明示时） |
 | "见 X 前过一遍 question list" / "准备 X 调研提纲" / "会前 briefing" | 走 \`sm-question-list\`（仅用户明示时） |
 | "跑健康检查" / "扫跨源矛盾" / "wiki 自检" | 走 \`sm-health-check\`（仅用户明示时） |
 | "会后归档" / "整理 X 的 Q&A" / "见完 X 后整理" | 走 \`sm-qa-archive\`（仅用户明示时） |
+| "关键人物追踪" / "外网观点" / "跟踪 Reddit" | 走 \`sm-people-watch\`（仅用户明示时） |
 
 ## Skill 调用的强制流程
 
@@ -160,9 +168,9 @@ render_legacy_entry_section() {
 
 ${chain}
 
-## 28 个 skill
+## 32 个 skill
 
-sm-master · sm-autopilot · sm-thesis · sm-industry-map · sm-company-deepdive · sm-earnings-preview · sm-model-check · sm-consensus-watch · sm-industry-database · sm-catalyst-monitor · sm-roadshow-questions · sm-red-team · sm-pm-brief · sm-briefing · sm-tape-review · sm-deck-builder · sm-batch-refresh · sm-batch-earnings · sm-catalyst-sweep · sm-wiki-build · sm-daily-feed · sm-question-list · sm-health-check · sm-qa-archive · sm-people-watch
+sm-master · sm-autopilot · sm-thesis · sm-industry-map · sm-company-deepdive · sm-valuation · sm-earnings-preview · sm-model-check · sm-consensus-watch · sm-industry-database · sm-catalyst-monitor · sm-roadshow-questions · sm-red-team · sm-pm-brief · sm-briefing · sm-tape-review · sm-quant-tape · sm-deck-builder · sm-batch-refresh · sm-batch-earnings · sm-catalyst-sweep · sm-stock-screen · sm-hourly-watch · sm-close-recap · sm-supervisor · sm-learn · sm-wiki-build · sm-daily-feed · sm-question-list · sm-health-check · sm-qa-archive · sm-people-watch
 
 ## 硬约束
 

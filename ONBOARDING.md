@@ -87,7 +87,7 @@ grep -l "investor-harness:keyword-routes" \
 
 > 你装了 **Investor Harness**——投研人的 AI 任务执行规范。下面是它能帮你做的事 + 对应触发关键词。
 >
-> **31 个 sm-* skill，分 11 大类**：
+> **32 个 sm-* skill，分 12 大类**：
 >
 > ▸ **入口路由**（2）：`sm-autopilot`（模糊请求自动判断走哪个）/ `sm-master`（7 模式总控）
 > ▸ **命题与框架**（2）：`sm-thesis`（投资命题）/ `sm-industry-map`（行业框架 + 空间测算 + 环节壁垒）
@@ -99,6 +99,7 @@ grep -l "investor-harness:keyword-routes" \
 > ▸ **技术面**（2）：`sm-tape-review`（K 线 + 量价复盘）/ `sm-quant-tape`（量化看盘 · 缠论结构，v0.9.5）
 > ▸ **三方任务组**（1，v0.9.6）：`sm-supervisor`（在第二任务开启实时语音，作为第三方监工监督 worker：随时问进度、抽查可靠性、口头下达修正、需要时请用户仲裁）
 > ▸ **批量**（2）：`sm-batch-refresh`（覆盖池批量刷新）/ `sm-batch-earnings`（财报季批量）
+> ▸ **🆕 自主学习**（1，v0.9.7）：`sm-learn`（自动采集你的提问方式，每 3-5 次会话自动归纳，按"问题回家"原则反补进对应 skill 的必答问题；自动生效进试用期，你只保留"撤销 L-xxx"否决权）
 > ▸ **🆕 Librarian 模式**（6，v0.9+，opt-in）：`sm-wiki-build`（建 14 段 wiki）/ `sm-daily-feed`（7 桶日刷）/ `sm-question-list`（会前 vault 扫描）/ `sm-health-check`（健康检查 + 跨源仲裁）/ `sm-qa-archive`（会后归档 + 双链）/ `sm-people-watch`（关键人物 / Reddit / X 跟踪）
 
 然后展示完整路由表（从 [`setup/keyword-routes.md`](setup/keyword-routes.md) 拉，用 markdown 表格呈现，**至少包含每个 skill 一行**——不允许省略）。
@@ -269,7 +270,7 @@ GitHub: https://github.com/joansongjr/investor-harness
 
 - ❶ **幻觉**：AI 不再编数据——每条事实必须标完整中文证据等级、列"仍需补的资料"
 - ❷ **健忘**：跨 session 续跑、覆盖池持久化
-- ❸ **不成体系**：31 个标准化 skill，所有输出归档到固定路径
+- ❸ **不成体系**：32 个标准化 skill，所有输出归档到固定路径
 - ❹ **上下文溢出**：三层加载 + checkpoint 续跑
 - ❺ **🆕 被动**（v0.9 Librarian 解决）：AI 不再只是"你问什么它答什么"——每天主动扫 vault、刷新 wiki、跑健康检查
 

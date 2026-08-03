@@ -1,4 +1,4 @@
-<!-- investor-harness:keyword-routes:start v0.9.6 -->
+<!-- investor-harness:keyword-routes:start v0.9.7 -->
 <!--
   这块由 investor-harness ONBOARDING.md 自动管理。
   下次升级时整块替换。**不要手动编辑**——改 setup/keyword-routes.md 然后重跑 onboarding。
@@ -9,7 +9,7 @@
 
 当用户对话里出现以下关键词时，**LLM 必须按对应 skill 的规则工作**（按 core/_boot.md 三层加载）：
 
-### 默认路由（25 个）
+### 默认路由（26 个）
 
 | 用户说 | 走 skill |
 |---|---|
@@ -38,6 +38,7 @@
 | 财报季批量 / 批量前瞻 / batch earnings | `sm-batch-earnings` |
 | 扫事件 / 今天有什么催化 / catalyst sweep | `sm-catalyst-sweep` |
 | **监工 X / 盯着 X 的任务 / 开个监工 / 三方任务组 / 语音监工 / 开实时语音监督 / 边做边监督** | `sm-supervisor` |
+| 归纳提问 / 学习一下我的问法 / 把这些问题学进去 / 看看学了什么 / 撤销 L-xxx | `sm-learn`（自主学习，主要靠 postamble 自动触发，关键词仅手动操作用） |
 
 ### Librarian 模式（v0.9+ · opt-in · 6 个）
 

@@ -102,6 +102,7 @@ LLM 看到以下任一情况，立即显示菜单：
 | 18 | sm-valuation | 估值分析 + 同业对比（v0.9.5）|
 | 19 | sm-quant-tape | 量化看盘 · 缠论结构（v0.9.5）|
 | 20 | sm-supervisor | 三方任务组监工（第二任务 / 实时语音 / 双向 mailbox，v0.9.6）|
+| 21 | sm-learn | 自主学习（自动归纳你的提问方式反补进 skill；关键词仅手动操作用，v0.9.7）|
 
 ---
 
@@ -129,6 +130,7 @@ LLM 自动识别用户意图，匹配最合适的 skill：
 - 出现 "模型 / 模型审阅 / sanity check" → sm-model-check
 - 出现 "量化看盘 / 缠论 / 买卖点 / 中枢 / 背驰" → sm-quant-tape
 - 出现 "监工 / 盯着任务 / 三方任务组 / 监督 / 语音监工 / 实时语音监督 / 边做边监督" → sm-supervisor
+- 出现 "归纳提问 / 学习我的问法 / 把这些问题学进去 / 看看学了什么 / 撤销 L-" → sm-learn
 - 出现 "一致预期 / 预期差" → sm-consensus-watch
 - 出现 "催化 / 事件 / 政策" → sm-catalyst-monitor
 - 出现 "刷新覆盖池 / 周度更新" → sm-batch-refresh

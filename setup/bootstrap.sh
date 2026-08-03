@@ -34,6 +34,8 @@ This will create a new analyst workspace at <target-dir> with:
   - briefings/         (daily / weekly / monthly archive root)
   - .task-pulse + .checkpoint/ (resume state)
   - .supervision/      (third-party / voice supervisor bus)
+  - .learning/         (sm-learn autonomous learning store, v0.9.7)
+  - user-skills/overlays/ (sm-learn per-skill question overlays, v0.9.7)
 
 Example:
   bash setup/bootstrap.sh ~/my-research
@@ -172,6 +174,57 @@ if [[ ! -d "$SUPERVISION_DIR" ]]; then
   echo "  ✓ created:  .supervision/ (third-party supervisor bus)"
 fi
 
+# v0.9.7: learning store for sm-learn (question ledger + rules ledger + trial log)
+LEARNING_DIR="$TARGET_DIR/.learning"
+if [[ ! -d "$LEARNING_DIR" ]]; then
+  mkdir -p "$LEARNING_DIR/archive" "$LEARNING_DIR/mentor-imports"
+  echo "  ✓ created:  .learning/ (sm-learn learning store)"
+fi
+
+if [[ ! -f "$LEARNING_DIR/.gitignore" ]]; then
+  printf '*\n' > "$LEARNING_DIR/.gitignore"
+fi
+
+if [[ ! -f "$LEARNING_DIR/question-ledger.jsonl" ]]; then
+  : > "$LEARNING_DIR/question-ledger.jsonl"
+  echo "  ✓ created:  .learning/question-ledger.jsonl (append-only event log)"
+fi
+
+if [[ ! -f "$LEARNING_DIR/learn-state.json" ]]; then
+  cat > "$LEARNING_DIR/learn-state.json" <<'LEARN_EOF'
+{"v":1,"ts":null,"sessions":0,"events":0,"skipped":0,"dropped":0,"cursor":null,"last_learn":null,"learn_count":0,"vocab":[],"carryover":[],"watch":[]}
+LEARN_EOF
+  echo "  ✓ created:  .learning/learn-state.json (counters + cursor)"
+fi
+
+if [[ ! -f "$LEARNING_DIR/adopted-rules.md" ]]; then
+  cat > "$LEARNING_DIR/adopted-rules.md" <<'LEARN_EOF'
+# Learned Rules 台账 · adopted-rules.md
+
+> 单写者：sm-learn。全部 learned rules 的 single source of truth。
+> 目标 < 20 KB，最大 50 KB；超限移入 archive/。
+
+## 生效规则
+
+（暂无——机制自动运行，每 3-5 次 skill 会话归纳一轮）
+
+## 已拒绝提案（防重提）
+
+## 已停用 / 已撤销规则
+LEARN_EOF
+  echo "  ✓ created:  .learning/adopted-rules.md (rules ledger)"
+fi
+
+if [[ ! -f "$LEARNING_DIR/trial-log.md" ]]; then
+  cat > "$LEARNING_DIR/trial-log.md" <<'LEARN_EOF'
+# Trial Log · 试用期记录（postamble Step 5.5 append-only）
+
+| 日期 | 规则 | skill | 标的 | 用次 | satisfied | recurrence | ignored | 备注 |
+|---|---|---|---|---|---|---|---|---|
+LEARN_EOF
+  echo "  ✓ created:  .learning/trial-log.md (trial tracking)"
+fi
+
 # Archive roots required by output-archive.md
 COVERAGE_ARCHIVE_DIR="$TARGET_DIR/coverage"
 THEMES_DIR="$TARGET_DIR/themes"
@@ -245,6 +298,24 @@ if [[ ! -d "$USER_SKILLS_DIR" ]]; then
     fi
   done
 fi
+
+# v0.9.7: sm-learn skill overlays. Deliberately NOT nested inside the user-skills
+# creation block above — existing workspaces already have user-skills/ and would
+# otherwise never get overlays/.
+OVERLAYS_DIR="$TARGET_DIR/user-skills/overlays"
+if [[ ! -d "$OVERLAYS_DIR" ]]; then
+  mkdir -p "$OVERLAYS_DIR"
+  echo "  ✓ created:  user-skills/overlays/ (sm-learn question overlays)"
+fi
+
+# v0.9.7: workspace .gitignore — learning artifacts never enter any repo
+GITIGNORE_FILE="$TARGET_DIR/.gitignore"
+for pattern in ".learning/" "user-skills/overlays/"; do
+  if [[ ! -f "$GITIGNORE_FILE" ]] || ! grep -qxF "$pattern" "$GITIGNORE_FILE"; then
+    echo "$pattern" >> "$GITIGNORE_FILE"
+  fi
+done
+echo "  ✓ ensured:  .gitignore covers .learning/ and user-skills/overlays/"
 
 echo
 echo "Summary: created=$CREATED, overwritten=$OVERWRITTEN, skipped=$SKIPPED"

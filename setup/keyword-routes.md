@@ -1,7 +1,7 @@
 # 关键词路由表（Single Source of Truth）
 
-> 这份文件是 31 个 sm-* skill 的关键词触发对照。**ONBOARDING.md 和 routes-block.template.md 都从这里同步**。
-> 修改时只改这里，再用 `setup/sync-routes.sh` 同步到其他文件（或手动 copy）。
+> 这份文件是 32 个 sm-* skill 的关键词触发对照。**ONBOARDING.md 和 routes-block.template.md 都从这里同步**。
+> 修改时只改这里，再手动同步到其他文件。
 
 ## 触发原则
 
@@ -12,7 +12,7 @@
 
 ---
 
-## 默认路由（22 个）
+## 默认路由（26 个）
 
 ### Entry / 入口
 
@@ -32,7 +32,7 @@
 
 | 关键词 | 触发 skill | 用途 |
 |---|---|---|
-| `X 深度报告` / `深度看 X` / `起 X 的 coverage` | `sm-company-deepdive` | 公司深度（9 段）|
+| `X 深度报告` / `深度看 X` / `起 X 的 coverage` | `sm-company-deepdive` | 公司深度（§0 结论前置 + 13 段底稿）|
 | `X 财报前瞻` / `X earnings preview` / `X 业绩前瞻` | `sm-earnings-preview` | 财报前瞻 |
 | `审 X 的模型` / `X 模型 sanity check` / `X 模型审阅` | `sm-model-check` | 财务模型审阅 |
 | `X 预期差` / `X consensus` / `X 一致预期` | `sm-consensus-watch` | 一致预期 + 预期差 |
@@ -80,6 +80,17 @@
 |---|---|---|
 | `监工 X` / `盯着 X 的任务` / `做 X 的监督` / `开个监工` / `三方任务组` / `语音监工` / `开实时语音监督` / `边做边监督` | `sm-supervisor` | 第二会话监督 worker；实时语音负责进度问答、分级干预、用户口令转写与收尾验收 |
 
+### Learning / 自主学习（v0.9.7）
+
+> **sm-learn 主要靠自动触发**（postamble 每 3-5 次会话自动跑一轮，不需要用户说任何话）。以下关键词只用于手动操作。
+
+| 关键词 | 触发 skill | 用途 |
+|---|---|---|
+| `归纳提问` / `学习一下我的问法` / `跑 sm-learn` | `sm-learn` | 手动强制归纳一轮 |
+| `把这些问题学进去：…` | `sm-learn`（mentor 导入） | 老师 / 资深分析师问题清单高权威导入 |
+| `看看学了什么` / `看提案` / `看观察池` | `sm-learn`（审计） | 已学规则 / 待裁决提案 / 观察池查询 |
+| `撤销 L-xxx` / `恢复 L-xxx` / `重建 learned-rules` | `sm-learn`（台账操作） | 规则回滚 / 复活 / 载体重建 |
+
 ### Presentation / PPT 输出（v0.8）
 
 | 关键词 | 触发 skill | 用途 |
@@ -98,7 +109,7 @@
 
 ## 🆕 Librarian 模式（v0.9+ · opt-in）
 
-> **关键**：以下 5 个 skill **不在 sm-autopilot 默认路由内**，必须用户明示对应关键词才启用。
+> **关键**：以下 6 个 skill **不在 sm-autopilot 默认路由内**，必须用户明示对应关键词才启用。
 > 原因：Librarian 模式要求用户的 vault 已经按 Obsidian 形态组织好，不适合所有人。
 
 | 关键词 | 触发 skill | 用途 |

@@ -12,7 +12,7 @@
 |---|---|---|---|
 | **L1 模板** | 重复格式化任务，分析流程不变 | 日报 / 周报 / 月报 | ⭐ |
 | **L2 继承** | 现有 skill 差一小段，想补而不改原 skill | sm-company-deepdive + ESG 专项 | ⭐⭐ |
-| **L3 自创** | 全新场景，31 个 sm-* 都没有 | 港股打新 / 可转债 / ETF 持仓对比 | ⭐⭐⭐ |
+| **L3 自创** | 全新场景，32 个 sm-* 都没有 | 港股打新 / 可转债 / ETF 持仓对比 | ⭐⭐⭐ |
 
 **选择原则**：能用 L1 解决的不用 L2，能用 L2 扩展的不用 L3。
 
@@ -36,6 +36,10 @@
 ```
 
 每个 user skill 一个子目录，**必须**包含 `SKILL.md`。
+
+### v0.9.7 附注：`user-skills/overlays/`（自主学习专用，介于 L1 与 L2 之间）
+
+`user-skills/overlays/{skill}.overlay.md` 是 **sm-learn 自动维护**的 skill 问法增量层——机制从你的提问方式中归纳出的必答问题 / 输出段 / 降权声明落在这里，preamble Step 0.7 加载时叠加到主库 SKILL.md 上（只增不删）。与 L2 的区别：L2 是你手写的结构扩展，overlay 是机制自动学的问法增量；两者可共存（L2 skill 也能有自己的 overlay）。⛔ 不要手动编辑 overlay——对 AI 说"撤销 L-xxx"/"归纳提问"操作；格式规范见 [`learning.md`](learning.md) §4.2。
 
 ---
 
@@ -395,6 +399,6 @@ Step 1.5 · 检查 user-templates 和 user-skills
 - 升级时 update.sh 不会覆盖你的 user-skills/
 
 **L3 自创**：
-- 完全自由，可以做 31 个 sm-* 没覆盖的任何场景
+- 完全自由，可以做 32 个 sm-* 没覆盖的任何场景
 - 仍然继承 Investor Harness 的纪律（preamble / postamble / 合规）
 - 可以回流贡献到主库，成为 sm-*

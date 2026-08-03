@@ -6,6 +6,7 @@
 > 这是治"幻觉"和"不成体系"的核心机制。
 >
 > v0.4 改动：新增 Step 0（增量 checkpoint 写入）+ Step 7（context echo 简化），原 6 步保留。
+> v0.9.7 改动：新增 Step 5.5（落 Question Ledger + 自动归纳触发），原步骤保留。
 
 ---
 
@@ -141,6 +142,35 @@
 
 ---
 
+## Step 5.5 · 落 Question Ledger + 自动归纳触发（v0.9.7 新增 · 治重复提问）
+
+**这是自主学习机制的采集口——静默执行，不请示、不打断。**
+
+写入时机是**双份的**：每次写 .checkpoint 时顺手把该段新发生的可采事件先行落账（长会话防 context 压缩丢失）；本步收尾只做查漏与去重（按 session+seq 幂等）。
+
+1. 回顾本次会话的用户消息，按 [learning.md](learning.md) §2 与 §8 判例锚筛出可采事件：
+   - 五类硬排除：机制操作指令 / 纯数据查询 / 闲聊 / 会话过程管理 / ⛔ 买卖与仓位表述
+   - 试金石：**"换一个标的，这句话对未来分析仍有指导意义吗？"**
+   - **问题回家**：每条事件判 `home`（内容归属 skill，默认 = 本会话 skill，内容明显属于别的 skill 按 keyword-routes 语义改判）
+   - 含指代词的原话先解引用再落 raw；无法解引用 → 不入池，`skipped` +1
+2. 每条一行 JSON append 到 `{workspace_root}/.learning/question-ledger.jsonl`（schema 见 learning.md §1.1）：
+   - ⛔ 只允许 append（`printf '%s\n' '{json}' >> …`），严禁读全文再回写
+   - 默认每会话 ≤3 条，硬上限 5 条；超限取舍**至少留 1 个问法类名额**，丢弃的记 `dropped` +1
+   - 批量类 skill（batch-refresh / batch-earnings / stock-screen）：同一问法每标的一行
+3. **试用期三信号**：对本会话作用域内的 trial 规则（同 home overlay + 全局，正常 ≤5 条）逐条判
+   satisfied / recurrence / ignored（判定细则见 learning.md §5.1），append 到 `.learning/trial-log.md`
+4. 更新 `.learning/learn-state.json`：`sessions` +1、`events` +N（只动计数字段，其余 sm-learn 独占）
+5. **自动归纳触发**：`sessions ≥ 4` 或 `events ≥ 15`（`sessions = 5` 强制）→ 本会话收尾时
+   **自动内联跑一轮 sm-learn**（规则见 [learning.md](learning.md) §3 + skills/sm-learn），
+   会话尾输出 🧠 摘要块。这一步**不需要用户说任何话**——学习机制自主运行，用户只保留
+   "撤销 L-xxx"否决权
+
+无可采事件 → 只执行第 3、4 步，一行事件都不写。
+
+如果你觉得"本次没有任何值得记的提问"——回看一遍用户的追问，**追问本身往往就是纠正**。
+
+---
+
 ## Step 6 · 验收清单
 
 按 [acceptance.md](acceptance.md) 的清单逐条自检：
@@ -151,6 +181,7 @@
 - [ ] 合规声明已附
 - [ ] 输出已归档到正确路径
 - [ ] .task-pulse + active-tasks.md 已更新
+- [ ] question ledger 已更新（或本次无可采事件，仅计数 +1）；试用规则三信号已记 trial-log
 - [ ] .checkpoint 已删除（任务完成时）
 
 **任何一条没过 → 不算完成 → 必须补完再交付**。

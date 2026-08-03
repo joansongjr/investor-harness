@@ -4,14 +4,14 @@
 
 ## What this is
 
-Investor Harness v0.9.6 — 投研人的 AI 任务执行规范。
+Investor Harness v0.9.7 — 投研人的 AI 任务执行规范。
 治三大痛点：**幻觉 / 健忘 / 不成体系**。
-**v0.9.5 深度研究升级**：deepdive 壁垒五维量化 + 量价拆分 + 财务指标分析；新增 `sm-valuation` 与 `sm-quant-tape`。**v0.9.6 三方任务组**：`sm-supervisor` 把第二任务的实时语音变成第三方监工——用户 + worker + supervisor 通过 `.supervision/` 双向 mailbox 协作。**v0.9.6 · deepdive 结论前置**：`sm-company-deepdive` 输出格式改为 §0 结论前置（核心逻辑 / 核心叙事 / 走到什么位置 / 核心关注点）+ §1-§13 底稿；强制写作顺序为"先做完底稿并按 🔴/🟡/🟢 标结论支撑权重，再回来综合 §0"。
+**v0.9.5 深度研究升级**：deepdive 壁垒五维量化 + 量价拆分 + 财务指标分析；新增 `sm-valuation` 与 `sm-quant-tape`。**v0.9.6 三方任务组**：`sm-supervisor` 把第二任务的实时语音变成第三方监工——用户 + worker + supervisor 通过 `.supervision/` 双向 mailbox 协作。**v0.9.6 · deepdive 结论前置**：`sm-company-deepdive` 输出格式改为 §0 结论前置 + §1-§13 底稿，先底稿标 🔴/🟡/🟢 权重再综合 §0。**v0.9.7 自主学习**：`sm-learn` + `core/learning.md`——用户的提问方式被自动采集（postamble）、每 3-5 次会话自动归纳、按"问题回家"原则反补进对应 skill 的必答问题（overlay），自动生效进试用期，用户只保留"撤销 L-xxx"否决权。
 
-## 31 skills (one-line each)
+## 32 skills (one-line each)
 
-**默认路由 25 个**
-`sm-master`(7 模式总控) · `sm-autopilot`(自动路由) · `sm-thesis`(命题构建) · `sm-industry-map`(行业框架) · `sm-company-deepdive`(公司深度) · `sm-valuation`(估值 + 同业对比) · `sm-earnings-preview`(财报前瞻) · `sm-model-check`(模型审阅) · `sm-consensus-watch`(预期差) · `sm-industry-database`(产业 / 公司数据库) · `sm-catalyst-monitor`(事件跟踪) · `sm-roadshow-questions`(路演问题) · `sm-red-team`(反方审视) · `sm-pm-brief`(PM 一页纸) · `sm-briefing`(晨会晚报) · `sm-tape-review`(盘面 + 技术面复盘) · `sm-quant-tape`(量化看盘 · 缠论结构) · `sm-deck-builder`(PPT 生成) · `sm-batch-refresh`(批量刷新) · `sm-batch-earnings`(财报季批量) · `sm-catalyst-sweep`(催化剂扫描) · `sm-stock-screen`(选股筛标的) · `sm-hourly-watch`(小时级盯盘) · `sm-close-recap`(收盘复盘) · `sm-supervisor`(三方任务组监工)
+**默认路由 26 个**
+`sm-master`(7 模式总控) · `sm-autopilot`(自动路由) · `sm-thesis`(命题构建) · `sm-industry-map`(行业框架) · `sm-company-deepdive`(公司深度) · `sm-valuation`(估值 + 同业对比) · `sm-earnings-preview`(财报前瞻) · `sm-model-check`(模型审阅) · `sm-consensus-watch`(预期差) · `sm-industry-database`(产业 / 公司数据库) · `sm-catalyst-monitor`(事件跟踪) · `sm-roadshow-questions`(路演问题) · `sm-red-team`(反方审视) · `sm-pm-brief`(PM 一页纸) · `sm-briefing`(晨会晚报) · `sm-tape-review`(盘面 + 技术面复盘) · `sm-quant-tape`(量化看盘 · 缠论结构) · `sm-deck-builder`(PPT 生成) · `sm-batch-refresh`(批量刷新) · `sm-batch-earnings`(财报季批量) · `sm-catalyst-sweep`(催化剂扫描) · `sm-stock-screen`(选股筛标的) · `sm-hourly-watch`(小时级盯盘) · `sm-close-recap`(收盘复盘) · `sm-supervisor`(三方任务组监工) · `sm-learn`(自主学习归纳)
 
 **v0.9 Librarian 模式 6 个（opt-in，需用户明示）**
 `sm-wiki-build`(建 14 段 wiki) · `sm-daily-feed`(7 桶日刷) · `sm-question-list`(会前 vault 扫描) · `sm-health-check`(双层健康检查 + 跨源仲裁) · `sm-qa-archive`(会后归档 + 双链级联) · `sm-people-watch`(关键人物 / 社区信号流)
@@ -81,6 +81,7 @@ Investor Harness v0.9.6 — 投研人的 AI 任务执行规范。
 | **壁垒 / 空间 / 量价拆分框架 (v0.9.5)** | **core/moat-analysis.md** |
 | **财务指标分析手册 (v0.9.5)** | **core/financial-metrics.md** |
 | **三方任务组协议 (v0.9.6)** | **core/supervisor.md** |
+| **自主学习协议 (v0.9.7)** | **core/learning.md** |
 | **Librarian 模式总览 (v0.9)** | **core/librarian.md** |
 | 14 段 wiki 标准结构 | core/wiki-architecture.md |
 | 7 桶 daily feed | core/daily-feed.md |

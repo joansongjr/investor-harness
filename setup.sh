@@ -514,9 +514,9 @@ render_entry_md_section() {
 
 ${chain}
 
-## 28 个 skill
+## 32 个 skill
 
-sm-master · sm-autopilot · sm-thesis · sm-industry-map · sm-company-deepdive · sm-earnings-preview · sm-model-check · sm-consensus-watch · sm-industry-database · sm-catalyst-monitor · sm-roadshow-questions · sm-red-team · sm-pm-brief · sm-briefing · sm-tape-review · sm-deck-builder · sm-batch-refresh · sm-batch-earnings · sm-catalyst-sweep · sm-wiki-build · sm-daily-feed · sm-question-list · sm-health-check · sm-qa-archive · sm-people-watch
+sm-master · sm-autopilot · sm-thesis · sm-industry-map · sm-company-deepdive · sm-valuation · sm-earnings-preview · sm-model-check · sm-consensus-watch · sm-industry-database · sm-catalyst-monitor · sm-roadshow-questions · sm-red-team · sm-pm-brief · sm-briefing · sm-tape-review · sm-quant-tape · sm-deck-builder · sm-batch-refresh · sm-batch-earnings · sm-catalyst-sweep · sm-stock-screen · sm-hourly-watch · sm-close-recap · sm-supervisor · sm-learn · sm-wiki-build · sm-daily-feed · sm-question-list · sm-health-check · sm-qa-archive · sm-people-watch
 
 ## 硬约束
 

@@ -3,8 +3,8 @@
 
 name: investor-harness
 display_name: Investor Harness
-version: 0.9.6
-description: 投研人的 AI 任务执行规范。31 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.9.6 新增三方任务组：sm-supervisor 把第二任务的实时语音变成第三方监工，用户 + worker + supervisor 通过 .supervision 双向 mailbox 协作，支持进度问答、分级干预、口头指令转写与收尾验收，全模型 / 全 harness 通用。v0.9.5 深度研究升级：sm-company-deepdive 核心壁垒扩为五维量化大模块（竞对差距量化 + 市场空间量价拆分 + 盈利预测量价拆分 + 财务指标分析），sm-industry-map 新增行业空间测算与环节壁垒段，新增 sm-valuation（估值方法选择 + 同业对比）与 sm-quant-tape（量化看盘 · 缠论结构），新增 core/moat-analysis.md 与 core/financial-metrics.md 两个共享框架。v0.9.2 新增 sm-industry-database（产业 / 公司数据库搭建）并把证据分级从字母缩写切换为完整中文标签。v0.9.1 新增 ONBOARDING 流程——首次启动 agent 时自动展示功能 + 关键词路由表，等用户确认后在对应入口 MD 追加受管路由块。v0.9 Librarian 升级（6 个 opt-in skill）。v0.8 sm-deck-builder。v0.7 L1/L2/L3 用户自定义。
+version: 0.9.7
+description: 投研人的 AI 任务执行规范。32 个 sm-* skill 强制 LLM 在做投研工作时不出现幻觉、不丢失上下文、不输出杂乱。v0.9.7 自主学习：sm-learn + core/learning.md——用户的提问方式被 postamble 静默采集，每 3-5 次会话自动归纳，按"问题回家"原则反补进对应 skill 的必答问题（overlay），自动生效进试用期（阈值 ≥3 次·≥2 标的·≥2 天 + 三重冲突检查），用户只保留"撤销 L-xxx"否决权；试用期三信号自动验证，学习产物全部留在工作区且 git-ignore。v0.9.6 新增三方任务组：sm-supervisor 把第二任务的实时语音变成第三方监工，用户 + worker + supervisor 通过 .supervision 双向 mailbox 协作，支持进度问答、分级干预、口头指令转写与收尾验收，全模型 / 全 harness 通用。v0.9.5 深度研究升级：sm-company-deepdive 核心壁垒扩为五维量化大模块（竞对差距量化 + 市场空间量价拆分 + 盈利预测量价拆分 + 财务指标分析），sm-industry-map 新增行业空间测算与环节壁垒段，新增 sm-valuation（估值方法选择 + 同业对比）与 sm-quant-tape（量化看盘 · 缠论结构），新增 core/moat-analysis.md 与 core/financial-metrics.md 两个共享框架。v0.9.2 新增 sm-industry-database（产业 / 公司数据库搭建）并把证据分级从字母缩写切换为完整中文标签。v0.9.1 新增 ONBOARDING 流程——首次启动 agent 时自动展示功能 + 关键词路由表，等用户确认后在对应入口 MD 追加受管路由块。v0.9 Librarian 升级（6 个 opt-in skill）。v0.8 sm-deck-builder。v0.7 L1/L2/L3 用户自定义。
 license: MIT
 author: Joan Song
 homepage: https://github.com/joansongjr/investor-harness
@@ -96,9 +96,21 @@ skills:
   - id: sm-roadshow-questions
     path: skills/sm-roadshow-questions
     tier: monitoring
+  - id: sm-hourly-watch
+    path: skills/sm-hourly-watch
+    tier: monitoring
+    description: 股票池小时级盯盘 / 异动告警
+  - id: sm-close-recap
+    path: skills/sm-close-recap
+    tier: monitoring
+    description: 股票池收盘归因 / 原因变化复盘
   - id: sm-red-team
     path: skills/sm-red-team
     tier: challenge
+  - id: sm-stock-screen
+    path: skills/sm-stock-screen
+    tier: discovery
+    description: 主题挖掘 / 低涨幅补涨 / 预期差选股
   - id: sm-pm-brief
     path: skills/sm-pm-brief
     tier: output
@@ -142,6 +154,11 @@ skills:
     path: skills/sm-supervisor
     tier: supervision
     description: 三方任务组实时语音监工——第二任务巡检 worker 的 checkpoint 与草稿，支持进度问答、用户口令转写、🔴/🟡/🟢 分级干预和收尾验收；通信走 .supervision 双向 mailbox，全 harness 通用 — v0.9.6 新增
+  # v0.9.7 自主学习 skill
+  - id: sm-learn
+    path: skills/sm-learn
+    tier: learning
+    description: 提问驱动自主学习——postamble 静默采集用户提问方式，每 3-5 次会话自动归纳，按"问题回家"原则反补进对应 skill 的必答问题（overlay）；自动生效进试用期，用户保留"撤销 L-xxx"否决权；协议见 core/learning.md — v0.9.7 新增
   # v0.9 Librarian 升级 skill
   - id: sm-wiki-build
     path: skills/sm-wiki-build
@@ -163,6 +180,10 @@ skills:
     path: skills/sm-qa-archive
     tier: librarian
     description: 会后 Q&A 归档 + wiki 级联更新（双链复利执行端）— v0.9 新增
+  - id: sm-people-watch
+    path: skills/sm-people-watch
+    tier: librarian
+    description: 关键人物 / X / Reddit 社区信号流跟踪 — v0.9 新增
 
 core:
   - path: core/evidence.md
@@ -219,6 +240,10 @@ core:
   # v0.9.6 三方任务组 core
   - path: core/supervisor.md
     purpose: 三方任务组协议（用户 + worker + supervisor，.supervision 双向 mailbox + 单写者规则 + 🔴/🟡/🟢 干预分级 + 实时语音交互层）— v0.9.6 新增
+  # v0.9.7 自主学习 core
+  - path: core/learning.md
+    purpose: 提问驱动自主学习协议（唯一规范源：数据契约 + 问题回家 + 聚类阈值 + 自动生效边界 + 试用期验证 + 安全轨 + 判例锚）— v0.9.7 新增
+    critical: true
 
 user_install_prompt:
   path: INSTALL-PROMPT.md
@@ -227,10 +252,10 @@ user_install_prompt:
 
 onboarding:
   path: ONBOARDING.md
-  purpose: 首次启动 agent 时由 agent 读取的引导流程——列出 28 个 skill + 关键词路由表，等用户明确"同意"后自动写入 harness 入口 MD — v0.9.1 新增
+  purpose: 首次启动 agent 时由 agent 读取的引导流程——列出 32 个 skill + 关键词路由表，等用户明确"同意"后自动写入 harness 入口 MD — v0.9.1 新增
   critical: true
   related:
-    - setup/keyword-routes.md       # 28 个 skill 关键词路由表（single source of truth）
+    - setup/keyword-routes.md       # 32 个 skill 关键词路由表（single source of truth）
     - skills/sm-industry-database/SKILL.md
     - setup/routes-block.template.md # 要插入用户入口 MD 的标准块（带 BEGIN/END marker）
 
