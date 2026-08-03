@@ -30,7 +30,7 @@
 
 > 🆕 **v0.9.0 — Librarian 升级：从记忆系统到主动投研助手**
 > 该版本累计 28 个 skill（默认路由 22 + Librarian opt-in 6）+ 6 份新核心文档；当前 v0.9.7 已扩展到 32 个 skill（默认路由 26 + Librarian opt-in 6）。重点：让 AI 不只是帮你**记住**了什么，而是**在你需要之前**就把跨源综合做完、矛盾标红、判断点摆好——你做 PM 的判断，机器干苦活。
-> 完整设计参见 [`core/librarian.md`](core/librarian.md) · HTML 介绍 deck：[`docs/v0.9-librarian-deck.html`](docs/v0.9-librarian-deck.html)
+> 完整设计参见 [`core/librarian.md`](core/librarian.md) · Librarian 专题 deck：[`docs/v0.9-librarian-deck.html`](docs/v0.9-librarian-deck.html)
 
 ---
 
@@ -825,7 +825,7 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 - `sm-health-check` — 每天跑两层健康检查 + 跨源仲裁
 - `sm-qa-archive` — 会后归档触发 wiki 级联更新
 
-**HTML 介绍 deck**：`docs/v0.9-librarian-deck.html`（双击在浏览器打开，分享会用）
+**HTML 介绍 deck**：`docs/v0.9.7-harness-deck.html`（当前版本总介绍，双击在浏览器打开，分享会用）· `docs/v0.9-librarian-deck.html`（v0.9.0 Librarian 专题存档）
 
 **为什么 v0.9 是质变**：
 

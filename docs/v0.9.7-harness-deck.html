@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Investor Harness v0.9.7 · 自主学习</title>
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #161a22;
+    --ink: #e6edf3;
+    --muted: #8b949e;
+    --line: #30363d;
+    --accent: #f0a500;
+    --accent-soft: rgba(240,165,0,.15);
+    --green: #3fb950;
+    --red: #f85149;
+    --blue: #58a6ff;
+    --serif: 'Source Han Serif SC','Noto Serif CJK SC','Songti SC','Times New Roman',serif;
+    --sans: -apple-system,BlinkMacSystemFont,'PingFang SC','Helvetica Neue','Microsoft Yahei',Arial,sans-serif;
+    --mono: 'JetBrains Mono','SF Mono',Menlo,Consolas,monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  .deck { width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+  .slide { position: absolute; inset: 0; padding: 4.5vh 6vw; display: none; flex-direction: column; justify-content: center; overflow: auto; }
+  .slide.active { display: flex; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .nav { position: fixed; bottom: 18px; left: 0; right: 0; display: flex; justify-content: center; gap: 14px; z-index: 50; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .nav button { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-family: inherit; }
+  .nav button:hover { border-color: var(--accent); }
+  .progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); z-index: 50; transition: width .35s ease; }
+  .counter { position: fixed; top: 16px; right: 22px; font-family: var(--mono); font-size: 12px; color: var(--muted); z-index: 50; }
+
+  h1 { font-family: var(--serif); font-weight: 600; font-size: 76px; line-height: 1.15; margin: 0 0 24px 0; letter-spacing: -.5px; }
+  h2 { font-family: var(--serif); font-weight: 600; font-size: 48px; line-height: 1.2; margin: 0 0 18px 0; letter-spacing: -.3px; }
+  h3 { font-size: 22px; font-weight: 600; margin: 0 0 14px 0; color: var(--accent); letter-spacing: .3px; }
+  p { font-size: 20px; line-height: 1.65; color: var(--ink); margin: 0 0 12px 0; max-width: 1200px; }
+  p.small { font-size: 17px; color: var(--muted); }
+  .kicker { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+  .pull { font-family: var(--serif); font-size: 34px; line-height: 1.4; color: var(--ink); border-left: 4px solid var(--accent); padding: 8px 24px; margin: 24px 0; max-width: 1100px; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px; }
+  .card h4 { margin: 0 0 10px 0; font-size: 19px; color: var(--accent); }
+  .card p { font-size: 16px; line-height: 1.6; color: var(--ink); margin: 0; }
+  .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 3px 12px; font-size: 12px; font-family: var(--mono); margin-right: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 17px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--accent); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+  td.muted { color: var(--muted); }
+  code, pre { font-family: var(--mono); }
+  pre { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; font-size: 14px; line-height: 1.7; color: var(--ink); overflow: auto; }
+  .ascii { font-family: var(--mono); white-space: pre; font-size: 14px; line-height: 1.55; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px 24px; overflow: auto; }
+  .red { color: var(--red); }
+  .green { color: var(--green); }
+  .blue { color: var(--blue); }
+  .accent { color: var(--accent); }
+  .strike { text-decoration: line-through; color: var(--muted); }
+  ul { padding-left: 22px; margin: 6px 0; }
+  ul li { font-size: 18px; line-height: 1.7; margin-bottom: 4px; }
+  ol li { font-size: 18px; line-height: 1.7; margin-bottom: 8px; }
+
+  .cover { background: radial-gradient(ellipse at 30% 30%, rgba(240,165,0,.10), transparent 60%), var(--bg); }
+  .cover h1 { font-size: 88px; }
+  .cover .sub { font-family: var(--serif); font-size: 30px; color: var(--muted); margin-top: 6px; font-style: italic; }
+  .cover .meta { position: absolute; bottom: 60px; left: 6vw; display: flex; gap: 36px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .cover .meta .label { color: var(--accent); display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 2px; }
+
+  .timeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-top: 20px; }
+  .timeline .tick { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 14px; }
+  .timeline .tick.hot { border-color: var(--accent); background: var(--accent-soft); }
+  .timeline .tick .v { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 8px; }
+  .timeline .tick .t { font-size: 15px; font-weight: 600; line-height: 1.45; }
+  .timeline .tick .d { font-size: 12.5px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+  .end h1 { font-size: 88px; }
+  .end .url { font-family: var(--mono); font-size: 22px; color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 10px; padding: 14px 22px; display: inline-block; margin-top: 16px; }
+
+  @media (max-width: 1100px) {
+    h1 { font-size: 50px; } h2 { font-size: 34px; }
+    .cover h1 { font-size: 54px; } .end h1 { font-size: 54px; }
+    p { font-size: 17px; } .pull { font-size: 22px; }
+    .two { grid-template-columns: 1fr; gap: 24px; }
+    .three, .four { grid-template-columns: 1fr; }
+    .timeline { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="counter" id="counter"></div>
+<div class="deck">
+
+  <!-- 1. Cover -->
+  <section class="slide cover active">
+    <div class="kicker">Investor Harness · v0.9.7</div>
+    <h1>它开始记住<br/>你怎么提问</h1>
+    <div class="sub">投研人的 AI 任务执行规范 —— 现在会自主学习了</div>
+    <p style="margin-top:32px; max-width:960px; font-size:22px; color:var(--muted);">32 个 skill 治幻觉 / 健忘 / 不成体系。v0.9.7 起：你的提问方式被自动归纳、反补进对应 skill——<span class="accent">下次它先答，你不用再问</span>。</p>
+    <div class="meta">
+      <div><span class="label">分享人</span>宋婧茹 · 兴业证券海外研究</div>
+      <div><span class="label">版本</span>v0.9.7 · MIT 开源</div>
+      <div><span class="label">GitHub</span>github.com/joansongjr/investor-harness</div>
+    </div>
+  </section>
+
+  <!-- 2. 是什么 -->
+  <section class="slide">
+    <div class="kicker">Investor Harness 是什么</div>
+    <h2>不是又一个 AI 工具，是套在 AI 上的执行纪律</h2>
+    <p>Claude Code / Codex / OpenCode 已经够聪明——问题是它们做投研时<strong>不守纪律</strong>。Harness 是一层全 markdown 的规范栈，强制任何 LLM 按投研的规矩干活：</p>
+    <div class="three" style="margin-top:22px;">
+      <div class="card">
+        <h4>治幻觉</h4>
+        <p>开工前强制 [Preflight] 取数计划 → 实际取数 → 每条事实带完整中文证据等级（公开事实 / 财报披露 / 市场共识 / 合理推演 / 待核验假设）→ 结尾强制"仍需补的资料"。</p>
+      </div>
+      <div class="card">
+        <h4>治健忘</h4>
+        <p>.task-pulse 任务心跳 + .checkpoint 断点续跑 + 本地资料优先扫描——会话断了接着跑，历史研究是起点不是空白。</p>
+      </div>
+      <div class="card">
+        <h4>治不成体系</h4>
+        <p>每次输出双份：对话贴全文 + 归档到 coverage/{ticker}/ 固定路径。半年后可 diff、可 review、可跨 skill 引用。</p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:20px;">纯 markdown · 数据不出本地 · 全模型全 harness 通用 · MIT 开源</p>
+  </section>
+
+  <!-- 3. 版本演进 -->
+  <section class="slide">
+    <div class="kicker">v0.9 系列演进</div>
+    <h2>六步走到"越用越懂你"</h2>
+    <div class="timeline">
+      <div class="tick"><div class="v">v0.9.0</div><div class="t">Librarian 升级</div><div class="d">14 段活 wiki · 7 桶 daily feed · 跨源仲裁 · Q&amp;A 双链（6 个 opt-in skill）</div></div>
+      <div class="tick"><div class="v">v0.9.1-2</div><div class="t">Onboarding + 数据库</div><div class="d">一句话激活路由 · sm-industry-database 产业数据库搭建 · 证据等级全中文化</div></div>
+      <div class="tick"><div class="v">v0.9.5</div><div class="t">深度研究升级</div><div class="d">壁垒五维量化 · 市场空间与盈利预测量价拆分 · sm-valuation · sm-quant-tape 缠论</div></div>
+      <div class="tick"><div class="v">v0.9.6</div><div class="t">三方任务组</div><div class="d">sm-supervisor 实时语音监工 · .supervision 双向 mailbox</div></div>
+      <div class="tick"><div class="v">v0.9.6</div><div class="t">结论前置</div><div class="d">deepdive §0 四行结论最前置、最后写 · 🔴🟡🟢 结论支撑权重</div></div>
+      <div class="tick hot"><div class="v">v0.9.7</div><div class="t">自主学习 🆕</div><div class="d">提问方式自动归纳反补进 skill · 问题回家 · 试用期 · 一键撤销</div></div>
+    </div>
+    <p class="small" style="margin-top:22px;">前五步把"纪律"建全了；v0.9.7 让纪律<strong class="accent">随你的用法自动进化</strong>——这是从"规范"到"你的规范"的一步。</p>
+  </section>
+
+  <!-- 4. skill 地图 -->
+  <section class="slide">
+    <div class="kicker">32 个 skill 一张地图</div>
+    <h2>默认路由 26 + Librarian opt-in 6</h2>
+    <div class="two" style="margin-top:16px;">
+      <div>
+        <p class="small"><span class="pill">entry</span> sm-autopilot · sm-master</p>
+        <p class="small"><span class="pill">framing</span> sm-thesis · sm-industry-map</p>
+        <p class="small"><span class="pill">research</span> sm-company-deepdive · sm-valuation · sm-earnings-preview · sm-model-check · sm-consensus-watch · sm-industry-database</p>
+        <p class="small"><span class="pill">monitoring</span> sm-catalyst-monitor · sm-roadshow-questions · sm-hourly-watch · sm-close-recap</p>
+        <p class="small"><span class="pill">challenge</span> sm-red-team　<span class="pill">discovery</span> sm-stock-screen</p>
+        <p class="small"><span class="pill">output</span> sm-pm-brief · sm-briefing　<span class="pill">technical</span> sm-tape-review · sm-quant-tape</p>
+        <p class="small"><span class="pill">presentation</span> sm-deck-builder　<span class="pill">batch</span> sm-batch-refresh · sm-batch-earnings · sm-catalyst-sweep</p>
+        <p class="small"><span class="pill">supervision</span> sm-supervisor　<span class="pill" style="border-color:var(--green);color:var(--green);background:rgba(63,185,80,.12);">learning 🆕</span> sm-learn</p>
+      </div>
+      <div>
+        <h3>Librarian 6 个（opt-in）</h3>
+        <table style="font-size:14px;">
+          <tr><td><code>sm-wiki-build</code></td><td class="muted">14 段活 wiki</td></tr>
+          <tr><td><code>sm-daily-feed</code></td><td class="muted">7 桶日刷</td></tr>
+          <tr><td><code>sm-question-list</code></td><td class="muted">会前 vault 扫描</td></tr>
+          <tr><td><code>sm-health-check</code></td><td class="muted">健康检查 + 跨源仲裁</td></tr>
+          <tr><td><code>sm-qa-archive</code></td><td class="muted">会后归档 + 双链</td></tr>
+          <tr><td><code>sm-people-watch</code></td><td class="muted">关键人物 / 社区信号流</td></tr>
+        </table>
+        <p class="small" style="margin-top:14px; color:var(--muted);">全部 skill 共享同一套 preamble 6 步 / postamble 8 步 / 证据分级 / 归档纪律——这才是"32 个"有意义的原因：<strong>结构统一，输出可比</strong>。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. v0.9.5 深度研究 -->
+  <section class="slide">
+    <div class="kicker">v0.9.5 · 深度研究升级</div>
+    <h2>壁垒不许用形容词，空间不许只给大数</h2>
+    <div class="two" style="margin-top:18px;">
+      <div>
+        <h3>sm-company-deepdive 的三道硬闸</h3>
+        <ul>
+          <li><strong>壁垒五维量化</strong>——市场地位 / 品牌 / 技术 / 成本 / 转换成本，每维至少一个量化锚，先声明哪 1-2 维是决定性的</li>
+          <li><strong>竞对差距量化</strong>——差距表 + 追平年限与资本推演 + 壁垒侵蚀的可观测触发条件</li>
+          <li><strong>量价拆分</strong>——市场空间 TAM/SAM/SOM 自上而下 × 自下而上交叉验证；收入预测分业务线 量×价 逐条拆；预测收入 ÷ 空间 = 隐含份额逐年自检</li>
+        </ul>
+      </div>
+      <div>
+        <h3>两个新 skill</h3>
+        <p><strong class="accent">sm-valuation</strong> — 估值方法选择（PE/PB/PS/PEG/EV-EBITDA/DCF/SOTP）+ 三档测算 + 敏感性 + 同业对比 + 市场隐含预期反推。⛔ 不给目标价评级。</p>
+        <p style="margin-top:14px;"><strong class="accent">sm-quant-tape</strong> — 量化看盘 · 缠论结构：分型 / 笔 / 线段 / 中枢 / 三类买卖点 / 背驰 + 量能交叉验证。</p>
+        <p class="small" style="margin-top:14px;">共享框架沉淀在 core/moat-analysis.md 与 core/financial-metrics.md——所有 skill 用同一套口径。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. v0.9.6 结论前置 -->
+  <section class="slide">
+    <div class="kicker">v0.9.6 · deepdive 结论前置</div>
+    <h2>§0 放最前面，但必须最后写</h2>
+    <div class="two" style="margin-top:16px;">
+      <div>
+        <p>读者第一眼看到四行结论：</p>
+        <ul>
+          <li><strong>核心逻辑</strong> — 为什么值得关注 / 为什么是现在</li>
+          <li><strong>核心叙事</strong> — 市场在讲什么故事 + 你判断的 gap</li>
+          <li><strong>走到什么位置</strong> — 命题成型 / 验证中 / 叙事扩散 / 定价充分 / 逆转，配观察窗口</li>
+          <li><strong>核心关注点</strong> — 未来 3-6 个月最能改变结论的 1-3 个变量</li>
+        </ul>
+      </div>
+      <div>
+        <p>写作纪律反过来：<strong class="accent">先做完 §1-§13 底稿</strong>，每段末尾标结论支撑权重——</p>
+        <p style="margin-top:10px;">🔴 ★★★ 决定性（全篇 2-4 段）<br/>🟡 ★★ 重要支撑（4-6 段）<br/>🟢 ★ 背景铺垫（其余）</p>
+        <p style="margin-top:10px;">§0 每句必须能追溯到某段 🔴/🟡。<span class="red">未标权重不许写 §0；四行不许全写成正面。</span></p>
+        <p class="small" style="margin-top:12px;">读者体验 = 结论前置；写作纪律 = 结论由底稿 bottom-up 涌现。防的就是"先有结论再找证据"。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. v0.9.6 supervisor -->
+  <section class="slide">
+    <div class="kicker">v0.9.6 · 三方任务组</div>
+    <h2>给执行 agent 配一个实时语音监工</h2>
+    <div class="ascii" style="margin-top:14px; font-size:13px;">
+   任务 A（worker）                          任务 B（supervisor · 可挂实时语音）
+   sm-company-deepdive 正常跑研究     ⇄      "用 sm-supervisor 监工 X"
+        │                                        │
+        │  写 to-supervisor/                写 to-worker/
+        └──────────► <span class="accent">.supervision/ 双向 mailbox</span> ◄──────────┘
+                     （各写自己的信箱，永不覆盖对方）
+
+   监工做四件事：<span class="green">进度问答</span> · <span class="green">抽查最新段落可靠性</span> · <span class="green">用户口头意见转 worker 消息</span> · <span class="green">收尾独立验收</span>
+   干预分级：<span class="red">🔴 下一安全点立即处理</span> · <span class="accent">🟡 段间修正</span> · <span class="green">🟢 收尾建议</span></div>
+    <p class="small" style="margin-top:16px;">不依赖私有 API，纯文件总线——Claude Code / Codex / OpenCode 混搭也能跑；没有语音就用文字，协议相同。灵感来自"一对一任务 + 一个语音监工"的三人任务组实践。</p>
+  </section>
+
+  <!-- 8. v0.9.7 痛点 -->
+  <section class="slide">
+    <div class="kicker">v0.9.7 · 为什么要自主学习</div>
+    <h2>"客户集中度呢？"——这是你第三次问了</h2>
+    <div class="two" style="margin-top:18px;">
+      <div>
+        <p>每个分析师都有自己的问法：做模型总要问那几个假设，复盘总问那几类归因，深度报告总补问客户集中度、存货周转、老师教的那几个角度。</p>
+        <p style="color:var(--red); font-weight:600; margin-top:14px;">但每开一个新会话，AI 都从零开始——你只能一遍一遍重新说。</p>
+        <p class="small" style="margin-top:12px;">重复到第三次的时候，挫败感已经产生：它怎么还不会？</p>
+      </div>
+      <div>
+        <div class="card" style="border-color:var(--accent);">
+          <h4>v0.9.7 的回答</h4>
+          <p style="font-size:18px;">把你的提问方式变成 skill 的一部分。<br/><br/>你问过三次的角度，第四次开始<strong style="color:var(--accent);">它先答，你不用再问</strong>。<br/><br/>而且全程自主运行——采集、归纳、生效、验证，<strong>你不需要说任何话</strong>，只保留一票否决权。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. v0.9.7 机制 -->
+  <section class="slide">
+    <div class="kicker">v0.9.7 · 机制</div>
+    <h2>四段闭环 + 问题回家</h2>
+    <div class="ascii" style="margin-top:12px; font-size:13px;">
+① <span class="accent">采集</span>（每次会话收尾静默做，≤200 tokens）
+   你的提问 / 追问 / 纠正 → .learning/question-ledger.jsonl
+   <span class="green">问题回家</span>：按内容归属 home skill——deepdive 会话里问"折旧假设是不是太乐观"
+   → 归 sm-model-check；问"今天为什么跌" → 归 sm-close-recap
+
+② <span class="accent">归纳</span>（每 3-5 次会话自动触发）
+   按 home 分组聚类 → 剥离标的抽象化（"H20 对华恢复对 FY27 收入的影响"
+   → "单一{产品}在{地区}的出货边际变化对{财期}{业务}收入的影响"）
+   阈值：<span class="green">≥3 次 · ≥2 个标的 · ≥2 个不同日期</span> + 泛化测试 + 三重冲突检查
+
+③ <span class="accent">写回</span>（自动生效进试用期，每轮 ≤3 条）
+   问法 → user-skills/overlays/{skill}.overlay.md 的「必答问题（新增）」
+   跨 skill 偏好 → .learning/learned-rules.md（全局）· 单标的 → coverage/{ticker}/questions.md
+
+④ <span class="accent">验证</span>（试用期 5 次使用，三信号自动跟踪）
+   成功判据 = <span class="green">你不再需要问这个问题</span> → 转正；失败 → 自动停用（可一键恢复）</div>
+    <p class="small" style="margin-top:14px;">会话尾一行摘要：🧠 自动生效 2 条试用规则 · 撤销任一条说"撤销 L-xxx"。老师的问题清单可以"<strong class="accent">把这些问题学进去</strong>"直接高权威导入。</p>
+  </section>
+
+  <!-- 10. v0.9.7 安全 -->
+  <section class="slide">
+    <div class="kicker">v0.9.7 · 为什么敢让它自动生效</div>
+    <h2>自主 ≠ 失控：每条规则可逆、可审计、出不了工作区</h2>
+    <div class="four" style="margin-top:20px;">
+      <div class="card">
+        <h4>统计门槛</h4>
+        <p>≥3 次·≥2 标的·≥2 天，90 天滚动窗口。"经常问 ≠ 每次都要"——异动日才问的角度成案为<strong>条件必答</strong>，不污染平静期报告。</p>
+      </div>
+      <div class="card">
+        <h4>试用期</h4>
+        <p>新规则先试用 5 次：原问题复现 ≥2 次或产出被连续忽略 → <strong>自动停用</strong>。规则必须证明自己有用才转正。</p>
+      </div>
+      <div class="card">
+        <h4>不可覆盖域</h4>
+        <p>证据分级 / 合规声明 / 数据源纪律 / preamble·postamble 步骤——学习规则<strong>永远碰不到</strong>。外发报告层的纠正也不会污染讨论层。</p>
+      </div>
+      <div class="card">
+        <h4>一票否决</h4>
+        <p>"撤销 L-xxx" 一键回滚，"看看学了什么" 全量审计。每条规则带原话出处 + 事件 ID，台账可追溯。</p>
+      </div>
+    </div>
+    <div class="pull" style="margin-top:24px; font-size:24px;">
+      学习产物全部留在你的 workspace（<span class="accent">.learning/</span> + overlay），默认 git-ignore——<br/>
+      <span class="accent">机制是开源的，但"懂你"这件事只属于你的本地。</span>
+    </div>
+  </section>
+
+  <!-- 11. Librarian 一页 -->
+  <section class="slide">
+    <div class="kicker">v0.9 · Librarian 模式（opt-in）</div>
+    <h2>vault 用户的加餐：在你需要之前拼好信息</h2>
+    <div class="three" style="margin-top:18px;">
+      <div class="card">
+        <h4>活的公司主页</h4>
+        <p>14 段标准 wiki，§3 估值每天随股价缩放，§2 模型快照走 registry 自动 diff——wiki 不会悄悄过期。</p>
+      </div>
+      <div class="card">
+        <h4>会前自动纠偏</h4>
+        <p>question list 自动附 vault 扫描结论——你以为的数字和库里实际的数字摆在一起，矛盾在会前暴露而不是会上。</p>
+      </div>
+      <div class="card">
+        <h4>跨源仲裁</h4>
+        <p>每天对比管理层指引 vs 卖方 forecast vs 模型假设，差异 &gt;5% 标红。alpha 常在 gap 里。</p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:20px;">需要 Obsidian 形态的 vault，所以是 opt-in——说"建 coverage / 刷 daily feed / 跑健康检查"才启用。完整设计见 core/librarian.md 与 <code>docs/v0.9-librarian-deck.html</code> 专题 deck。</p>
+  </section>
+
+  <!-- 12. 安装升级 -->
+  <section class="slide">
+    <div class="kicker">上手</div>
+    <h2>新装三分钟，老用户一句话升级</h2>
+    <div class="two" style="margin-top:20px;">
+      <div>
+        <h3>新装</h3>
+        <ol style="padding-left:20px;">
+          <li>装 Claude Code / Codex / OpenCode 任一</li>
+          <li>克隆仓库，对 agent 说 <strong class="accent">"跑一下 investor-harness onboarding"</strong></li>
+          <li>agent 列出 32 个 skill + 路由表，你说"同意"后自动写入入口 MD + 补建工作区骨架</li>
+        </ol>
+        <pre style="margin-top:12px; font-size:12px;">git clone https://github.com/joansongjr/investor-harness.git
+cd 你的工作区 && 对 agent 说：跑一下 onboarding</pre>
+      </div>
+      <div>
+        <h3>已装用户升级到 v0.9.7</h3>
+        <p style="font-size:18px;">对 agent 说一句：</p>
+        <pre style="font-size:13px;">读 ~/investor-harness/UPGRADE-PROMPT.md，
+帮我把本地 investor-harness 保守升级到 v0.9.7</pre>
+        <ul style="margin-top:12px; font-size:16px;">
+          <li>保留你的个性化配置 / 工作区 / 任务底稿 / 历史归档</li>
+          <li>老工作区补跑一次 <code>bash setup/bootstrap.sh</code> 建 .learning/ 骨架（只补缺不覆盖）</li>
+          <li>下次跑任何 skill，自主学习就开始工作</li>
+        </ul>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px;">MIT 协议 · 数据不出本地 · 全部 markdown 可审计可 fork · Claude Code / Codex / OpenCode / OpenClaw 通用</p>
+  </section>
+
+  <!-- 13. 收束 -->
+  <section class="slide">
+    <div class="kicker">对分析师意味着什么</div>
+    <h2>三件事不用再做，第四件它替你越做越好</h2>
+    <div class="four" style="margin-top:22px;">
+      <div class="card">
+        <h4>1 · 拼信息</h4>
+        <p>Preflight 强制取数 + 归档体系，跨源综合有纪律地做完。</p>
+      </div>
+      <div class="card">
+        <h4>2 · 重复交代</h4>
+        <p>断点续跑 + 本地资料优先——不用每个会话把背景重讲一遍。</p>
+      </div>
+      <div class="card">
+        <h4>3 · 事后补格式</h4>
+        <p>证据等级 / 合规声明 / 仍需补资料，是过程的产物不是事后补丁。</p>
+      </div>
+      <div class="card" style="border-color:var(--accent);">
+        <h4>4 · 重复提问 🆕</h4>
+        <p>你的问法长进 skill 里。三个月后，这套 harness 已经不是下载时那套——<strong style="color:var(--accent);">它是你的</strong>。</p>
+      </div>
+    </div>
+    <div class="pull" style="margin-top:28px;">
+      <span class="accent">你做判断，机器干苦活——现在，机器还会记住你怎么判断。</span>
+    </div>
+  </section>
+
+  <!-- 14. End -->
+  <section class="slide end">
+    <div class="kicker">下载 / 使用 / 反馈</div>
+    <h1>开源 · 任你 fork</h1>
+    <div class="url">github.com/joansongjr/investor-harness</div>
+    <p style="margin-top:28px; max-width:1100px; color:var(--muted); font-size:19px;">v0.9.7 · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场<br/>
+      支持 Claude Code · Codex · OpenCode · OpenClaw · Generic markdown harness</p>
+    <p style="margin-top: 34px; color: var(--ink); font-size: 21px;">问题、issue、PR 都欢迎。<br/><span class="muted" style="font-size:17px;">分享人：宋婧茹 · 兴业证券海外研究 · 2026 / 08</span></p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button onclick="go(-1)">← Prev</button>
+  <button onclick="go(1)">Next →</button>
+  <span style="align-self:center;">← / → 翻页 · F 全屏 · ESC 退出</span>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let idx = 0;
+function render() {
+  slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+  document.getElementById('counter').textContent = (idx+1) + ' / ' + slides.length;
+  document.getElementById('progress').style.width = ((idx+1)/slides.length*100) + '%';
+}
+function go(delta) {
+  idx = Math.max(0, Math.min(slides.length-1, idx+delta));
+  render();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { go(1); e.preventDefault(); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(-1); e.preventDefault(); }
+  if (e.key === 'Home') { idx=0; render(); }
+  if (e.key === 'End') { idx=slides.length-1; render(); }
+  if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+render();
+</script>
+</body>
+</html>
