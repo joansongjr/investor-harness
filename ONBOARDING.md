@@ -45,6 +45,13 @@ grep -l "investor-harness:keyword-routes" \
     ~/.codex/AGENTS.md \
     ~/.config/opencode/AGENTS.md \
     ./CLAUDE.md ./AGENTS.md 2>/dev/null
+
+# WorkBuddy 不用入口 MD——靠 ~/.workbuddy/skills/investor-harness/SKILL.md 自动激活
+# 检测方式：SKILL.md 存在即视为已激活；MEMORY.md 有 marker 视为已写入持久底座
+test -f ~/.workbuddy/skills/investor-harness/SKILL.md && echo "workbuddy:skill-active"
+grep -l "investor-harness:keyword-routes" \
+    ~/.workbuddy/MEMORY.md \
+    ./.workbuddy/memory/MEMORY.md 2>/dev/null
 ```
 
 - **命中 marker** → 路由已经激活，但**先不要立刻宣布 onboarding 完成**。继续执行 **第 0.5 步 · 工作区骨架审计**：
@@ -154,15 +161,88 @@ grep -l "investor-harness:keyword-routes" \
 | 4 | 用户级 Codex | `~/.codex/AGENTS.md` | 用户全局 |
 | 5 | 用户级 OpenCode | `~/.config/opencode/AGENTS.md` | 用户全局 |
 | 6 | 用户级 OpenClaw | `~/.openclaw/CLAUDE.md`（推测）| 用户全局 |
+| 7 | 用户级 WorkBuddy | `~/.workbuddy/skills/investor-harness/SKILL.md`（自动激活）| 用户全局 |
+| 8 | WorkBuddy 持久底座 | `~/.workbuddy/MEMORY.md` 或 `${PWD}/.workbuddy/memory/MEMORY.md` | 用户/项目 |
+
+**WorkBuddy 特殊处理**：
+
+WorkBuddy 与其他 harness 根本不同——它**不读入口 MD**（不读 CLAUDE.md / AGENTS.md）。激活机制是：
+
+1. **自动激活（安装即生效）**：把 harness 装到 `~/.workbuddy/skills/investor-harness/`（`bash install/workbuddy.sh` 或 `setup.sh` 选 WorkBuddy），WorkBuddy 扫描到根目录 `SKILL.md` 就按 `description` 自动触发。**无需写任何入口 MD**。
+2. **可选持久底座**：把路由表写入 `~/.workbuddy/MEMORY.md`（用户级）或 `${PWD}/.workbuddy/memory/MEMORY.md`（项目级），让 WorkBuddy 在该环境工作时持续读到路由规则。不写入也能用——靠 SKILL.md 的 description 自动触发。
 
 **规则**：
 
-- 用户当前**在项目目录下** + 项目级 MD 存在 → **优先写项目级**（影响范围窄、易回滚）
-- 否则 → 写**用户级**
+- 用户当前**在项目目录下** + 项目级 MEMORY.md 存在 → **优先写项目级**（影响范围窄、易回滚）
+- 否则 → 写**用户级** MEMORY.md
 - 多个 harness 都装了 → 询问用户写哪个 / 全部都写
-- 一个都没检测到 → 询问用户手动给路径
+- 只有 WorkBuddy → 跳过入口 MD 写入，只确认 SKILL.md 已安装 + 可选写 MEMORY.md
+
+### 第 4.5 步 · 知识库锚点（可选但强烈建议）
+
+如果**用户的触发消息**里包含知识库锚点语句（典型来自图片 2 的指令）：
+
+> "我的知识库在 XX 文件夹存着，按照 harness 的规范，每次都调用里面的内容，并且把生成的结果存在这个文件夹里对应的位置，把这个位置和这段要求放在 agent.md 文件最顶层"
+
+agent 必须**自动**执行以下流程（**这是硬约束，不允许跳过**）：
+
+**检测**（用关键词扫描用户消息）：
+- 关键词 1：`我的知识库在` 或 `知识库在`
+- 关键词 2：`按照 harness 的规范` 或 `按 harness 规范`
+- 关键词 3：`放在 agent.md 文件最顶层` 或 `放在 .* 文件最顶层` 或 `放在 .* 最顶层`
+- **三个关键词同时命中** → 视为知识库锚点指令，必须处理
+
+**解析**：
+- 从消息里提取 `XX 文件夹`的绝对路径（用户可能写 `~/xxx`、`/Users/xxx/xxx`、相对路径等，需要展开 `~`）
+- 如果用户没给具体路径（如只说"我的知识库"没说在哪） → 询问用户输入路径
+
+**dry-run**（必须）：
+- 读取 `setup/knowledge-base-anchor.template.md`
+- 替换占位符：`{{KB_PATH}}` → 用户知识库路径，`{{HARNESS_PATH}}` → 当前安装路径
+- 完整展示**要写入的内容**给用户
+- 明确告知：**这一段会插入到入口文件最顶层**（不是追加到末尾），可能覆盖现有顶层内容
+
+**用户同意**（⛔ 硬约束）：
+- 必须等到用户输入"同意 / agree / yes, write it / OK 写入"等明确表达
+- "先看看 / 再想想 / 我自己来" → 绝对不写
+- 用户问"会改什么文件" → 再次 dry-run 展示
+
+**写入**（这是最关键的差异——**插入最顶层**，不是追加）：
+
+```
+1. 读取入口文件（如 ~/.claude/CLAUDE.md）
+2. 把渲染好的知识库锚点块 + 一行空行 + 原文件全部内容
+   → 写入临时文件
+3. 用临时文件覆盖原文件
+4. 验证：head -20 <入口文件> 应能看到"# 📚 知识库锚点（最高优先级）"
+```
+
+**WorkBuddy 特殊处理**：
+- WorkBuddy 不写入口 MD，锚点写到 `~/.workbuddy/MEMORY.md`（用户级）或 `${PWD}/.workbuddy/memory/MEMORY.md`（项目级）的**最顶层**
+- 但 WorkBuddy 的 SKILL.md（根目录）**不修改**——锚点独立于 skill 路由系统
+- 写入后用 `head -20` 验证锚点出现在顶层
+
+**后续行为**：
+- 知识库锚点一旦写入，**优先级高于路由块**：每次新会话 agent 第一件事读到知识库路径
+- 升级 investor-harness 时，路由表 marker 内的内容会被替换，**但知识库锚点不动**（它独立于 marker 路由系统）
+- 用户想移除锚点：对 agent 说"移除知识库锚点"，agent 找 `<!-- investor-harness:knowledge-base-anchor:start -->...:end -->` 整块删除
+
+**为什么这一步独立于第 5 步**：
+- 第 5 步写的是**路由块**（marker 追加到末尾，控制关键词触发）
+- 第 4.5 步写的是**知识库锚点**（插入到最顶层，控制数据来源 + 归档位置）
+- 两者**职责分离**：路由块管"什么时候调用什么 skill"，锚点管"从哪里取数据 + 结果放哪"
 
 ### 第 5 步 · 写入路由块
+
+**WorkBuddy 分支（优先判断）**：
+
+如果检测到用户用 WorkBuddy（`~/.workbuddy/skills/investor-harness/SKILL.md` 已存在）：
+
+1. **SKILL.md 已自动激活**——install/workbuddy.sh 或 setup.sh 已把 harness 装到 `~/.workbuddy/skills/investor-harness/`，根目录 SKILL.md 的 description 覆盖了 onboarding 触发词 + 投研关键词。无需额外写入。
+2. **可选写 MEMORY.md 持久底座**——询问用户是否把路由表写入 `~/.workbuddy/MEMORY.md`（用户级）或 `${PWD}/.workbuddy/memory/MEMORY.md`（项目级）。写入逻辑同下方入口 MD（marker 整块替换/追加）。用户选"只靠 SKILL.md 自动触发" → 跳过，onboarding 仍算完成。
+3. 跳过下方入口 MD 写入流程。
+
+**其他 harness（Claude Code / Codex / OpenCode / OpenClaw）**：
 
 ```
 1. 读取目标 MD 文件
@@ -188,6 +268,26 @@ grep -l "investor-harness:keyword-routes" \
 只有用户再次输入"确认"才执行 Edit/Write。
 
 ### 第 6 步 · 写入后验证
+
+**WorkBuddy**：
+
+```bash
+# 验证 SKILL.md 已安装（自动激活的必要条件）
+test -f ~/.workbuddy/skills/investor-harness/SKILL.md && echo "✅ WorkBuddy skill 已就绪"
+# 如果写了 MEMORY.md 持久底座，验证 marker
+grep -c "investor-harness:keyword-routes" ~/.workbuddy/MEMORY.md 2>/dev/null
+# 应该返回 2（start + end）
+```
+
+输出给用户：
+
+> ✅ WorkBuddy skill 已安装：`~/.workbuddy/skills/investor-harness/SKILL.md`
+> 📁 持久底座：`~/.workbuddy/MEMORY.md`（若已写入）/ 未写入（靠 SKILL.md description 自动触发）
+> 🔄 **重启 WorkBuddy 会话** 即可生效
+>
+> 验证方式：重启后说"看看 NVDA"，agent 会自动按 `sm-autopilot` 工作。
+
+**其他 harness（Claude Code / Codex / OpenCode / OpenClaw）**：
 
 ```bash
 # 用 grep 验证 marker 写入成功
@@ -249,7 +349,9 @@ grep -c "investor-harness:keyword-routes" <target_md>
 
 只有同时满足以下两件事，才能说"Investor Harness 已经 setup 好"：
 
-1. **入口路由已激活**（入口 MD 已写入 marker）
+1. **路由已激活**——满足以下任一：
+   - 入口 MD 已写入 marker（Claude Code / Codex / OpenCode / OpenClaw）
+   - WorkBuddy skill 已安装（`~/.workbuddy/skills/investor-harness/SKILL.md` 存在，自动激活）
 2. **工作区骨架已就绪**（coverage/、themes/、briefings/、.task-pulse、active-tasks.md、coverage.md、memory.md 等已存在）
 
 缺任何一项，都要明确告诉用户：

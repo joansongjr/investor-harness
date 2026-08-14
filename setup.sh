@@ -84,17 +84,43 @@ entry_md_target_for_harness() {
     codex)       printf '%s\n' "$HOME/.codex/AGENTS.md" ;;
     openclaw)    printf '%s\n' "$HOME/.openclaw/CLAUDE.md" ;;
     opencode)    printf '%s\n' "$HOME/.config/opencode/AGENTS.md" ;;
+    # WorkBuddy 不写入口 MD——靠 ~/.workbuddy/skills/investor-harness/SKILL.md 自动激活
+    workbuddy)   printf '%s\n' "none" ;;
     *)           return 1 ;;
   esac
 }
 
 default_entry_md_target() {
   local harness
+  # 跳过 workbuddy（它不写入口 MD），取第一个需要写入口 MD 的 harness
   for harness in $TARGET_HARNESSES; do
+    [ "$harness" = "workbuddy" ] && continue
     entry_md_target_for_harness "$harness"
     return 0
   done
-  printf '%s\n' "$HOME/.claude/CLAUDE.md"
+  # 全是 workbuddy → 不需要入口 MD
+  printf '%s\n' "none"
+}
+
+# 判断是否选择了至少一个非 workbuddy harness（需要写入口 MD的）
+has_entry_md_harness() {
+  local harness
+  for harness in $TARGET_HARNESSES; do
+    [ "$harness" != "workbuddy" ] && return 0
+  done
+  return 1
+}
+
+# 自动检测 harness 类型（图片驱动安装 / NO_PROMPT 模式用）
+# 按优先级：WorkBuddy > Claude Code > Codex > OpenCode > OpenClaw
+auto_detect_harness() {
+  [ -d "$HOME/.workbuddy" ] && { echo "workbuddy"; return; }
+  [ -d "$HOME/.claude" ] && { echo "claude-code"; return; }
+  [ -d "$HOME/.codex" ] && { echo "codex"; return; }
+  [ -d "$HOME/.config/opencode" ] && { echo "opencode"; return; }
+  [ -d "$HOME/.opencode" ] && { echo "opencode"; return; }
+  [ -d "$HOME/.openclaw" ] && { echo "openclaw"; return; }
+  echo ""
 }
 
 replace_managed_block() {
@@ -130,11 +156,11 @@ show_banner() {
   hr
   echo
   info "本向导会帮你："
-  info "  1. 检测你的 AI 工具（Claude Code / Codex / OpenClaw）"
+  info "  1. 检测你的 AI 工具（Claude Code / Codex / OpenClaw / WorkBuddy）"
   info "  2. 配置数据源优先级"
-  info "  3. 安装 23 个 sm-* skill"
+  info "  3. 安装 32 个 sm-* skill"
   info "  4. 创建投研工作区（可选）"
-  info "  5. 写入启用提示词到入口 MD（自动备份）"
+  info "  5. 写入启用提示词到入口 MD（WorkBuddy 靠 SKILL.md 自动激活，无需此步）"
   info "  6. 验证安装"
   echo
   info "Harness 位置: $HARNESS_DIR"
@@ -190,21 +216,41 @@ detect_environment() {
 # ═══════════════════════════════════════════════════
 
 select_harnesses() {
+  # --auto / NO_PROMPT 模式：自动检测 harness，不询问
+  if [[ "${AUTO_MODE:-0}" == "1" ]] || [[ "${NO_PROMPT:-0}" == "1" ]]; then
+    local auto_harness
+    auto_harness="$(auto_detect_harness)"
+    if [[ -n "$auto_harness" ]]; then
+      TARGET_HARNESSES="$auto_harness"
+      ok "[auto 模式] 检测到 $auto_harness，自动选择（跳过询问）"
+      echo
+      return
+    else
+      err "[auto 模式] 未检测到任何 harness（~/.claude / ~/.codex / ~/.workbuddy / ~/.opencode / ~/.openclaw 都不存在）"
+      err "请先安装 Claude Code / Codex / OpenCode / WorkBuddy / OpenClaw，或手动跑 setup.sh（不带 --auto）"
+      exit 1
+    fi
+  fi
+
   say "▎ Step 2 · 选择你的 AI 工具"
   echo
 
   # 检测已有 harness
-  local has_claude_code="no" has_codex="no" has_openclaw="no"
-  local cc_mark="" cx_mark="" oc_mark=""
+  local has_claude_code="no" has_codex="no" has_openclaw="no" has_workbuddy="no"
+  local cc_mark="" cx_mark="" oc_mark="" wb_mark=""
 
   [ -d "$HOME/.claude" ] && { has_claude_code="yes"; cc_mark="${GREEN}✓ 已检测到${NC}"; } || cc_mark="${YELLOW}未检测到${NC}"
   [ -d "$HOME/.codex" ] && { has_codex="yes"; cx_mark="${GREEN}✓ 已检测到${NC}"; } || cx_mark="${YELLOW}未检测到${NC}"
   [ -d "$HOME/.openclaw" ] && { has_openclaw="yes"; oc_mark="${GREEN}✓ 已检测到${NC}"; } || oc_mark="${YELLOW}未检测到${NC}"
+  [ -d "$HOME/.workbuddy" ] && { has_workbuddy="yes"; wb_mark="${GREEN}✓ 已检测到${NC}"; } || wb_mark="${YELLOW}未检测到${NC}"
 
   echo "  [1] Claude Code  ($cc_mark)"
   echo "  [2] Codex        ($cx_mark)"
   echo "  [3] OpenClaw     ($oc_mark)"
-  echo "  [4] 以上全部"
+  echo "  [4] WorkBuddy     ($wb_mark)"
+  echo "  [5] 以上全部"
+  echo
+  echo "  注：WorkBuddy 不写入口 MD，靠 ~/.workbuddy/skills/investor-harness/SKILL.md 自动激活"
   echo
 
   local choice
@@ -212,13 +258,14 @@ select_harnesses() {
 
   TARGET_HARNESSES=""
   case "$choice" in
-    *4*)
-      TARGET_HARNESSES="claude-code codex openclaw"
+    *5*)
+      TARGET_HARNESSES="claude-code codex openclaw workbuddy"
       ;;
     *)
       [[ "$choice" == *1* ]] && TARGET_HARNESSES="$TARGET_HARNESSES claude-code"
       [[ "$choice" == *2* ]] && TARGET_HARNESSES="$TARGET_HARNESSES codex"
       [[ "$choice" == *3* ]] && TARGET_HARNESSES="$TARGET_HARNESSES openclaw"
+      [[ "$choice" == *4* ]] && TARGET_HARNESSES="$TARGET_HARNESSES workbuddy"
       ;;
   esac
 
@@ -237,7 +284,7 @@ select_harnesses() {
 
 detect_mcps() {
   # 检测现有 .mcp.json
-  for mcp_path in "$HOME/.claude/mcp.json" "$HOME/.codex/mcp.json" "$HOME/.openclaw/mcp.json" "$PWD/.mcp.json"; do
+  for mcp_path in "$HOME/.claude/mcp.json" "$HOME/.codex/mcp.json" "$HOME/.openclaw/mcp.json" "$HOME/.workbuddy/.mcp.json" "$PWD/.mcp.json"; do
     if [ -f "$mcp_path" ]; then
       printf '%s\n' "$mcp_path"
     fi
@@ -330,6 +377,7 @@ install_skills() {
       claude-code) target_dir="$HOME/.claude/skills" ;;
       codex)       target_dir="$HOME/.codex/skills" ;;
       openclaw)    target_dir="$HOME/.openclaw/skills" ;;
+      workbuddy)   target_dir="$HOME/.workbuddy/skills" ;;
       *) continue ;;
     esac
 
@@ -536,6 +584,22 @@ EOF
 }
 
 inject_entry_md() {
+  # WorkBuddy-only：不需要写入口 MD，靠 ~/.workbuddy/skills/investor-harness/SKILL.md 自动激活
+  if ! has_entry_md_harness; then
+    say "▎ Step 6 · WorkBuddy 激活（无需入口 MD）"
+    echo
+    info "WorkBuddy 不读 CLAUDE.md / AGENTS.md——靠根目录 SKILL.md 自动激活。"
+    info "已安装到：$HOME/.workbuddy/skills/investor-harness/SKILL.md"
+    echo
+    ok "WorkBuddy skill 已就绪，重启会话即按 description 自动触发"
+    echo
+    info "可选增强：在 WorkBuddy 里说'跑一下 investor-harness onboarding'"
+    info "       会引导你把路由表写入 ~/.workbuddy/MEMORY.md 做持久底座"
+    echo
+    ENTRY_MD_TARGET="none"
+    return 0
+  fi
+
   say "▎ Step 6 · 写入启用提示词到入口 MD"
   echo
 
@@ -605,9 +669,15 @@ verify_install() {
       claude-code) target="$HOME/.claude/skills/investor-harness" ;;
       codex)       target="$HOME/.codex/skills/investor-harness" ;;
       openclaw)    target="$HOME/.openclaw/skills/investor-harness" ;;
+      workbuddy)   target="$HOME/.workbuddy/skills/investor-harness" ;;
+      *) continue ;;
     esac
     if [ -L "$target" ] && [ -d "$target" ]; then
       ok "$harness skills 链接正常"
+      # WorkBuddy 额外验证根目录 SKILL.md 存在（自动激活的必要条件）
+      if [ "$harness" = "workbuddy" ] && [ -f "$target/SKILL.md" ]; then
+        ok "  WorkBuddy 入口 SKILL.md 就绪（自动激活）"
+      fi
     else
       err "$harness skills 链接缺失"
       errors=$((errors+1))
@@ -615,7 +685,9 @@ verify_install() {
   done
 
   # 2. 入口 MD 注入
-  if [ -f "$ENTRY_MD_TARGET" ] && grep -q "INVESTOR_HARNESS:BEGIN" "$ENTRY_MD_TARGET"; then
+  if [ "$ENTRY_MD_TARGET" = "none" ]; then
+    ok "WorkBuddy 模式：无需入口 MD（靠 SKILL.md 自动激活）"
+  elif [ -f "$ENTRY_MD_TARGET" ] && grep -q "INVESTOR_HARNESS:BEGIN" "$ENTRY_MD_TARGET"; then
     ok "入口 MD 启用提示词已写入"
   else
     warn "入口 MD 启用提示词未检测到（可能你选择了跳过）"
@@ -646,10 +718,14 @@ show_completion() {
   info "资源位置："
   info "  Harness 源:     $HARNESS_DIR"
   [ -n "$WORKSPACE_ROOT" ] && info "  工作区:         $WORKSPACE_ROOT"
-  info "  启用提示词:     $ENTRY_MD_TARGET"
+  if [ "$ENTRY_MD_TARGET" = "none" ]; then
+    info "  WorkBuddy 入口:  $HOME/.workbuddy/skills/investor-harness/SKILL.md"
+  else
+    info "  启用提示词:     $ENTRY_MD_TARGET"
+  fi
   echo
   info "下一步："
-  info "  1. ${BOLD}重启你的 AI 工具${NC}（Claude Code / Codex / OpenClaw）"
+  info "  1. ${BOLD}重启你的 AI 工具${NC}（Claude Code / Codex / OpenClaw / WorkBuddy）"
   if [ -n "$WORKSPACE_ROOT" ]; then
     info "  2. cd ${WORKSPACE_ROOT}"
     info "  3. 随便问一家公司，比如：'看一下 LITE'"
@@ -671,6 +747,23 @@ show_completion() {
 # ═══════════════════════════════════════════════════
 
 main() {
+  # 解析参数：--auto / --image 启用自动检测 harness 模式（图片驱动安装用）
+  AUTO_MODE=0
+  for arg in "$@"; do
+    case "$arg" in
+      --auto|--image)
+        AUTO_MODE=1
+        ;;
+      --help|-h)
+        echo "Usage: bash setup.sh [--auto]"
+        echo "  --auto  自动检测 harness 类型，不询问用户（图片驱动安装 / NO_PROMPT 用）"
+        echo "  也支持 NO_PROMPT=1 环境变量"
+        exit 0
+        ;;
+    esac
+  done
+  export AUTO_MODE
+
   show_banner
   detect_environment
   select_harnesses

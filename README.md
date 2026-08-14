@@ -732,7 +732,13 @@ Investor Harness 是**开放提示词栈**，不是 AI agent。它没有 runtime
 ```bash
 git clone https://github.com/joansongjr/investor-harness.git
 cd investor-harness
-bash install/claude-code.sh    # 或 codex.sh / opencode.sh / generic.sh
+bash install/claude-code.sh    # 或 codex.sh / opencode.sh / workbuddy.sh / generic.sh
+```
+
+或用交互式向导（自动检测 + 多 harness + 数据源配置）：
+
+```bash
+bash setup.sh    # 选 Claude Code / Codex / OpenClaw / WorkBuddy
 ```
 
 然后重启你的 agent，并说：
@@ -740,6 +746,8 @@ bash install/claude-code.sh    # 或 codex.sh / opencode.sh / generic.sh
 ```text
 跑一下 investor-harness onboarding
 ```
+
+> **WorkBuddy 用户注意**：WorkBuddy 不读 CLAUDE.md / AGENTS.md，靠根目录 `SKILL.md` 自动激活。`bash install/workbuddy.sh` 装到 `~/.workbuddy/skills/investor-harness/` 后，WorkBuddy 扫描到 SKILL.md 即按 description 自动触发投研任务 + onboarding 引导。可选增强：跑 onboarding 把路由表写入 `~/.workbuddy/MEMORY.md` 做持久底座。
 
 ### 路径 C · 完整工作区（10 分钟，推荐机构和进阶用户）
 

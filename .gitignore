@@ -27,3 +27,20 @@ node_modules/
 
 # 日志
 *.log
+
+# 工作区产物（本地研究数据，不进开源仓库）
+.task-pulse
+.checkpoint/
+.supervision/
+.learning/
+active-tasks.md
+coverage/
+themes/
+briefings/
+
+# WorkBuddy 本地数据
+.workbuddy/
+
+# 临时研究产出（HTML 报告等，属本地工作产物）
+医药行业-*.html
+
