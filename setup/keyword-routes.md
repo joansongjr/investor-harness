@@ -32,7 +32,7 @@
 
 | 关键词 | 触发 skill | 用途 |
 |---|---|---|
-| `X 深度报告` / `深度看 X` / `起 X 的 coverage` | `sm-company-deepdive` | 公司深度（§0 结论前置 + 13 段底稿）|
+| `X 深度报告` / `深度看 X` / `起 X 的 coverage` | `sm-company-deepdive` | 公司深度（§0 结论前置 + 11 段底稿，业务线逐条展开为主；说"带量价拆分"才做完整测算）|
 | `X 财报前瞻` / `X earnings preview` / `X 业绩前瞻` | `sm-earnings-preview` | 财报前瞻 |
 | `审 X 的模型` / `X 模型 sanity check` / `X 模型审阅` | `sm-model-check` | 财务模型审阅 |
 | `X 预期差` / `X consensus` / `X 一致预期` | `sm-consensus-watch` | 一致预期 + 预期差 |

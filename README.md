@@ -3,12 +3,15 @@
 > 投研人的 AI 任务执行规范
 > *An execution discipline harness for AI-assisted investment research*
 
-**v0.9.7** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
+**v0.9.8** · MIT License · A 股 / 港股 / 美股 / 公募 / 跨市场
 
 > 🔄 **已安装用户升级**
-> 如果你已经装过 investor-harness，不想重装、只想把框架保守升级到 v0.9.7，同时保留个性化配置、工作区、任务底稿和历史归档，直接对 agent 说：
-> **"读 `~/investor-harness/UPGRADE-PROMPT.md`，然后帮我把本地 investor-harness 保守升级到 v0.9.7。"**
+> 如果你已经装过 investor-harness，不想重装、只想把框架保守升级到 v0.9.8，同时保留个性化配置、工作区、任务底稿和历史归档，直接对 agent 说：
+> **"读 `~/investor-harness/UPGRADE-PROMPT.md`，然后帮我把本地 investor-harness 保守升级到 v0.9.8。"**
 > 详见 [`UPGRADE-PROMPT.md`](UPGRADE-PROMPT.md)
+
+> 🆕 **v0.9.8 — deepdive 回归业务理解：业务线逐条展开、量价拆分按需**
+> 来自用户反馈：v0.9.5 的 13 段 deepdive 做了太多测算（甚至量价拆分），但 AI 没有渠道 / 专家 / 模型数据，拆出来层次浅；而真正想看的"不同业务的介绍、产品前景、技术变化为什么利好或利空"反而没展开，总结也跟不上市场变化。v0.9.8 把 `sm-company-deepdive` 收为 **§0 + §1-§11 共 12 段**：**§2 业务线逐条展开**成为主模块（每条业务 5 小段：做什么怎么赚钱 / 产品与客户现状 / 产品前景 / 技术变化利好利空及传导链 / 近 90 天变化 + 技术变化 × 业务线影响矩阵）；**§5 量价拆分降为按需档**（档 A 驱动方向默认，档 B 完整拆表只在有一次源量价数据或用户说"带量价拆分"时做，表里禁止拍数填格）；**§7 新增近 90 天市场争论时效段**（多空论点 / 按日期倒序事件 / 预期差，写明取数截止日期）。[`core/moat-analysis.md`](core/moat-analysis.md) 同步新增 §0 适用性闸门；sm-valuation 在 deepdive 只有档 A 时须向用户要预测，不得自拍数字补位。§2 完整规格沉淀为 [`core/business-line-analysis.md`](core/business-line-analysis.md)：三层切分法（披露分部 → 商业模式主导维度 → 分歧单元，单元 ≤5）、每小段必答 + "未披露即合格"出口（不逼 AI 编数）、技术变化六环传导链模板（含"代际内升级 vs 路线切换"关键判别与对称性闸门）、2.c 固定判断行（方向 + 核心假设 + 证伪信号）、双日期时效标注与局部刷新协议、技术信息源权威度优先级（公司官方 → 标准组织 → 产业机构原始发布 → 厂商 roadmap → 严肃媒体注一次源）。
 
 > 🆕 **v0.9.7 — 自主学习：它记住你的问法，不需要你说任何话**
 > 新增 **`sm-learn`** + [`core/learning.md`](core/learning.md) 提问驱动自主学习协议：你每次用 skill 时的提问、追问、纠正被 postamble 静默采集（每会话 ≤200 tokens），每 3-5 次会话**自动**归纳一轮——按"**问题回家**"原则聚类（做模型时问的问法反补 `sm-model-check`，复盘的问法反补 `sm-close-recap`），过阈值（≥3 次 · ≥2 标的 · ≥2 天）与三重冲突检查的规则**自动生效进试用期**（每轮 ≤3 条），会话尾一行摘要告知。你只保留否决权："撤销 L-xxx" 一键回滚。试用期三信号自动验证，失败规则自动停用。老师的问题清单可以"把这些问题学进去"高权威导入。全部学习产物留在工作区（`.learning/` + overlay），git-ignore、升级安全、绝不修改 harness 主库、绝不覆盖证据分级与合规硬约束。
@@ -29,7 +32,7 @@
 > 详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)
 
 > 🆕 **v0.9.0 — Librarian 升级：从记忆系统到主动投研助手**
-> 该版本累计 28 个 skill（默认路由 22 + Librarian opt-in 6）+ 6 份新核心文档；当前 v0.9.7 已扩展到 32 个 skill（默认路由 26 + Librarian opt-in 6）。重点：让 AI 不只是帮你**记住**了什么，而是**在你需要之前**就把跨源综合做完、矛盾标红、判断点摆好——你做 PM 的判断，机器干苦活。
+> 该版本累计 28 个 skill（默认路由 22 + Librarian opt-in 6）+ 6 份新核心文档；当前 v0.9.8 已扩展到 32 个 skill（默认路由 26 + Librarian opt-in 6）。重点：让 AI 不只是帮你**记住**了什么，而是**在你需要之前**就把跨源综合做完、矛盾标红、判断点摆好——你做 PM 的判断，机器干苦活。
 > 完整设计参见 [`core/librarian.md`](core/librarian.md) · Librarian 专题 deck：[`docs/v0.9-librarian-deck.html`](docs/v0.9-librarian-deck.html)
 
 ---
@@ -124,7 +127,7 @@ LLM 的行为会变成这样——
 → 这些将在"仍需补的资料"段列出
 ```
 
-#### 第二步：按 13 段结构输出，每条带证据等级
+#### 第二步：按 12 段结构输出，每条带证据等级
 
 ```markdown
 # 寒武纪 (688256.SH) · Coverage Deepdive

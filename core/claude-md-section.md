@@ -33,7 +33,7 @@
 | 我说什么 | 你做什么 |
 |---|---|
 | "看一下 X" / "X 怎么样" | 走 `sm-autopilot` 自动路由 |
-| "深度看 X" / "起 coverage" | 走 `sm-company-deepdive` |
+| "深度看 X" / "起 coverage" | 走 `sm-company-deepdive`（v0.9.8：12 段，业务线逐条展开 + 技术变化利好利空传导链；量价拆分按需，"带量价拆分" 才开完整测算）|
 | "X 财报前瞻" | 走 `sm-earnings-preview` |
 | "反过来想 X" / "X 空头逻辑" | 走 `sm-red-team` |
 | "X 预期差" | 走 `sm-consensus-watch` |

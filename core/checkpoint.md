@@ -23,7 +23,7 @@
 
 不要等任务全部完成才写文件。每完成一段就更新 checkpoint。
 
-例：sm-company-deepdive 13 段，每完成 §1、§2、§3... 都更新 checkpoint。
+例：sm-company-deepdive 12 段，每完成 §1、§2、§3... 都更新 checkpoint。
 
 ### Rule 2：每次取数后写 checkpoint
 

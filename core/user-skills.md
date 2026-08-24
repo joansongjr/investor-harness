@@ -56,7 +56,7 @@ inputs:
   - 公司名 / 代码
   - 可选：ESG 评级数据
 outputs:
-  - 继承 sm-company-deepdive 的 13 段 + ESG 专项段
+  - 继承 sm-company-deepdive 的 12 段 + ESG 专项段
 data_sources: 见 ../../../core/adapters.md + MSCI ESG / 中证 ESG
 markets: [CN-A, HK, US]
 ---
@@ -69,7 +69,7 @@ markets: [CN-A, HK, US]
 
 **继承的**：
 - 强制流程（preamble + postamble）
-- 13 段输出结构（§1 公司定位 ... §13 仍需补的资料，v0.9.5）
+- 12 段输出结构（§0 结论前置 + §1 公司定位 ... §11 仍需补的资料，v0.9.8）
 - 证据分级纪律
 - 合规边界
 - 归档协议
@@ -370,7 +370,7 @@ Step 1.5 · 检查 user-templates 和 user-skills
 ## 常见陷阱
 
 ### 陷阱 1：L2 删除了父 skill 的必需段
-- ❌ 不能"继承 sm-company-deepdive 但去掉 §9 仍需补的资料"
+- ❌ 不能"继承 sm-company-deepdive 但去掉 §11 仍需补的资料"
 - ✅ 可以"在 §8 后新增 §8.5 ESG"
 
 ### 陷阱 2：L3 试图绕过 preamble

@@ -263,7 +263,7 @@
 ## 用户视角看到的最终输出（v0.5.1 双输出版）
 
 ```
-[完整的 13 段 sm-company-deepdive 输出，按结构展开，每条带证据等级]
+[完整的 12 段 sm-company-deepdive 输出，按结构展开，每条带证据等级]
 
 # 寒武纪 (688256.SH) · Coverage Deepdive
 

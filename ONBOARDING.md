@@ -98,7 +98,7 @@ grep -l "investor-harness:keyword-routes" \
 >
 > ▸ **入口路由**（2）：`sm-autopilot`（模糊请求自动判断走哪个）/ `sm-master`（7 模式总控）
 > ▸ **命题与框架**（2）：`sm-thesis`（投资命题）/ `sm-industry-map`（行业框架 + 空间测算 + 环节壁垒）
-> ▸ **单点研究**（6）：`sm-company-deepdive`（公司深度 13 段：壁垒五维量化 + 量价拆分）/ `sm-valuation`（估值方法选择 + 同业对比，v0.9.5）/ `sm-earnings-preview`（财报前瞻）/ `sm-model-check`（模型审阅）/ `sm-consensus-watch`（一致预期 + 预期差）/ `sm-industry-database`（产业 / 公司数据库搭建）
+> ▸ **单点研究**（6）：`sm-company-deepdive`（公司深度 12 段：业务线逐条展开 + 技术变化传导链，量价拆分按需，v0.9.8）/ `sm-valuation`（估值方法选择 + 同业对比，v0.9.5）/ `sm-earnings-preview`（财报前瞻）/ `sm-model-check`（模型审阅）/ `sm-consensus-watch`（一致预期 + 预期差）/ `sm-industry-database`（产业 / 公司数据库搭建）
 > ▸ **跟踪监控**（5）：`sm-catalyst-monitor`（催化剂事件）/ `sm-roadshow-questions`（路演调研问题）/ `sm-catalyst-sweep`（覆盖池催化扫描）/ `sm-hourly-watch`（小时级盯盘）/ `sm-close-recap`（收盘复盘）
 > ▸ **反方挑战**（1）：`sm-red-team`（空头逻辑 / 反方审视）
 > ▸ **选股发现**（1）：`sm-stock-screen`（选股 / 主题筛标的）
