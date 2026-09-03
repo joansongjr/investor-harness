@@ -73,7 +73,7 @@ bash setup/bootstrap.sh ~/my-investor-workspace
 
 agent 会：
 
-1. 列出 32 个 skill 功能 + 关键词触发表给你看
+1. 列出 34 个 skill 功能 + 关键词触发表给你看
 2. 解释"自动写入 / 手动复制 / 每次显式调用" 三种激活方式
 3. **等你输入"同意"**（明确字面表达）
 4. 自动检测 agent 类型（Claude Code → `~/.claude/CLAUDE.md` / Codex → `~/.codex/AGENTS.md` / OpenCode → `~/.config/opencode/AGENTS.md`）
@@ -84,7 +84,7 @@ agent 会：
 
 ⛔ 硬约束：**未读到用户明确"同意" / "agree" / "yes write"** → agent 绝对不动你的文件。
 
-详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)（完整 32 个 skill 关键词表）。
+详见 [`ONBOARDING.md`](ONBOARDING.md) + [`setup/keyword-routes.md`](setup/keyword-routes.md)（完整 34 个 skill 关键词表）。
 
 > **新的完成标准**：只有"路由已激活 + 工作区骨架已补齐"两件事都完成，才算真正 setup 好。
 

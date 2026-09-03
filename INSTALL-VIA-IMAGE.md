@@ -82,7 +82,7 @@ onboarding 流程在 `ONBOARDING.md`。**严格按 9 步执行**：
 
 1. 第 0 步：检测是否已 onboard（grep `investor-harness:keyword-routes`）
 2. 第 0.5 步：工作区骨架审计
-3. 第 1 步：展示 32 个 skill 清单 + 关键词路由表（从 `setup/keyword-routes.md` 拉，**不省略任何一行**）
+3. 第 1 步：展示 34 个 skill 清单 + 关键词路由表（从 `setup/keyword-routes.md` 拉，**不省略任何一行**）
 4. 第 2 步：解释三种激活方式
 5. 第 3 步：请求明确"同意"（**⛔ 硬约束：未明确同意不写文件**）
 6. 第 4 步：检测 harness + 入口 MD 路径
@@ -95,7 +95,7 @@ onboarding 流程在 `ONBOARDING.md`。**严格按 9 步执行**：
 
 ### Step 4 · 介绍主要功能
 
-按 `setup/keyword-routes.md` 的分类展示 32 个 skill（**默认路由 26 个 + Librarian opt-in 6 个**），包含触发关键词。然后展示 `README.md` 里的"核心能力"对比（裸 LLM vs Investor Harness）。
+按 `setup/keyword-routes.md` 的分类展示 34 个 skill（**默认路由 28 个 + Librarian opt-in 6 个**），包含触发关键词。然后展示 `README.md` 里的"核心能力"对比（裸 LLM vs Investor Harness）。
 
 ---
 

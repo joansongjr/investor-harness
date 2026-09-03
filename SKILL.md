@@ -19,7 +19,7 @@ agent_created: true
 ## onboarding 流程（WorkBuddy 适配版）
 
 ### 第 1 步 · 展示功能清单 + 关键词表
-读 `ONBOARDING.md` 第 1 步的 32 个 skill 清单，完整展示给用户（不省略）。完整路由表从 `setup/keyword-routes.md` 拉。
+读 `ONBOARDING.md` 第 1 步的 34 个 skill 清单，完整展示给用户（不省略）。完整路由表从 `setup/keyword-routes.md` 拉。
 
 ### 第 2 步 · 解释 WorkBuddy 下的激活方式
 > 本项目在 WorkBuddy 下已通过「根目录 SKILL.md」自动激活——WorkBuddy 扫描 `~/.workbuddy/skills/investor-harness/SKILL.md` 即识别为本 skill，按 description 自动触发。无需写入口 MD。可选增强：把路由表写入 `~/.workbuddy/MEMORY.md`（用户级）或 `{workspace}/.workbuddy/memory/MEMORY.md`（项目级）做持久底座。

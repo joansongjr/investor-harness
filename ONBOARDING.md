@@ -94,15 +94,15 @@ grep -l "investor-harness:keyword-routes" \
 
 > 你装了 **Investor Harness**——投研人的 AI 任务执行规范。下面是它能帮你做的事 + 对应触发关键词。
 >
-> **32 个 sm-* skill，分 12 大类**：
+> **34 个 sm-* skill，分 12 大类**：
 >
 > ▸ **入口路由**（2）：`sm-autopilot`（模糊请求自动判断走哪个）/ `sm-master`（7 模式总控）
 > ▸ **命题与框架**（2）：`sm-thesis`（投资命题）/ `sm-industry-map`（行业框架 + 空间测算 + 环节壁垒）
-> ▸ **单点研究**（6）：`sm-company-deepdive`（公司深度 12 段：业务线逐条展开 + 技术变化传导链，量价拆分按需，v0.9.8）/ `sm-valuation`（估值方法选择 + 同业对比，v0.9.5）/ `sm-earnings-preview`（财报前瞻）/ `sm-model-check`（模型审阅）/ `sm-consensus-watch`（一致预期 + 预期差）/ `sm-industry-database`（产业 / 公司数据库搭建）
+> ▸ **单点研究**（7）：`sm-company-deepdive`（公司深度 12 段：业务线逐条展开 + 技术变化传导链，量价拆分按需，v0.9.8）/ `sm-valuation`（估值方法选择 + 同业对比，v0.9.5）/ `sm-earnings-preview`（财报前瞻）/ `sm-model-check`（模型审阅）/ `sm-consensus-watch`（一致预期 + 预期差）/ `sm-industry-database`（产业 / 公司数据库搭建）/ `sm-fund-compare`（基金产品对比：同口径闸门 + 情景适配，v0.9.9）
 > ▸ **跟踪监控**（5）：`sm-catalyst-monitor`（催化剂事件）/ `sm-roadshow-questions`（路演调研问题）/ `sm-catalyst-sweep`（覆盖池催化扫描）/ `sm-hourly-watch`（小时级盯盘）/ `sm-close-recap`（收盘复盘）
 > ▸ **反方挑战**（1）：`sm-red-team`（空头逻辑 / 反方审视）
 > ▸ **选股发现**（1）：`sm-stock-screen`（选股 / 主题筛标的）
-> ▸ **输出交付**（3）：`sm-pm-brief`（PM 一页纸）/ `sm-briefing`（晨会 / 晚报 / 纪要）/ `sm-deck-builder`（PPT 生成）
+> ▸ **输出交付**（4）：`sm-pm-brief`（PM 一页纸）/ `sm-briefing`（晨会 / 晚报 / 纪要）/ `sm-deck-builder`（PPT 生成）/ `sm-infographic`（一图复盘：公司财报一图 / 板块期间一图，v0.9.9）
 > ▸ **技术面**（2）：`sm-tape-review`（K 线 + 量价复盘）/ `sm-quant-tape`（量化看盘 · 缠论结构，v0.9.5）
 > ▸ **三方任务组**（1，v0.9.6）：`sm-supervisor`（在第二任务开启实时语音，作为第三方监工监督 worker：随时问进度、抽查可靠性、口头下达修正、需要时请用户仲裁）
 > ▸ **批量**（2）：`sm-batch-refresh`（覆盖池批量刷新）/ `sm-batch-earnings`（财报季批量）
@@ -372,7 +372,7 @@ GitHub: https://github.com/joansongjr/investor-harness
 
 - ❶ **幻觉**：AI 不再编数据——每条事实必须标完整中文证据等级、列"仍需补的资料"
 - ❷ **健忘**：跨 session 续跑、覆盖池持久化
-- ❸ **不成体系**：32 个标准化 skill，所有输出归档到固定路径
+- ❸ **不成体系**：34 个标准化 skill，所有输出归档到固定路径
 - ❹ **上下文溢出**：三层加载 + checkpoint 续跑
 - ❺ **🆕 被动**（v0.9 Librarian 解决）：AI 不再只是"你问什么它答什么"——每天主动扫 vault、刷新 wiki、跑健康检查
 

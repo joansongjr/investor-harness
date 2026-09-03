@@ -4,9 +4,9 @@
 
 ## What this is
 
-Investor Harness v0.9.8 — 投研人的 AI 任务执行规范。
+Investor Harness v0.9.9 — 投研人的 AI 任务执行规范。
 治三大痛点：**幻觉 / 健忘 / 不成体系**。
-**v0.9.5 深度研究升级**：deepdive 壁垒五维量化 + 量价拆分 + 财务指标分析；新增 `sm-valuation` 与 `sm-quant-tape`。**v0.9.6 三方任务组**：`sm-supervisor` 把第二任务的实时语音变成第三方监工——用户 + worker + supervisor 通过 `.supervision/` 双向 mailbox 协作。**v0.9.6 · deepdive 结论前置**：`sm-company-deepdive` 输出格式改为 §0 结论前置 + §1-§13 底稿，先底稿标 🔴/🟡/🟢 权重再综合 §0。**v0.9.7 自主学习**：`sm-learn` + `core/learning.md`——用户的提问方式被自动采集（postamble）、每 3-5 次会话自动归纳、按"问题回家"原则反补进对应 skill 的必答问题（overlay），自动生效进试用期，用户只保留"撤销 L-xxx"否决权。**v0.9.8 · deepdive 回归业务理解**：`sm-company-deepdive` 收为 §0 + §1-§11 共 12 段，§2 按业务线逐条展开（做什么 / 产品与客户 / 前景 / 技术变化利好利空及原因 / 近 90 天变化）成为主模块；量价拆分降为 §5 按需档（档 A 驱动方向默认，档 B 完整拆表仅在有一次源或用户明示时做，禁止拍数填表）；新增 §7 近 90 天市场争论时效段；§2 完整规格沉淀为 `core/business-line-analysis.md`（切分三层法 + 传导链六环模板 + 前景模板 + 时效规则 + 技术信息源权威度优先级）。
+**v0.9.5 深度研究升级**：deepdive 壁垒五维量化 + 量价拆分 + 财务指标分析；新增 `sm-valuation` 与 `sm-quant-tape`。**v0.9.6 三方任务组**：`sm-supervisor` 把第二任务的实时语音变成第三方监工——用户 + worker + supervisor 通过 `.supervision/` 双向 mailbox 协作。**v0.9.6 · deepdive 结论前置**：`sm-company-deepdive` 输出格式改为 §0 结论前置 + §1-§13 底稿，先底稿标 🔴/🟡/🟢 权重再综合 §0。**v0.9.7 自主学习**：`sm-learn` + `core/learning.md`——用户的提问方式被自动采集（postamble）、每 3-5 次会话自动归纳、按"问题回家"原则反补进对应 skill 的必答问题（overlay），自动生效进试用期，用户只保留"撤销 L-xxx"否决权。**v0.9.8 · deepdive 回归业务理解**：`sm-company-deepdive` 收为 §0 + §1-§11 共 12 段，§2 按业务线逐条展开（做什么 / 产品与客户 / 前景 / 技术变化利好利空及原因 / 近 90 天变化）成为主模块；量价拆分降为 §5 按需档（档 A 驱动方向默认，档 B 完整拆表仅在有一次源或用户明示时做，禁止拍数填表）；新增 §7 近 90 天市场争论时效段；§2 完整规格沉淀为 `core/business-line-analysis.md`（切分三层法 + 传导链六环模板 + 前景模板 + 时效规则 + 技术信息源权威度优先级）。**v0.9.9 新增两个 skill**：`sm-infographic`（一图复盘——公司财报一图 / 板块期间一图，先底稿后渲染，图上数字可溯源，含信息准确性核验块）与 `sm-fund-compare`（基金对比——同口径闸门 + 情景适配结论，不作申购推荐）。
 
 ## 32 skills (one-line each)
 

@@ -1,6 +1,6 @@
 # 关键词路由表（Single Source of Truth）
 
-> 这份文件是 32 个 sm-* skill 的关键词触发对照。**ONBOARDING.md 和 routes-block.template.md 都从这里同步**。
+> 这份文件是 34 个 sm-* skill 的关键词触发对照。**ONBOARDING.md 和 routes-block.template.md 都从这里同步**。
 > 修改时只改这里，再手动同步到其他文件。
 
 ## 触发原则
@@ -47,6 +47,8 @@
 | `怎么问 X 管理层` / `X 调研提纲` / `X 路演问题` | `sm-roadshow-questions` | 路演 / 调研问题设计 |
 | `盯盘` / `看盘` / `每小时看一下 X` / `X 盘中异动` | `sm-hourly-watch` | 股票池小时级盯盘 / 异动告警 |
 | `收盘后复盘` / `股票池复盘` / `今天为什么涨跌` / `盘后复盘` | `sm-close-recap` | 股票池收盘归因 / 原因变化 |
+| `X 一图` / `一张图看 X` / `一页图` / `一图看懂 X 财报` / `X 板块 N 月一图复盘` | `sm-infographic` | 公司财报一图 / 板块期间一图（行情复盘 + 报表端变化）— v0.9.9 |
+| `对比 X 和 Y 基金` / `基金对比` / `X、Y 两只基金怎么选` | `sm-fund-compare` | 基金产品同口径对比 + 情景适配 — v0.9.9 |
 
 ### Challenge / 反方
 
